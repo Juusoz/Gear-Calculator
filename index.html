@@ -23,8 +23,7 @@
 		   $(function() {
 			  $("#MainText").load("MainText.html", function(response, status, xhr) {
 				 if (status == "error") {
-					console.log("Error loading MainText.html: " + xhr.status + " " + xhr.statusText);
-					$("#MainText").text("Failed to load content.");
+					$("#MainText").text("Failed to load file: " + xhr.status + " " + xhr.statusText);
 				 }
 			  });
 		   });
@@ -32,14 +31,28 @@
 		<div id="MainText"></div>
 		
 		
+		<!------------ Selection button area ----------->
+		<div class="button-group mb-3">
+			<button class="btn btn-primary" type="button" onclick="showSimplePlanetary()">Simple Planetary</button>
+			<button class="btn btn-primary" type="button" onclick="showCompoundPlanetary()">Compound Planetary</button>
+		</div>
+
+		<script>
+			function showSimplePlanetary() {
+				document.getElementById("type").innerHTML = "Simple Planetary";
+				document.getElementById("planetary-gear").style.display = "block";
+				document.getElementById("compound-planetary").style.display = "none";
+			}
+
+			function showCompoundPlanetary() {
+				document.getElementById("type").innerHTML = "Compound Planetary";
+				document.getElementById("planetary-gear").style.display = "none";
+				document.getElementById("compound-planetary").style.display = "block";
+			}
+		</script>
 		
-      <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle mb-3" type="button" id="type" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Simple Planetary</button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" onclick="$('#type')[0].innerHTML = this.innerHTML; $('#planetary-gear')[0].style.display = 'block'; $('#compound-planetary')[0].style.display = 'none';">Simple Planetary</a>
-          <a class="dropdown-item" onclick="$('#type')[0].innerHTML = this.innerHTML; $('#planetary-gear')[0].style.display = 'none'; $('#compound-planetary')[0].style.display = 'block';">Compound Planetary</a>
-        </div>
-      </div>
+		
+		<!-----------Simple Panetary Gear selection area------------->
       <div class="card mb-3" id="planetary-gear">
         <div class="card-body mr-3">
           <div class="form-group row">
@@ -129,6 +142,7 @@
             </div>
           </template>
         </div>
+		
         <script type="text/javascript">
           var cps1 = 0;
           var checked1 = 0;
@@ -263,6 +277,9 @@
           }
         </script>
       </div>
+	  
+	  
+	  <!---------------Compound planetary gear selection area----------------->
       <div class="card mb-3" id="compound-planetary" style="display: none;">
         <div class="card-body mr-3">
           <p>This generator assumes that the planets are rigidly connected, the stage 1 sun is the input, the stage 2 ring is the output and that the stage 1 ring is held stationary.</p>
