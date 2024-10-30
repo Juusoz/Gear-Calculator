@@ -31,11 +31,10 @@
 		<div id="MainText"></div>
 		
 		
-		<!------------Selection button area ----------->
-		<button class="btn btn-primary mb-3" type="button" id="type">Simple Planetary</button>
-		<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-			<a class="dropdown-item" onclick="$('#type')[0].innerHTML = this.innerHTML; $('#planetary-gear')[0].style.display = 'block'; $('#compound-planetary')[0].style.display = 'none';">Simple Planetary</a>
-			<a class="dropdown-item" onclick="$('#type')[0].innerHTML = this.innerHTML; $('#planetary-gear')[0].style.display = 'none'; $('#compound-planetary')[0].style.display = 'block';">Compound Planetary</a>
+		<!------------ Selection button area ----------->
+		<div class="button-group mb-3">
+			<button class="btn btn-primary" id="simplePlanetaryBtn" onclick="$('#type')[0].innerHTML = this.innerHTML; $('#planetary-gear')[0].style.display = 'block'; $('#compound-planetary')[0].style.display = 'none';">Simple Planetary</button>
+			<button class="btn btn-secondary" id="compoundPlanetaryBtn" onclick="$('#type')[0].innerHTML = this.innerHTML; $('#planetary-gear')[0].style.display = 'none'; $('#compound-planetary')[0].style.display = 'block';">Compound Planetary</button>
 		</div>
 		
 		
