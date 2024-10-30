@@ -6,15 +6,19 @@
     <link rel="icon" href="./Gear_icon.png">
     <title>Gear-calculator</title>
 	
-	<script src="jquery.js"></script> 
-	
-	
-	  
-		<script> 
-			$(function(){
-			  $("#MainText").load("MainText.html"); 
-			});
-		</script> 
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+	   $(function() {
+		  $("#MainText").load("MainText.html", function(response, status, xhr) {
+			 if (status == "error") {
+				console.log("Error loading MainText.html: " + xhr.status + " " + xhr.statusText);
+				$("#MainText").text("Failed to load content.");
+			 }
+		  });
+	   });
+	</script>
+	<div id="MainText"></div>
+
   </head>
   
   <body>
@@ -22,7 +26,7 @@
       <h1>Gear-calculator</h1>
       <object data="https://img.shields.io/github/stars/Juusoz/Gear-Calculator.svg?label=Stars&amp;style=social" height=20></object>
 		
-		<div id="MainText"></div>
+		<div id="MainText"></div> <!-- Main Text area -->
 		
 		
 		
