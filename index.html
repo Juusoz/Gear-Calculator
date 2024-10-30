@@ -31,25 +31,11 @@
 		<div id="MainText"></div>
 		
 		
-		<!------------ Selection button area ----------->
-		<div class="button-group mb-3">
-			<button class="btn btn-primary" type="button" onclick="showSimplePlanetary()">Simple Planetary</button>
-			<button class="btn btn-primary" type="button" onclick="showCompoundPlanetary()">Compound Planetary</button>
+		<!------------Selection button area ----------->
+		<div class="button-group">
+			<button class="btn btn-primary mb-3" onclick="$('#type')[0].innerHTML = 'Simple Planetary'; $('#planetary-gear')[0].style.display = 'block'; $('#compound-planetary')[0].style.display = 'none';">Simple Planetary</button>
+			<button class="btn btn-primary mb-3" onclick="$('#type')[0].innerHTML = 'Compound Planetary'; $('#planetary-gear')[0].style.display = 'none'; $('#compound-planetary')[0].style.display = 'block';">Compound Planetary</button>
 		</div>
-
-		<script>
-			function showSimplePlanetary() {
-				document.getElementById("type").innerHTML = "Simple Planetary";
-				document.getElementById("planetary-gear").style.display = "block";
-				document.getElementById("compound-planetary").style.display = "none";
-			}
-
-			function showCompoundPlanetary() {
-				document.getElementById("type").innerHTML = "Compound Planetary";
-				document.getElementById("planetary-gear").style.display = "none";
-				document.getElementById("compound-planetary").style.display = "block";
-			}
-		</script>
 		
 		
 		<!-----------Simple Panetary Gear selection area------------->
