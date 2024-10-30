@@ -7,7 +7,7 @@ As well as have some speed optimizations. If I get to it.
 
 <b>To do:</b>
 <ul>
-  <li>Change colour scheme to seperate from the original site</li>
+  <li><del>Change colour scheme to seperate from the original site</del></li>
   <li>Seperate gear types to different buttons</li>
   <li>Add an abort button</li>
   <li>Add regular gears</li>
