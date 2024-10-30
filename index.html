@@ -31,11 +31,30 @@
 		<div id="MainText"></div>
 		
 		
-		<!------------ Selection button area ----------->
-		<div class="button-group mb-3">
-			<button class="btn btn-primary" id="simplePlanetaryBtn" onclick="$('#type')[0].innerHTML = this.innerHTML; $('#planetary-gear')[0].style.display = 'block'; $('#compound-planetary')[0].style.display = 'none';">Simple Planetary</button>
-			<button class="btn btn-secondary" id="compoundPlanetaryBtn" onclick="$('#type')[0].innerHTML = this.innerHTML; $('#planetary-gear')[0].style.display = 'none'; $('#compound-planetary')[0].style.display = 'block';">Compound Planetary</button>
-		</div>
+	<!------------ Selection button area ----------->
+	<div class="btn-group mb-3" role="group" aria-label="Planetary Type Selection">
+		<button type="button" class="btn btn-primary" id="simplePlanetaryBtn" 
+				onclick="selectPlanetaryType('simple')">Simple Planetary</button>
+		<button type="button" class="btn btn-primary" id="compoundPlanetaryBtn" 
+				onclick="selectPlanetaryType('compound')">Compound Planetary</button>
+	</div>
+
+	<!------------ JavaScript to Handle Button Logic ----------->
+	<script>
+		function selectPlanetaryType(type) {
+			if (type === 'simple') {
+				document.getElementById('simplePlanetaryBtn').classList.add('active');
+				document.getElementById('compoundPlanetaryBtn').classList.remove('active');
+				document.getElementById('planetary-gear').style.display = 'block';
+				document.getElementById('compound-planetary').style.display = 'none';
+			} else if (type === 'compound') {
+				document.getElementById('simplePlanetaryBtn').classList.remove('active');
+				document.getElementById('compoundPlanetaryBtn').classList.add('active');
+				document.getElementById('planetary-gear').style.display = 'none';
+				document.getElementById('compound-planetary').style.display = 'block';
+			}
+		}
+	</script>
 		
 		
 		<!-----------Simple Panetary Gear selection area------------->
