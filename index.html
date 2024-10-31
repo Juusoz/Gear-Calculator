@@ -35,11 +35,15 @@
 		<div class="d-flex mb-3" role="group" aria-label="Planetary Type Selection">
 			<div class="me-2">
 				<button type="button" class="btn btn-primary active" id="simplePlanetaryBtn" 
-						onclick="selectPlanetaryType('simple')">Simple Planetary</button>
+						onclick="selectPlanetaryType('simple')">Planetary gears</button>
 			</div>
 			<div>
 				<button type="button" class="btn btn-primary" id="compoundPlanetaryBtn" 
 						onclick="selectPlanetaryType('compound')">Compound Planetary</button>
+			</div>
+			<div>
+				<button type="button" class="btn btn-primary" id="compoundSpurBtn" 
+						onclick="selectPlanetaryType('spur')">Spur gears</button>
 			</div>
 		</div>
 
@@ -49,13 +53,31 @@
 				if (type === 'simple') {
 					document.getElementById('simplePlanetaryBtn').classList.add('active');
 					document.getElementById('compoundPlanetaryBtn').classList.remove('active');
+					document.getElementById('compoundSpurBtn').classList.remove('active');
+					
+					
 					document.getElementById('planetary-gear').style.display = 'block';
 					document.getElementById('compound-planetary').style.display = 'none';
+					document.getElementById('spur-gear').style.display = 'none';
+					
 				} else if (type === 'compound') {
+				
 					document.getElementById('simplePlanetaryBtn').classList.remove('active');
 					document.getElementById('compoundPlanetaryBtn').classList.add('active');
+					document.getElementById('compoundSpurBtn').classList.remove('active');
+					
 					document.getElementById('planetary-gear').style.display = 'none';
 					document.getElementById('compound-planetary').style.display = 'block';
+					document.getElementById('spur-gear').style.display = 'none';
+					
+				} else if (type === 'spur') {
+					document.getElementById('simplePlanetaryBtn').classList.remove('active');
+					document.getElementById('compoundPlanetaryBtn').classList.remove('active');
+					document.getElementById('compoundSpurBtn').classList.add('active');
+					
+					document.getElementById('planetary-gear').style.display = 'none';
+					document.getElementById('compound-planetary').style.display = 'none';
+					document.getElementById('spur-gear').style.display = 'block';
 				}
 			}
 		</script>
