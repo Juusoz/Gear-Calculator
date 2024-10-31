@@ -9,8 +9,9 @@ As well as some speed optimizations. If I get to it.
 <ul>
   <li><del>Change colour scheme to seperate from the original site</del></li>
   <li>Seperate gear types to different buttons</li>
+  <li>Create the spur gear menu</li>
+  <li>Make the spur gear number crunching code</li>
   <li>Add an abort button</li>
-  <li>Add regular gears</li>
   <li>Remove compound and replace with "Gear layers"</li>
   <li>Add speed optimizations</li>
 </ul>
