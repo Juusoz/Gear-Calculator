@@ -24,6 +24,7 @@ self.onmessage = function (msg) {
             // If the maximum number of layers is reached, check if the ratio is close to the target
             if (Math.abs(currentRatio - target_gear_ratio) < 0.01) { // Adjust tolerance as needed
                 self.postMessage([0, gears, currentRatio, gears.length * 2]); // Send valid result with total gear count
+				console.log("Sent a message");
             }
             return;
         }
@@ -49,7 +50,9 @@ self.onmessage = function (msg) {
 
     // Start exploration from the first layer
     exploreLayer(1, 1, []);  // Initial ratio is 1, and no gears selected yet
+	console.log("Processing started");
 
     // Notify the main thread that processing is complete
     self.postMessage([2]);
+	console.log("Processing ended");
 };
