@@ -13,25 +13,30 @@ self.onmessage = function (msg) {
     var spurgear_max_teeth = parseInt(msg.data[1]);  // Maximum teeth for a spur gear
     var spurgear_max_layers = parseInt(msg.data[2]); // Maximum number of layers
     var target_gear_ratio = parseFloat(msg.data[3]); // Target gear ratio (optional for filtering)
+	var IdealFound = false;
 
     next = 10000;  // Progress update threshold
 
     // Recursive function to explore gear combinations across layers
     function exploreLayer(currentLayer, currentRatio, gears) {
-        if (currentLayer > spurgear_max_layers) {
-            // If maximum layers are reached, send the results
+		
+        if (currentLayer > spurgear_max_layers || IdealFound == true) {
+            // If maximum layers are reached or ideal solution has been found, send the results
             var totalGears = gears.length * 2; // Two gears per layer
             self.postMessage([0, gears, currentRatio, totalGears, currentLayer - 1]);
 			console.log("Sent message");
             return;
         }
 
-        for (var teeth1 = spurgear_min_teeth; teeth1 <= spurgear_max_teeth; teeth1++) {
-            for (var teeth2 = spurgear_min_teeth; teeth2 <= spurgear_max_teeth; teeth2++) {
+        for (var teeth1 = spurgear_min_teeth; teeth1 <= spurgear_max_teeth; teeth1++) {		//Cycle for gear 1
+			
+            for (var teeth2 = spurgear_min_teeth; teeth2 <= spurgear_max_teeth; teeth2++) {	//Cycle for gear 2
+				
                 var newRatio = currentRatio * (teeth2 / teeth1); // Cumulative ratio
 
-                // Filter out combinations that don't contribute meaningfully
-                if (target_gear_ratio && newRatio > target_gear_ratio * 1.1) continue;
+                if(currentRatio == target_gear_ratio){	// Ideal solution has been found
+					IdealFound = true;
+				}
 
                 // Track valid combinations for each layer
                 exploreLayer(currentLayer + 1, newRatio, gears.concat([[teeth1, teeth2]]));
