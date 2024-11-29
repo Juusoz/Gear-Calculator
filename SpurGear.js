@@ -23,6 +23,8 @@ self.onmessage = function (msg) {
         if (currentLayer > spurgear_max_layers) {
             // If the maximum number of layers is reached, send the result
             self.postMessage([0, gears]);
+			console.log("Posted a message");
+			
             return;
         }
 
@@ -46,7 +48,9 @@ self.onmessage = function (msg) {
 
     // Start exploration from the first layer
     exploreLayer(1, 1, []);  // Initial ratio is 1, and no gears selected yet
+	console.log("Started processing");
 
     // Notify the main thread that processing is complete
     self.postMessage([2]);
+	console.log("Processing complete");
 };
