@@ -8,8 +8,8 @@
   </div>
   
   <div class="form-group row">
-	<label for="spurgear_max_number" class="col-4 col-form-label">Maximum number of gears</label>
-	<input type="number" class="form-control col-2" id="spurgear_max_number" value="2" min="2" onchange="spurgear_update();>
+	<label for="spurgear_layers" class="col-4 col-form-label">Gear layers</label>
+	<input type="number" class="form-control col-2" id="spurgear_layers" value="1" min="1" onchange="spurgear_update();>
   </div>
   
   <div class="form-group row mb-3">
@@ -47,7 +47,7 @@
 
 <script type="text/javascript">
     // Variables to track calculations and progress
-    var cps1 = 0; // Combinations per second, used for time estimation
+    var spurgear_cps = 0; // Combinations per second, used for time estimation
     var spurgear_checked = 0; // Number of checked combinations
     var spurgear_combinations = 3080; // Total number of possible combinations
     var ratioFunction = "(r+s)/s"; // Default ratio formula
@@ -55,7 +55,7 @@
     // Function to update the total number of combinations based on user input
     function spurgear_update() {
         spurgear_combinations = ($("#spurgear_max_teeth")[0].value - $("#spurgear_min_teeth")[0].value) + 1;
-        spurgear_combinations *= ($("#spurgear_max_number")[0].value - $("#planetnummin1")[0].value) + 1;
+        spurgear_combinations *= $("#spurgear_layers")[0].value * 2;
         $("#spurgear_combinations")[0].innerHTML = "Possible combinations: " + spurgear_combinations;
     }
 
@@ -72,7 +72,7 @@
         }
 
         // Calculate and display estimated time remaining
-        var remaining = (spurgear_combinations - spurgear_checked) / cps1;
+        var remaining = (spurgear_combinations - spurgear_checked) / spurgear_cps;
         if (remaining == Infinity || isNaN(remaining)) {
             remaining = "Estimated time remaining: N/A"; // Default if no valid time
         } else {
@@ -158,7 +158,7 @@
                     old = time.pop();
                     deltaTime = time[0][0] - old[0];
                     deltaCombinations = time[0][1] - old[1];
-                    cps1 = (1000 / deltaTime) * deltaCombinations; // Update CPS
+                    spurgear_cps = (1000 / deltaTime) * deltaCombinations; // Update CPS
                 }
                 updateStatus1(); // Update progress bar and time
                 spurgear_update(); // Refresh combinations count
@@ -182,7 +182,7 @@
         w.postMessage([
             parseInt($("#spurgear_min_teeth")[0].value), 
             parseInt($("#spurgear_max_teeth")[0].value),
-            parseInt($("#spurgear_max_number")[0].value)
+            parseInt($("#spurgear_layers")[0].value)
         ]);
     }
 
