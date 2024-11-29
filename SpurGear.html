@@ -6,7 +6,7 @@
     <!-- Label for minimum teeth input -->
     <label for="spurgear_min_teeth" class="col-4 col-form-label">Spur gear minimum teeth</label>
     <!-- Input field for minimum teeth with constraints and dynamic update of maximum value -->
-    <input type="number" class="form-control col-2" id="spurgear_min_teeth" value="8" min="0" max="12" 
+    <input type="number" class="form-control col-2" id="spurgear_min_teeth" value="8" min="1" max="12" 
            onchange="spurgear_update(); this.max = $('#spurgear_max_teeth')[0].value; $('#spurgear_max_teeth')[0].min = this.value">
 
     <!-- Label for maximum teeth input -->
@@ -46,7 +46,7 @@
   <button type="button" class="btn btn-primary" onclick="spurgear_find()">Find!</button>
 
   <!-- Display of possible combinations and estimated time remaining -->
-  <p class="ml-2 mr-3" id="spurgear_combinations" style="display:inline;">Possible combinations: 3080</p>
+  <p class="ml-2 mr-3" id="spurgear_combinations" style="display:inline;">Possible combinations: 4</p>
   <p id="spurgear_time" style="display:inline;">Estimated time remaining: N/A</p>
 
   <!-- Progress bar indicating the search progress -->
@@ -153,7 +153,7 @@
         }
 
         // Create a web worker for asynchronous computation
-        w = new Worker("planetaryGear.js");
+        w = new Worker("SpurGear.js");
         w.onmessage = function(msg) {
 		
             if (msg.data[0] == 0) { // New valid result
