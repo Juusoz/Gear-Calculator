@@ -8,8 +8,8 @@ As well as some speed optimizations. If I get to it.
 <b>To do:</b>
 <ul>
   <li><del>Change colour scheme to seperate from the original site</del></li>
-  <li>Seperate gear types to different buttons</li>
-  <li>Create the spur gear menu</li>
+  <li><del>Seperate gear types to different buttons</del></li>
+  <li><del>Create the spur gear menu</del></li>
   <li>Make the spur gear number crunching code</li>
   <li>Add an abort button</li>
   <li>Remove compound and replace with "Gear layers"</li>
