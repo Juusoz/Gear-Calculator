@@ -1,49 +1,79 @@
 <div class="card-body mr-3">
-	<p>Work in progress!</p>
+  <b><p>Work in progress!</p></b>
+
+  <!-- Input group for specifying spur gear minimum and maximum teeth -->
   <div class="form-group row">
-	<label for="spurgear_min_teeth" class="col-4 col-form-label">Spur gear minimum teeth</label>
-	<input type="number" class="form-control col-2" id="spurgear_min_teeth" value="8" min="0" max="12" onchange="spurgear_update(); this.max = $('#spurgear_max_teeth')[0].value; $('#spurgear_max_teeth')[0].min = this.value">
-	<label for="spurgear_max_teeth" class="col-4 col-form-label">Spur gear maximum teeth</label>
-	<input type="number" class="form-control col-2" id="spurgear_max_teeth" value="12" min="8" onchange="spurgear_update(); this.min = $('#spurgear_min_teeth')[0].value; $('#spurgear_min_teeth')[0].max = this.value">
+    <!-- Label for minimum teeth input -->
+    <label for="spurgear_min_teeth" class="col-4 col-form-label">Spur gear minimum teeth</label>
+    <!-- Input field for minimum teeth with constraints and dynamic update of maximum value -->
+    <input type="number" class="form-control col-2" id="spurgear_min_teeth" value="8" min="0" max="12" 
+           onchange="spurgear_update(); this.max = $('#spurgear_max_teeth')[0].value; $('#spurgear_max_teeth')[0].min = this.value">
+
+    <!-- Label for maximum teeth input -->
+    <label for="spurgear_max_teeth" class="col-4 col-form-label">Spur gear maximum teeth</label>
+    <!-- Input field for maximum teeth with constraints and dynamic update of minimum value -->
+    <input type="number" class="form-control col-2" id="spurgear_max_teeth" value="12" min="8" 
+           onchange="spurgear_update(); this.min = $('#spurgear_min_teeth')[0].value; $('#spurgear_min_teeth')[0].max = this.value">
   </div>
-  
+
+  <!-- Input for specifying the number of gear layers -->
   <div class="form-group row">
-	<label for="spurgear_layers" class="col-4 col-form-label">Gear layers</label>
-	<input type="number" class="form-control col-2" id="spurgear_layers" value="1" min="1" onchange="spurgear_update();">
+    <!-- Label for gear layers -->
+    <label for="spurgear_layers" class="col-4 col-form-label">Gear layers</label>
+    <!-- Input field for gear layers with a minimum value of 1 -->
+    <input type="number" class="form-control col-2" id="spurgear_layers" value="1" min="1" onchange="spurgear_update();">
   </div>
-  
+
+  <!-- Input group for target gear ratio and maximum number of results -->
   <div class="form-group row mb-3">
-	<label for="spurgear_target_ratio" class="col-4 col-form-label">Target gear ratio</label>
-	<div class="input-group col-2 p-0">
-	  <input type="number" class="form-control" id="spurgear_target_ratio" value="4" min="0" aria-describedby="spurgear_ratio" onchange="spurgear_sort();">
-	  <div class="input-group-append">
-		<span class="input-group-text" id="spurgear_ratio">:1</span>
-	  </div>
-	</div>
-	
-	<label for="spurgear_max_results" class="col-4 col-form-label">Maximum number of results</label>
-	<input type="number" class="form-control col-2" id="spurgear_max_results" value="20" min="1">
+    <!-- Label for target gear ratio -->
+    <label for="spurgear_target_ratio" class="col-4 col-form-label">Target gear ratio</label>
+    <!-- Input field for target gear ratio with appended ratio text -->
+    <div class="input-group col-2 p-0">
+      <input type="number" class="form-control" id="spurgear_target_ratio" value="4" min="0" aria-describedby="spurgear_ratio" onchange="spurgear_sort();">
+      <div class="input-group-append">
+        <span class="input-group-text" id="spurgear_ratio">:1</span>
+      </div>
+    </div>
+
+    <!-- Label for maximum results -->
+    <label for="spurgear_max_results" class="col-4 col-form-label">Maximum number of results</label>
+    <!-- Input field for maximum results with a minimum value of 1 -->
+    <input type="number" class="form-control col-2" id="spurgear_max_results" value="20" min="1">
   </div>
-  
+
+  <!-- Button to initiate the gear combination search -->
   <button type="button" class="btn btn-primary" onclick="spurgear_find()">Find!</button>
+
+  <!-- Display of possible combinations and estimated time remaining -->
   <p class="ml-2 mr-3" id="spurgear_combinations" style="display:inline;">Possible combinations: 3080</p>
   <p id="spurgear_time" style="display:inline;">Estimated time remaining: N/A</p>
+
+  <!-- Progress bar indicating the search progress -->
   <div class="progress mt-3">
-  
-	<div class="progress-bar progress-bar-striped progress-bar-animated" id="spurgear_progressbar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+    <div class="progress-bar progress-bar-striped progress-bar-animated" id="spurgear_progressbar" role="progressbar" 
+         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
   </div>
+
+  <!-- List group to display search results -->
   <div class="list-group mt-3" id="spurgear_results"></div>
+
+  <!-- Template for individual result items -->
   <template id="spurgear_result_template">
-	<div class="spurgear_result">
-	  <a class="list-group-item list-group-item-action list-group-item-secondary" id="title" data-toggle="collapse" data-target="#col1" aria-expanded="false" aria-controls="col1" data-ratio="2"></a>
-	  <div class="list-group-item collapse" id="col1">
-		<div id="s">Spur gear teeth: </div>
-		<div id="dist">Planet distance from center: </div>
-		<div id="rot">Rotate planets by multiple of: </div>
-	  </div>
-	</div>
+    <div class="spurgear_result">
+      <!-- Collapsible list item for a result, initially collapsed -->
+      <a class="list-group-item list-group-item-action list-group-item-secondary" id="title" 
+         data-toggle="collapse" data-target="#col1" aria-expanded="false" aria-controls="col1" data-ratio="2"></a>
+      <div class="list-group-item collapse" id="col1">
+        <!-- Detailed result information placeholders -->
+        <div id="s">Spur gear teeth: </div>
+        <div id="dist">Planet distance from center: </div>
+        <div id="rot">Rotate planets by multiple of: </div>
+      </div>
+    </div>
   </template>
 </div>
+
 
 <script type="text/javascript">
     // Variables to track calculations and progress
