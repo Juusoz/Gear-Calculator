@@ -36,6 +36,7 @@ self.onmessage = function (msg) {
 
                 if(currentRatio == target_gear_ratio){	// Ideal solution has been found
 					IdealFound = true;
+					console.log("Ideal found");
 				}
 
                 // Track valid combinations for each layer
