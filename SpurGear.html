@@ -1,14 +1,14 @@
 <div class="card-body mr-3">
   <div class="form-group row">
 	<label for="spurgear_min_teeth" class="col-4 col-form-label">Spur gear minimum teeth</label>
-	<input type="number" class="form-control col-2" id="spurgear_min_teeth" value="8" min="0" max="12" onchange="update1(); this.max = $('#spurgear_max_teeth')[0].value; $('#spurgear_max_teeth')[0].min = this.value">
+	<input type="number" class="form-control col-2" id="spurgear_min_teeth" value="8" min="0" max="12" onchange="spurgear_update(); this.max = $('#spurgear_max_teeth')[0].value; $('#spurgear_max_teeth')[0].min = this.value">
 	<label for="spurgear_max_teeth" class="col-4 col-form-label">Spur gear maximum teeth</label>
-	<input type="number" class="form-control col-2" id="spurgear_max_teeth" value="12" min="8" onchange="update1(); this.min = $('#spurgear_min_teeth')[0].value; $('#spurgear_min_teeth')[0].max = this.value">
+	<input type="number" class="form-control col-2" id="spurgear_max_teeth" value="12" min="8" onchange="spurgear_update(); this.min = $('#spurgear_min_teeth')[0].value; $('#spurgear_min_teeth')[0].max = this.value">
   </div>
   
   <div class="form-group row">
 	<label for="spurgear_max_number" class="col-4 col-form-label">Maximum number of gears</label>
-	<input type="number" class="form-control col-2" id="spurgear_max_number" value="10" min="3" onchange="update1(); this.min = $('#planetnummin1')[0].value; $('#planetnummin1')[0].max = this.value">
+	<input type="number" class="form-control col-2" id="spurgear_max_number" value="2" min="2" onchange="spurgear_update(); this.min = $('#planetnummin1')[0].value; $('#planetnummin1')[0].max = this.value">
   </div>
   
   <div class="form-group row mb-3">
@@ -54,7 +54,7 @@
     var ratioFunction = "(r+s)/s"; // Default ratio formula
 
     // Function to update the total number of combinations based on user input
-    function update1() {
+    function spurgear_update() {
         combinations1 = ($("#spurgear_max_teeth")[0].value - $("#spurgear_min_teeth")[0].value) + 1;
         combinations1 *= ($("#planetmax1")[0].value - $("#planetmin1")[0].value) + 1;
         combinations1 *= ($("#ringmax1")[0].value - $("#ringmin1")[0].value) + 1;
@@ -160,7 +160,7 @@
                     cps1 = (1000 / deltaTime) * deltaCombinations; // Update CPS
                 }
                 updateStatus1(); // Update progress bar and time
-                update1(); // Refresh combinations count
+                spurgear_update(); // Refresh combinations count
             } else if (msg.data[0] == 2) { // Calculation complete
                 checked1 = combinations1;
                 // Re-enable input fields and button
@@ -169,7 +169,7 @@
                 });
                 $("#planetary-gear").find("button")[0].disabled = false;
                 updateStatus1(); // Final update to progress and time
-                update1();
+                spurgear_update();
                 w.terminate(); // Terminate web worker
                 w = undefined;
             }
