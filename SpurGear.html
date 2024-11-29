@@ -55,7 +55,7 @@
     // Function to update the total number of combinations based on user input
     function spurgear_update() {
         spurgear_combinations = ($("#spurgear_max_teeth")[0].value - $("#spurgear_min_teeth")[0].value) + 1;
-        spurgear_combinations *= $("#spurgear_layers")[0].value * 2;
+        spurgear_combinations ^= $("#spurgear_layers")[0].value;
         $("#spurgear_combinations")[0].innerHTML = "Possible combinations: " + spurgear_combinations;
     }
 
