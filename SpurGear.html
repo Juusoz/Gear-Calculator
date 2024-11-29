@@ -14,7 +14,7 @@
   <div class="form-group row mb-3">
 	<label for="spurgear_target_ratio" class="col-4 col-form-label">Target gear ratio</label>
 	<div class="input-group col-2 p-0">
-	  <input type="number" class="form-control" id="spurgear_target_ratio" value="4" min="0" aria-describedby="spurgear_ratio" onchange="sort1();">
+	  <input type="number" class="form-control" id="spurgear_target_ratio" value="4" min="0" aria-describedby="spurgear_ratio" onchange="spurgear_sort();">
 	  <div class="input-group-append">
 		<span class="input-group-text" id="spurgear_ratio">:1</span>
 	  </div>
@@ -122,7 +122,9 @@
         // Create a web worker for asynchronous computation
         w = new Worker("planetaryGear.js");
         w.onmessage = function(msg) {
+		
             if (msg.data[0] == 0) { // New valid result
+			
                 var s = msg.data[1]; // Sun gear teeth
                 var p = msg.data[2]; // Planet gear teeth
                 var r = msg.data[3]; // Ring gear teeth
@@ -145,8 +147,10 @@
                 entry.find("#dist")[0].innerHTML += (s + p) / 2 + " * module";
                 entry.find("#rot")[0].innerHTML += ((360 / pn) / (360 / s)) * (360 / p) + "&#176;";
                 $("#spurgear_results").append(entry);
-                sort1(); // Sort results
+                spurgear_sort(); // Sort results
+				
             } else if (msg.data[0] == 1) { // Progress update
+			
                 spurgear_checked = msg.data[1];
                 time.unshift([Date.now(), spurgear_checked]);
                 if (time.length > 20) {
@@ -157,7 +161,9 @@
                 }
                 updateStatus1(); // Update progress bar and time
                 spurgear_update(); // Refresh combinations count
+				
             } else if (msg.data[0] == 2) { // Calculation complete
+			
                 spurgear_checked = spurgear_combinations;
                 // Re-enable input fields and button
                 $("#planetary-gear").find("input").toArray().forEach(function(child) {
@@ -180,7 +186,7 @@
     }
 
     // Function to sort results by closeness to the target ratio
-    function sort1() {
+    function spurgear_sort() {
         var res = $(".spurgear_result").sort(sortFunc1);
         $(".spurgear_result").remove(); // Clear previous results
         res.each(function(_, entry) {
