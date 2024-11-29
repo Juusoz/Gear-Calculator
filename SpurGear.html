@@ -167,8 +167,7 @@
 
 				// Format layer details
 				var layerDetails = gearSystem.map((pair, index) => {
-					return (index === 0 ? `Layer ${index + 1}:<br>Spur gear 1: ${pair[0]}T & ${pair[1]}T` 
-										: `Layer ${index + 1}: ${pair[0]}T & ${pair[1]}T`);
+					return (index === 0 ? `Layer ${index + 1}:<br>Spur gear 1: ${pair[0]}T & ${pair[1]}T`;
 				}).join('<br>');
 
 				entry.find("#s")[0].innerHTML = layerDetails;
@@ -212,13 +211,17 @@
 
     //Sort results by closeness to the target ratio
     function spurgear_sort() {
-        var res = $(".spurgear_result").sort(sortFunc1);
+	
+        var results = $(".spurgear_result").sort(sortFunc1);
+		
         $(".spurgear_result").remove(); //Clear previous results
-        res.each(function(_, entry) {
+		
+        results.each(function(_, entry) {
             $("#spurgear_results").append(entry); //Append sorted results
         });
+		
         //Limit number of displayed results
-        if (res.length > $("#spurgear_max_results")[0].value) {
+        if (results.length > $("#spurgear_max_results")[0].value) {
             $(".spurgear_result").toArray().splice($("#spurgear_max_results")[0].value).forEach(function(r) {
                 r.remove();
             });

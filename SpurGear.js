@@ -35,7 +35,7 @@ self.onmessage = function (msg) {
                 var newRatio = currentRatio * (teeth2 / teeth1); // Cumulative ratio
 
                 if(newRatio == target_gear_ratio){	// Ideal solution has been found
-					spurgear_max_layers = currentLayer;
+					spurgear_max_layers = currentLayer;	//No need to start the next layer
 					console.log("Ideal found");
 				}
 
