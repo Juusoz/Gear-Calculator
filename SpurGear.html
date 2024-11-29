@@ -1,0 +1,222 @@
+<div class="card-body mr-3">
+          <div class="form-group row">
+            <label for="sunmin1" class="col-4 col-form-label">Sun gear minimum teeth</label>
+            <input type="number" class="form-control col-2" id="sunmin1" value="8" min="0" max="12" onchange="update1(); this.max = $('#sunmax1')[0].value; $('#sunmax1')[0].min = this.value">
+            <label for="sunmax1" class="col-4 col-form-label">Sun gear maximum teeth</label>
+            <input type="number" class="form-control col-2" id="sunmax1" value="12" min="8" onchange="update1(); this.min = $('#sunmin1')[0].value; $('#sunmin1')[0].max = this.value">
+          </div>
+          <div class="form-group row">
+            <label for="planetmin1" class="col-4 col-form-label">Planet gear minimum teeth</label>
+            <input type="number" class="form-control col-2" id="planetmin1" value="10" min="0" max="16" onchange="update1(); this.max = $('#planetmax1')[0].value; $('#planetmax1')[0].min = this.value">
+            <label for="planetmax1" class="col-4 col-form-label">Planet gear maximum teeth</label>
+            <input type="number" class="form-control col-2" id="planetmax1" value="16" min="10" onchange="update1(); this.min = $('#planetmin1')[0].value; $('#planetmin1')[0].max = this.value">
+          </div>
+          <div class="form-group row">
+            <label for="ringmin1" class="col-4 col-form-label">Ring gear minimum teeth</label>
+            <input type="number" class="form-control col-2" id="ringmin1" value="26" min="0" max="36" onchange="update1(); this.max = $('#ringmax1')[0].value; $('#ringmax1')[0].min = this.value">
+            <label for="ringmax1" class="col-4 col-form-label">Ring gear maximum teeth</label>
+            <input type="number" class="form-control col-2" id="ringmax1" value="36" min="26" onchange="update1(); this.min = $('#ringmin1')[0].value; $('#ringmin1')[0].max = this.value">
+          </div>
+          <div class="form-group row">
+            <label for="planetnummin1" class="col-4 col-form-label">Minimum number of planets</label>
+            <input type="number" class="form-control col-2" id="planetnummin1" value="3" min="2" max="10" onchange="update1(); this.max = $('#planetnummax1')[0].value; $('#planetnummax1')[0].min = this.value">
+            <label for="planetnummax1" class="col-4 col-form-label">Maximum number of planets</label>
+            <input type="number" class="form-control col-2" id="planetnummax1" value="10" min="3" onchange="update1(); this.min = $('#planetnummin1')[0].value; $('#planetnummin1')[0].max = this.value">
+          </div>
+          <div class="form-group row">
+            <label for="input" class="col-4 mt-auto mb-auto">Input</label>
+            <div class="col-2" id="input">
+              <div class="custom-control custom-radio">
+                <input type="radio" id="inputsun" name="input" class="custom-control-input" checked>
+                <label class="custom-control-label" for="inputsun">Sun</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="inputcarrier" name="input" class="custom-control-input">
+                <label class="custom-control-label" for="inputcarrier">Planet carrier</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="inputring" name="input" class="custom-control-input">
+                <label class="custom-control-label" for="inputring">Ring</label>
+              </div>
+            </div>
+            <label for="output" class="col-4 mt-auto mb-auto">Output</label>
+            <div class="col-2" id="output">
+              <div class="custom-control custom-radio">
+                <input type="radio" id="outputsun" name="output" class="custom-control-input">
+                <label class="custom-control-label" for="outputsun">Sun</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="outputcarrier" name="output" class="custom-control-input" checked>
+                <label class="custom-control-label" for="outputcarrier">Planet carrier</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="outputring" name="output" class="custom-control-input">
+                <label class="custom-control-label" for="outputring">Ring</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row mb-3">
+            <label for="target1" class="col-4 col-form-label">Target gear ratio</label>
+            <div class="input-group col-2 p-0">
+              <input type="number" class="form-control" id="target1" value="4" min="0" aria-describedby="ratio1" onchange="sort1();">
+              <div class="input-group-append">
+                <span class="input-group-text" id="ratio1">:1</span>
+              </div>
+            </div>
+            <label for="resultsmax1" class="col-4 col-form-label">Maximum number of results</label>
+            <input type="number" class="form-control col-2" id="resultsmax1" value="20" min="1">
+          </div>
+          <button type="button" class="btn btn-primary" onclick="find1()">Find!</button>
+          <p class="ml-2 mr-3" id="combinations1" style="display:inline;">Possible combinations: 3080</p>
+          <p id="time1" style="display:inline;">Estimated time remaining: N/A</p>
+          <div class="progress mt-3">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" id="bar1" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+          </div>
+          <div class="list-group mt-3" id="results1"></div>
+          <template id="resultTemplate1">
+            <div class="result1">
+              <a class="list-group-item list-group-item-action list-group-item-secondary" id="title" data-toggle="collapse" data-target="#col1" aria-expanded="false" aria-controls="col1" data-ratio="2"></a>
+              <div class="list-group-item collapse" id="col1">
+                <div id="s">Sun teeth: </div>
+                <div id="p">Planet teeth: </div>
+                <div id="r">Ring teeth: </div>
+                <div id="dist">Planet distance from center: </div>
+                <div id="rot">Rotate planets by multiple of: </div>
+              </div>
+            </div>
+          </template>
+        </div>
+		
+        <script type="text/javascript">
+          var cps1 = 0;
+          var checked1 = 0;
+          var combinations1 = 3080;
+          var ratioFunction = "(r+s)/s";
+
+          function update1() {
+            combinations1 = ($("#sunmax1")[0].value - $("#sunmin1")[0].value) + 1;
+            combinations1 *= ($("#planetmax1")[0].value - $("#planetmin1")[0].value) + 1;
+            combinations1 *= ($("#ringmax1")[0].value - $("#ringmin1")[0].value) + 1;
+            combinations1 *= ($("#planetnummax1")[0].value - $("#planetnummin1")[0].value) + 1;
+            $("#combinations1")[0].innerHTML = "Possible combinations: " + combinations1;
+          };
+
+          function updateStatus1() {
+            var percent = checked1 / combinations1 * 100;
+            var bar = $("#bar1")[0];
+            bar.attributes["aria-valuenow"] = Math.round(percent);
+            bar.style = "width: " + percent + "%";
+            if (percent != 0 && !isNaN(percent)) {
+              bar.innerHTML = Math.round(percent) + "%"
+            } else {
+              bar.innerHTML = ""
+            };
+            var remaining = (combinations1 - checked1) / cps1;
+            if (remaining == Infinity || isNaN(remaining)) {
+              remaining = "Estimated time remaining: N/A"
+            } else {
+              remaining = "Estimated time remaining: " + Math.floor(remaining / 3600) + " hours " + Math.floor((remaining % 3600) / 60) + " minutes " + Math.floor((remaining % 60)) + " seconds"
+            };
+            $("#time1")[0].innerHTML = remaining;
+          }
+
+          function find1() {
+            $(".result1").remove()
+            checked1 = 0
+            var time = []
+            $("#planetary-gear").find("input").toArray().forEach(function(child) {
+              child.disabled = true
+            })
+            $("#planetary-gear").find("button")[0].disabled = true
+            if ($("#inputsun")[0].checked) {
+              if ($("#outputsun")[0].checked) {
+                ratioFunction = "1";
+              } else if ($("#outputcarrier")[0].checked) {
+                ratioFunction = "(r+s)/s";
+              } else {
+                ratioFunction = "-(r/s)";
+              }
+            } else if ($("#inputcarrier")[0].checked) {
+              if ($("#outputsun")[0].checked) {
+                ratioFunction = "s/(r+s)";
+              } else if ($("#outputcarrier")[0].checked) {
+                ratioFunction = "1";
+              } else {
+                ratioFunction = "r/(r+s)";
+              }
+            } else {
+              if ($("#outputsun")[0].checked) {
+                ratioFunction = "-(s/r)";
+              } else if ($("#outputcarrier")[0].checked) {
+                ratioFunction = "(r+s)/r";
+              } else {
+                ratioFunction = "1";
+              }
+            }
+            w = new Worker("planetaryGear.js");
+            w.onmessage = function(msg) {
+              if (msg.data[0] == 0) {
+                var s = msg.data[1]
+                var p = msg.data[2]
+                var r = msg.data[3]
+                var pn = msg.data[4]
+                var ratio = eval(ratioFunction)
+                var entry = $($("#resultTemplate1").clone().prop("content"));
+                var id = s + "S" + p + "P" + r + "R" + pn + "PN"
+                var attr = document.createAttribute("data-ratio");
+                attr.value = ratio;
+                entry.find(".result1")[0].setAttributeNode(attr);
+                entry.find("#title")[0].attributes["data-target"].value = "#" + id
+                entry.find("#col1")[0].id = id
+                entry.find("#title")[0].attributes["aria-controls"].value = id
+                entry.find("#title")[0].innerHTML = Math.round(ratio * 100) / 100 + ":1 Ratio, " + pn + " Planets";
+                entry.find("#s")[0].innerHTML += s;
+                entry.find("#p")[0].innerHTML += p;
+                entry.find("#r")[0].innerHTML += r;
+                entry.find("#dist")[0].innerHTML += (s + p) / 2 + " * module";
+                entry.find("#rot")[0].innerHTML += ((360 / pn) / (360 / s)) * (360 / p) + "&#176;";
+                $("#results1").append(entry);
+                sort1();
+              } else if (msg.data[0] == 1) {
+                checked1 = msg.data[1]
+                time.unshift([Date.now(), checked1])
+                if (time.length > 20) {
+                  old = time.pop();
+                  deltaTime = time[0][0] - old[0];
+                  deltaCombinations = time[0][1] - old[1];
+                  cps1 = (1000 / deltaTime) * deltaCombinations;
+                }
+                updateStatus1();
+                update1();
+              } else if (msg.data[0] == 2) {
+                checked1 = combinations1
+                $("#planetary-gear").find("input").toArray().forEach(function(child) {
+                  child.disabled = false
+                })
+                $("#planetary-gear").find("button")[0].disabled = false
+                updateStatus1();
+                update1();
+                w.terminate();
+                w = undefined;
+              }
+            }
+            w.postMessage([parseInt($("#sunmin1")[0].value), parseInt($("#sunmax1")[0].value), parseInt($("#planetmin1")[0].value), parseInt($("#planetmax1")[0].value), parseInt($("#ringmin1")[0].value), parseInt($("#ringmax1")[0].value), parseInt($("#planetnummin1")[0].value), parseInt($("#planetnummax1")[0].value)]);
+          }
+
+          function sort1() {
+            var res = $(".result1").sort(sortFunc1);
+            $(".result1").remove();
+            res.each(function(_, entry) {
+              $("#results1").append(entry);
+            })
+            if (res.length > $("#resultsmax1")[0].value) {
+              $(".result1").toArray().splice($("#resultsmax1")[0].value).forEach(function(r) {
+                r.remove();
+              });
+            }
+          }
+
+          function sortFunc1(a, b) {
+            return Math.abs($("#target1")[0].value - Math.abs($(a).data("ratio"))) - Math.abs($("#target1")[0].value - Math.abs($(b).data("ratio")))
+          }
+        </script>
