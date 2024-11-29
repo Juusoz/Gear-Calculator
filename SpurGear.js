@@ -22,7 +22,6 @@ self.onmessage = function (msg) {
             // If maximum layers are reached, send the results
             var totalGears = gears.length * 2; // Two gears per layer
             self.postMessage([0, gears, currentRatio, totalGears, currentLayer - 1]);
-			console.log("Sent a message");
             return;
         }
 
@@ -30,7 +29,10 @@ self.onmessage = function (msg) {
             for (var teeth2 = spurgear_min_teeth; teeth2 <= spurgear_max_teeth; teeth2++) {
                 var newRatio = currentRatio * (teeth2 / teeth1); // Cumulative ratio
 
-                // Proceed to the next layer with the updated gear list and ratio
+                // Filter out combinations that don't contribute meaningfully
+                if (target_gear_ratio && newRatio > target_gear_ratio * 1.1) continue;
+
+                // Track valid combinations for each layer
                 exploreLayer(currentLayer + 1, newRatio, gears.concat([[teeth1, teeth2]]));
 
                 checked++;  // Increment the number of combinations checked
@@ -46,9 +48,7 @@ self.onmessage = function (msg) {
 
     // Start the recursive exploration from the first layer
     exploreLayer(1, 1, []); // Initial ratio is 1, and no gears selected yet
-	console.log("Started processing");
 
     // Notify the main thread that processing is complete
     self.postMessage([2]);
-	console.log("Ended processing");
 };
