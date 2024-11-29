@@ -20,7 +20,7 @@ self.onmessage = function (msg) {
     // Recursive function to explore gear combinations across layers
     function exploreLayer(currentLayer, currentRatio, gears) {
 		
-        if (currentLayer > spurgear_max_layers || IdealFound == true) {
+        if (currentLayer > spurgear_max_layers) {
             // If maximum layers are reached or ideal solution has been found, send the results
             var totalGears = gears.length * 2; // Two gears per layer
             self.postMessage([0, gears, currentRatio, totalGears, currentLayer - 1]);
@@ -34,8 +34,8 @@ self.onmessage = function (msg) {
 				
                 var newRatio = currentRatio * (teeth2 / teeth1); // Cumulative ratio
 
-                if(currentRatio == target_gear_ratio){	// Ideal solution has been found
-					IdealFound = true;
+                if(newRatio == target_gear_ratio){	// Ideal solution has been found
+					spurgear_max_layers = currentLayer;
 					console.log("Ideal found");
 				}
 
