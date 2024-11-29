@@ -14,13 +14,9 @@ self.onmessage = function (msg) {
     var spurgear_min_teeth = parseInt(msg.data[0]);  // Minimum teeth for a spur gear
     var spurgear_max_teeth = parseInt(msg.data[1]);  // Maximum teeth for a spur gear
     var spurgear_max_layers = parseInt(msg.data[2]); // Maximum number of layers
+	var target_gear_ratio = msg.data[3]; 			 // Target gear ratio
 
     next = 10000;  // Update the webpage every n calculations
-
-    // Function to calculate the ratio from two gears
-    function calculateRatio(teeth1, teeth2) {
-        return teeth2 / teeth1;
-    }
 
     // Recursive function to explore gear combinations across layers
     function exploreLayer(currentLayer, currentRatio, gears) {
@@ -30,12 +26,12 @@ self.onmessage = function (msg) {
             return;
         }
 
-        for (var teeth1 = spurgear_min_teeth; teeth1 <= spurgear_max_teeth; teeth1++) {
-            for (var teeth2 = spurgear_min_teeth; teeth2 <= spurgear_max_teeth; teeth2++) {
-                var ratio = calculateRatio(teeth1, teeth2);
+        for (var teeth1 = spurgear_min_teeth; teeth1 <= spurgear_max_teeth; teeth1++) {		//Cycle gear 1 options
+            for (var teeth2 = spurgear_min_teeth; teeth2 <= spurgear_max_teeth; teeth2++) {	//Cycle gear 2 options
+                var gear_ratio = teeth2 / teeth1;
 
                 // Track the gear pair and proceed to the next layer
-                exploreLayer(currentLayer + 1, ratio, gears.concat([[teeth1, teeth2]]));
+                exploreLayer(currentLayer + 1, gear_ratio, gears.concat([[teeth1, teeth2]]));
 
                 checked++;  // Increment the number of combinations checked
 

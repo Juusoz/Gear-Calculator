@@ -143,54 +143,56 @@
 			$("#spurgear_target_ratio")[0].value	 //Target gear ratio
         ]);
 		
-		//Worker done processing
-        worker.onmessage = function(msg) {	
-		
-            if (msg.data[0] == 0) { //New valid result
-			
-                var spurgear_teeth = msg.data[1]; //Recieved spur gear teeth
-                var spurgear_layers = msg.data[2]; //Recieved number of layers
-              //  var ratio = eval(ratioFunction); //Calculate gear ratio
-
-                //Clone result template and populate with data
-                var entry = $($("#spurgear_result_template").clone().prop("content"));
-                var id = s + "S" + p + "P" + r + "R" + pn + "PN";
-                var attr = document.createAttribute("data-ratio");
-                attr.value = ratio;
-                entry.find(".spurgear_result")[0].setAttributeNode(attr);
-                entry.find("#title")[0].attributes["data-target"].value = "#" + id;
-                entry.find("#col1")[0].id = id;
-                entry.find("#title")[0].attributes["aria-controls"].value = id;
-                entry.find("#title")[0].innerHTML = Math.round(ratio * 100) / 100 + ":1 Ratio, " + pn + " Planets";
-                entry.find("#s")[0].innerHTML += s;
-                entry.find("#p")[0].innerHTML += p;
-                entry.find("#r")[0].innerHTML += r;
-                entry.find("#dist")[0].innerHTML += (s + p) / 2 + " * module";
-                entry.find("#rot")[0].innerHTML += ((360 / pn) / (360 / s)) * (360 / p) + "&#176;";
-                $("#spurgear_results").append(entry);
-                spurgear_sort(); //Sort results
+		// On each worker response
+		worker.onmessage = function(msg) {
+			if (msg.data[0] === 0) { // New valid result
+				var gearSystem = msg.data[1]; // Received gear system as an array of layers
+				var entry = $($("#spurgear_result_template").clone().prop("content"));
 				
-            } else if (msg.data[0] == 1) { //Progress update
-			
-                spurgear_checked = msg.data[1];
-                time.unshift([Date.now(), spurgear_checked]);
-                if (time.length > 20) {
-                    old = time.pop();
-                    deltaTime = time[0][0] - old[0];
-                    deltaCombinations = time[0][1] - old[1];
-                    spurgear_cps = (1000 / deltaTime) * deltaCombinations; //Update CPS
-                }
-                updateStatus1(); //Update progress bar and time
-                spurgear_update(); //Refresh combinations count
+				var id = gearSystem.map(pair => pair.join('T')).join('_'); // Unique ID based on gear teeth in all layers
+				var attr = document.createAttribute("data-layers");
+				attr.value = gearSystem.length; // Store number of layers
+				entry.find(".spurgear_result")[0].setAttributeNode(attr);
+
+				entry.find("#title")[0].attributes["data-target"].value = "#" + id;
+				entry.find("#col1")[0].id = id;
+				entry.find("#title")[0].attributes["aria-controls"].value = id;
+
+				var gearSummary = gearSystem.map((pair, index) => 
+					`Layer ${index + 1}: ${pair[0]}T & ${pair[1]}T`).join('<br>');
+				
+				entry.find("#title")[0].innerHTML = `Spur Gear System (${gearSystem.length} layers)`;
+				entry.find("#s")[0].innerHTML = gearSummary;
+
+				// Placeholder calculations (replace with real ones as needed)
+				entry.find("#dist")[0].innerHTML += `Distance: N/A`;
+				entry.find("#rot")[0].innerHTML += `Rotation: N/A`;
+
+				$("#spurgear_results").append(entry);
+				spurgear_sort(); // Sort results
+
+			} else if (msg.data[0] === 1) { // Time for progress update
+				spurgear_checked = msg.data[1];
+				time.unshift([Date.now(), spurgear_checked]);
+				
+				if (time.length > 20) {
+					old = time.pop();
+					var deltaTime = time[0][0] - old[0];
+					var deltaCombinations = time[0][1] - old[1];
+					spurgear_cps = (1000 / deltaTime) * deltaCombinations; // Update CPS
+				}
+
+				updateStatus1(); // Update progress bar and time
+				spurgear_update(); // Refresh combinations count
 				
             } else if (msg.data[0] == 2) { //Calculation complete
 			
                 spurgear_checked = spurgear_combinations;
-                //Re-enable input fields and button
-                $("#planetary-gear").find("input").toArray().forEach(function(child) {
+                $("#planetary-gear").find("input").toArray().forEach(function(child) {	//Re-enable input fields
                     child.disabled = false;
                 });
-                $("#planetary-gear").find("button")[0].disabled = false;
+                $("#planetary-gear").find("button")[0].disabled = false;				//Re-enable the Find! button
+				
                 updateStatus1(); //Final update to progress and time
                 spurgear_update();
                 worker.terminate(); //Terminate web worker
@@ -218,4 +220,5 @@
     function sortFunc1(a, b) {
         return Math.abs($("#spurgear_target_ratio")[0].value - Math.abs($(a).data("ratio"))) - Math.abs($("#spurgear_target_ratio")[0].value - Math.abs($(b).data("ratio")));
     }
+	
 </script>
