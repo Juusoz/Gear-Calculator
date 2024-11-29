@@ -22,6 +22,7 @@ self.onmessage = function (msg) {
             // If maximum layers are reached, send the results
             var totalGears = gears.length * 2; // Two gears per layer
             self.postMessage([0, gears, currentRatio, totalGears, currentLayer - 1]);
+			console.log("Sent message");
             return;
         }
 
@@ -48,7 +49,9 @@ self.onmessage = function (msg) {
 
     // Start the recursive exploration from the first layer
     exploreLayer(1, 1, []); // Initial ratio is 1, and no gears selected yet
+	console.log("Started processing");
 
     // Notify the main thread that processing is complete
     self.postMessage([2]);
+	console.log("Ended processing");
 };
