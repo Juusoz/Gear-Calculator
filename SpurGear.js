@@ -22,7 +22,7 @@ self.onmessage = function (msg) {
     function exploreLayer(currentLayer, currentRatio, gears) {
         if (currentLayer > spurgear_max_layers) {
             // If the maximum number of layers is reached, send the result
-            self.postMessage([0, gears]);
+            self.postMessage([0, gears, currentRatio]);
 			console.log("Posted a message");
 			
             return;
@@ -30,7 +30,8 @@ self.onmessage = function (msg) {
 
         for (var teeth1 = spurgear_min_teeth; teeth1 <= spurgear_max_teeth; teeth1++) {		//Cycle gear 1 options
             for (var teeth2 = spurgear_min_teeth; teeth2 <= spurgear_max_teeth; teeth2++) {	//Cycle gear 2 options
-                var gear_ratio = teeth2 / teeth1;
+			
+                var gear_ratio = teeth2 / teeth1; //Calculate the current gear ratio
 
                 // Track the gear pair and proceed to the next layer
                 exploreLayer(currentLayer + 1, gear_ratio, gears.concat([[teeth1, teeth2]]));
