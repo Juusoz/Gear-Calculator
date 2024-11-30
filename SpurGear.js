@@ -1,69 +1,84 @@
-self.onmessage = function (msg) {
-    // Parse the input data
+onmessage = function (msg) {
+    // Parsing input data from message
     let spurgear_min_teeth = parseInt(msg.data[0]);  // Minimum teeth for a spur gear
     let spurgear_max_teeth = parseInt(msg.data[1]);  // Maximum teeth for a spur gear
     let spurgear_max_layers = parseInt(msg.data[2]); // Maximum number of layers
     let target_gear_ratio = parseFloat(msg.data[3]); // Target gear ratio
 
-    let best_ratio_diff = Infinity; // To track the closest ratio
-    let best_gear_system = null; // To track the best gear system found so far
-    let total_calculated = 0; // To count the number of calculated gear systems
-    let gear_systems = []; // To store valid gear systems as we calculate them
+    // Track best solution found so far
+    let best_ratio = Number.POSITIVE_INFINITY;
+    let best_configuration = null;
+    let gear_systems_count = 0;
 
-    // Helper function to calculate gear ratio for a given pair of gears
-    function calculateGearRatio(gear1, gear2) {
-        return gear1 / gear2;
+    // Helper function to calculate the gear ratio for a given system
+    function calculate_gear_ratio(tooth_counts) {
+        let total_ratio = 1;
+        for (let i = 0; i < tooth_counts.length - 1; i++) {
+            total_ratio *= tooth_counts[i + 1] / tooth_counts[i];
+        }
+        return total_ratio;
     }
 
-    // Helper function to calculate the max possible gear ratio for a given layer
-    function calculateMaxLayerRatio(layer) {
-        let max_ratio = 1; // Start with the minimum ratio, 1:1
-        layer.forEach((gear_pair) => {
-            let ratio = calculateGearRatio(gear_pair[0], gear_pair[1]);
-            if (ratio > max_ratio) {
-                max_ratio = ratio;
-            }
-        });
-        return max_ratio;
-    }
-
-    // Function to calculate gear systems layer by layer
-    function calculateGearSystems(layer, current_layer) {
-        // Base case: if the number of layers exceeds max, stop.
-        if (current_layer > spurgear_max_layers) {
-            return;
+    // Process each layer and gear combinations
+    function process_layer(current_layer, previous_layer_tooth_counts, current_max_teeth) {
+        let systems_in_layer = 0;
+        let max_possible_ratio = 1;
+        
+        // Calculate max possible gear ratio for the current layer
+        if (current_layer > 1) {
+            max_possible_ratio = Math.pow(spurgear_max_teeth / spurgear_min_teeth, current_layer - 1);
         }
 
-        // Try adding every possible pair of gears to the current layer
-        for (let gear1 = spurgear_min_teeth; gear1 <= spurgear_max_teeth; gear1++) {
-            for (let gear2 = spurgear_min_teeth; gear2 <= spurgear_max_teeth; gear2++) {
-                // Calculate gear ratio
-                let ratio = calculateGearRatio(gear1, gear2);
-                if (Math.abs(ratio - target_gear_ratio) < best_ratio_diff) {
-                    best_ratio_diff = Math.abs(ratio - target_gear_ratio);
-                    best_gear_system = [...layer, [gear1, gear2]];
-                    postMessage([0, best_gear_system, ratio, best_gear_system.length * 2, current_layer]);
+        // Skip this layer if the max possible ratio is below the target gear ratio
+        if (max_possible_ratio < target_gear_ratio) {
+            return 0;
+        }
+
+        // Iterate through all gear combinations for the current layer
+        for (let gear1 = spurgear_min_teeth; gear1 <= current_max_teeth; gear1++) {
+            for (let gear2 = spurgear_min_teeth; gear2 <= current_max_teeth; gear2++) {
+                // Gear pair (gear1 and gear2)
+                let current_gear_system = previous_layer_tooth_counts.concat([gear1, gear2]);
+                let current_ratio = calculate_gear_ratio(current_gear_system);
+
+                // Check if the current system is closer to the target ratio than the previous best
+                if (Math.abs(current_ratio - target_gear_ratio) < Math.abs(best_ratio - target_gear_ratio)) {
+                    best_ratio = current_ratio;
+                    best_configuration = current_gear_system.slice();
+                    postMessage([0, best_configuration, best_ratio, best_configuration.length, current_layer]);
                 }
 
-                // If the current gear pair meets the ratio, move on to the next layer
-                let new_layer = [...layer, [gear1, gear2]];
-                let max_possible_ratio = calculateMaxLayerRatio(new_layer);
-                if (max_possible_ratio >= target_gear_ratio) {
-                    total_calculated++;
-                    calculateGearSystems(new_layer, current_layer + 1);
+                systems_in_layer++;
+
+                // Output after every 10000 systems calculated
+                if (systems_in_layer % 10000 === 0) {
+                    postMessage([1, systems_in_layer]);
                 }
             }
         }
+
+        return systems_in_layer;
     }
 
-    // Start calculating gear systems from layer 1
-    calculateGearSystems([], 1);
+    // Start processing gears layer by layer
+    let total_systems_calculated = 0;
 
-    // Send the number of calculated systems after every 10000 iterations
-    if (total_calculated % 10000 === 0 || current_layer > spurgear_max_layers) {
-        postMessage([1, total_calculated]);
+    // Iterate over layers, starting from 2 gears
+    for (let current_layer = 1; current_layer <= spurgear_max_layers; current_layer++) {
+        let systems_in_current_layer = 0;
+        let max_teeth_for_layer = spurgear_max_teeth;
+
+        // Only proceed with layers if they could potentially produce a valid result
+        systems_in_current_layer = process_layer(current_layer, [], max_teeth_for_layer);
+
+        total_systems_calculated += systems_in_current_layer;
+
+        // If we've found a solution with just 2 layers, break early
+        if (current_layer == 2 && best_configuration != null) {
+            break;
+        }
     }
 
-    // Finish processing
+    // Output finished process message
     postMessage([2]);
 };
