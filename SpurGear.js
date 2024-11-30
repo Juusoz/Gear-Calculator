@@ -1,90 +1,113 @@
+// Worker Script
+
+// Variables to store the input values
+let spurgear_min_teeth;
+let spurgear_max_teeth;
+let spurgear_max_layers;
+let target_gear_ratio;
+let best_gears = []; // Array to hold the best gear systems
+let calculations = 0; // Counter to track the number of calculations
+let systems_found = 0; // Counter for systems found
+
+// This function is called when the worker receives a message from the main thread
 self.onmessage = function(msg) {
-    // Input data
-    const spurgear_min_teeth = parseInt(msg.data[0]);
-    const spurgear_max_teeth = parseInt(msg.data[1]);
-    const spurgear_max_layers = parseInt(msg.data[2]);
-    const target_gear_ratio = parseFloat(msg.data[3]);
+    // Parse the input values from msg.data
+    spurgear_min_teeth = parseInt(msg.data[0]);  // Minimum teeth for a spur gear
+    spurgear_max_teeth = parseInt(msg.data[1]);  // Maximum teeth for a spur gear
+    spurgear_max_layers = parseInt(msg.data[2]); // Maximum number of layers
+    target_gear_ratio = parseFloat(msg.data[3]); // Target gear ratio
+    
+    // Start the calculation process
+    calculateGearSystems();
+};
 
-    // Initialize variables for tracking gear systems
-    let bestSystems = [];
-    let bestGearRatioDiff = Infinity; // A very large value to track the closest gear ratio
-    let totalCalculatedSystems = 0;
-
-    // Function to calculate the gear ratio of a system of gears
-    function calculateGearRatio(gearTeethCounts) {
-        let ratio = 1;
-        for (let i = 1; i < gearTeethCounts.length; i++) {
-            ratio *= gearTeethCounts[i] / gearTeethCounts[i - 1];
-        }
-        return ratio;
-    }
-
-    // Function to check if the gear system is closer to the target than the best
-    function isCloserToTarget(gearRatio) {
-        return Math.abs(gearRatio - target_gear_ratio) < bestGearRatioDiff;
-    }
-
-    // Function to generate gear systems for a given number of layers
-    function generateGearSystems(currentLayer, gearTeethCounts) {
-        if (currentLayer > spurgear_max_layers) return;
-
-        let maxGearRatioForCurrentLayer = 1;
-        for (let i = 0; i < currentLayer * 2; i++) {
-            maxGearRatioForCurrentLayer *= spurgear_max_teeth / spurgear_min_teeth;
+// Function to calculate gear systems layer by layer
+function calculateGearSystems() {
+    console.log("Starting gear system calculation...");
+    
+    // Initialize the first layer of gears and gear ratio calculations
+    let previous_best_ratio = null;
+    let current_gear_system = [];
+    let layer = 1;
+    
+    // Loop through the layers of gears
+    for (let layers = 1; layers <= spurgear_max_layers; layers++) {
+        console.log(`Processing layer ${layers}...`);
+        
+        // Layer 1: calculate gear combinations
+        let possible_combinations = getGearCombinations();
+        console.log(`Possible gear combinations for layer ${layers}:`, possible_combinations);
+        
+        // If no gear combinations are possible, skip to the next layer
+        if (possible_combinations.length === 0) {
+            continue;
         }
 
-        // If the max possible ratio for the current layer is less than the target, skip this layer
-        if (maxGearRatioForCurrentLayer < target_gear_ratio) {
-            return;
-        }
-
-        // Loop through all possible gear teeth combinations for this layer
-        for (let i = spurgear_min_teeth; i <= spurgear_max_teeth; i++) {
-            for (let j = spurgear_min_teeth; j <= spurgear_max_teeth; j++) {
-                // Update the gear system with the new gears for the current layer
-                gearTeethCounts.push(i, j);
+        // Loop through possible gear combinations and calculate their gear ratios
+        for (let combination of possible_combinations) {
+            // Calculate gear ratio for the current combination
+            let gear_ratio = calculateGearRatio(combination);
+            
+            // If the gear ratio is within an acceptable range, update best gear systems
+            if (Math.abs(gear_ratio - target_gear_ratio) <= Math.abs(previous_best_ratio - target_gear_ratio)) {
+                // Update best gear systems
+                best_gears.push(combination);
+                previous_best_ratio = gear_ratio;
+                systems_found++;
                 
-                // Calculate the gear ratio for this new system
-                let gearRatio = calculateGearRatio(gearTeethCounts);
-                
-                // Check if this gear system is closer to the target gear ratio
-                if (isCloserToTarget(gearRatio)) {
-                    // If so, update the best systems
-                    bestGearRatioDiff = Math.abs(gearRatio - target_gear_ratio);
-                    bestSystems.push({
-                        gears: gearTeethCounts.slice(),
-                        gearRatio: gearRatio,
-                        layers: currentLayer
-                    });
+                // Post message with updated gear systems, ratio, number of gears, and current layer
+                self.postMessage([0, combination, gear_ratio, combination.length * 2, layers]);
+            }
 
-                    // Output the current system
-                    self.postMessage([0, gearTeethCounts, gearRatio, currentLayer * 2, currentLayer]);
+            // Increment calculation counter
+            calculations++;
 
-                    // Update the number of calculated systems and output progress
-                    totalCalculatedSystems++;
-                    if (totalCalculatedSystems % 10000 === 0) {
-                        self.postMessage([1, totalCalculatedSystems]);
-                    }
-                }
-
-                // If the current system reaches the target gear ratio exactly, we don't need to calculate further for this layer
-                if (gearRatio === target_gear_ratio) {
-                    return;
-                }
-
-                // Recursively calculate the next layer
-                generateGearSystems(currentLayer + 1, gearTeethCounts);
-                
-                // Backtrack by removing the last two gears
-                gearTeethCounts.pop();
-                gearTeethCounts.pop();
+            // Periodically update the system's progress
+            if (calculations % 10000 === 0) {
+                self.postMessage([1, systems_found]); // Update progress
             }
         }
+
+        // Calculate the maximum gear ratio for the next layer
+        let max_possible_ratio = calculateMaxPossibleRatio(layers);
+        
+        // If the max possible ratio for this layer is less than the target, skip this layer
+        if (max_possible_ratio < target_gear_ratio) {
+            console.log(`Layer ${layers} skipped due to insufficient maximum gear ratio.`);
+            continue;
+        }
     }
+    
+    // Once all layers are processed, finish the process
+    self.postMessage([2]); // Signal that processing is complete
+}
 
-    // Start generating gear systems from the first layer
-    generateGearSystems(1, []);
+// Function to get possible gear combinations for a given layer
+function getGearCombinations() {
+    let combinations = [];
+    
+    // Loop through all possible gear sizes within the range
+    for (let i = spurgear_min_teeth; i <= spurgear_max_teeth; i++) {
+        for (let j = spurgear_min_teeth; j <= spurgear_max_teeth; j++) {
+            // Combine gears i and j in this layer, ensuring the gear ratio is reasonable
+            combinations.push([i, j]);
+        }
+    }
+    
+    return combinations;
+}
 
-    // Once all calculations are done, post the finished signal
-    self.postMessage([2]);
-};
+// Function to calculate the gear ratio between two gears
+function calculateGearRatio(combination) {
+    let gear1 = combination[0];
+    let gear2 = combination[1];
+    
+    // Gear ratio is the ratio of the teeth count of gear2 to gear1
+    return gear2 / gear1;
+}
+
+// Function to calculate the maximum possible gear ratio for a given layer
+function calculateMaxPossibleRatio(layer) {
+    // The maximum ratio for a layer is determined by the maximum number of teeth in the gears
+    return spurgear_max_teeth / spurgear_min_teeth;
+}
