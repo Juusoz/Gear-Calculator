@@ -44,11 +44,14 @@
   
    <!-- Highest possible gear rate -->
 	<div class="form-group row mb-3">
-		<p class="ml-2 mr-3" id="spurgear_gearrate">Highest possible gear ratio: 1.5:1</p>
+		<p class="ml-3" id="spurgear_gearrate">Highest possible gear ratio: 1.50:1</p>
 	</div>
 
   <!-- Button to initiate the gear combination search -->
-  <button type="button" class="btn btn-primary" onclick="spurgear_find()">Find!</button>
+  <button type="button" id="spurgear_find" class="btn btn-primary" onclick="spurgear_find()">Find!</button>
+  
+    <!-- Button to cancel the gear combination search -->
+  <button type="button" id="spurgear_abort" class="btn btn-warning" onclick="spurgear_stopsearch()">Abort!</button>
 
   <!-- Display of possible combinations and estimated time remaining -->
   <p class="ml-2 mr-3" id="spurgear_combinations" style="display:inline;">Possible combinations: 25</p>
@@ -135,7 +138,8 @@
         $("#spur-gear").find("input").toArray().forEach(function(child) {
             child.disabled = true;
         });
-        $("#spur-gear").find("button")[0].disabled = true;
+        $("#spurgear_find")[0].abort();	//Hide the Find! button
+		$("#spurgear_abort")[0].show();	//Show the Abort! button
 
         //Create a web worker for asynchronous computation
         worker = new Worker("SpurGear.js");
@@ -200,20 +204,25 @@
 				spurgear_update(); // Refresh combinations count
 				
             } else if (msg.data[0] == 2) { //Calculation complete
-			
-                spurgear_checked = spurgear_combinations;
-                $("#spur-gear").find("input").toArray().forEach(function(child) {	//Re-enable input fields
-                    child.disabled = false;
-                });
-                $("#spur-gear").find("button")[0].disabled = false;				//Re-enable the Find! button
-				
-                updateStatus1(); //Final update to progress and time
-                spurgear_update();
-                worker.terminate(); //Terminate web worker
-                worker = undefined;
+				spurgear_stopsearch();	//Stop search
             }
         };
     }
+
+	function spurgear_stopsearch(){
+		spurgear_checked = spurgear_combinations;
+		$("#spur-gear").find("input").toArray().forEach(function(child) {	//Re-enable input fields
+			child.disabled = false;
+		});
+		$("#spurgear_find")[0].show();	//Re-enable the Find! button
+		$("#spurgear_abort")[0].hide();	//Hide the Abort! button
+		
+		updateStatus1(); //Final update to progress and time
+		spurgear_update();
+		worker.terminate(); //Terminate web worker
+		worker = undefined;
+	}
+
 
     //Sort results by closeness to the target ratio
     function spurgear_sort() {
