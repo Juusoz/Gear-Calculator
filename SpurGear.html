@@ -138,7 +138,7 @@
         $("#spur-gear").find("input").toArray().forEach(function(child) {
             child.disabled = true;
         });
-        $("#spurgear_find")[0].abort();	//Hide the Find! button
+        $("#spurgear_find")[0].hide();	//Hide the Find! button
 		$("#spurgear_abort")[0].show();	//Show the Abort! button
 
         //Create a web worker for asynchronous computation
