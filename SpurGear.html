@@ -128,10 +128,10 @@
         var time = []; //Array to track time for CPS calculation
 
         //Disable input fields and button during calculation
-        $("#spurgear").find("input").toArray().forEach(function(child) {
+        $("#spur-gear").find("input").toArray().forEach(function(child) {
             child.disabled = true;
         });
-        $("#spurgear").find("button")[0].disabled = true;
+        $("#spur-gear").find("button")[0].disabled = true;
 
         //Create a web worker for asynchronous computation
         worker = new Worker("SpurGear.js");
@@ -198,10 +198,10 @@
             } else if (msg.data[0] == 2) { //Calculation complete
 			
                 spurgear_checked = spurgear_combinations;
-                $("#spurgear").find("input").toArray().forEach(function(child) {	//Re-enable input fields
+                $("#spur-gear").find("input").toArray().forEach(function(child) {	//Re-enable input fields
                     child.disabled = false;
                 });
-                $("#spurgear").find("button")[0].disabled = false;				//Re-enable the Find! button
+                $("#spur-gear").find("button")[0].disabled = false;				//Re-enable the Find! button
 				
                 updateStatus1(); //Final update to progress and time
                 spurgear_update();
