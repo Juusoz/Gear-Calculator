@@ -167,7 +167,7 @@
 
 				// Format layer details
 				var layerDetails = gearSystem.map((pair, index) => {
-					return (index === 0 ? `Layer ${index + 1}: ${pair[0]}T & ${pair[1]}T`;
+					return (index === 0 ? `Layer ${index + 1}:${pair[0]}T & ${pair[1]}T`);
 				}).join('<br>');
 
 				entry.find("#s")[0].innerHTML = layerDetails;
