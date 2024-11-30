@@ -75,7 +75,7 @@ self.onmessage = function(msg) {
 			console.log("Skipped layer " + currentLayer + ", ideal has been found.");
 		}
 	}
-
+}
 		
 	
 	postDone();
