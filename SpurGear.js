@@ -1,6 +1,7 @@
 // Global variables
 var checked = 0;  // Counter for the number of combinations checked
 var next = 0;  // Threshold for sending progress updates
+var foundIdeal = false; // Flag to prevent unnecessary exploration
 
 function assert(condition) {
     if (!condition) {
@@ -15,23 +16,22 @@ self.onmessage = function (msg) {
     var target_gear_ratio = parseFloat(msg.data[3]); // Target gear ratio
 
     next = 10000;  // Progress update threshold
-    var foundIdeal = false; // Flag to prevent unnecessary exploration
 
-    function exploreCombination(layers) {
-        console.log(`Exploring with ${layers.length} layers`);
+    function exploreCombination(layers, currentLayer, currentRatio) {
+        if (foundIdeal) return; // Stop further exploration if an ideal solution is found
+
+        console.log(`Exploring layer ${currentLayer} with ratio ${currentRatio}`);
 
         for (var teeth1 = spurgear_min_teeth; teeth1 <= spurgear_max_teeth; teeth1++) {
             for (var teeth2 = spurgear_min_teeth; teeth2 <= spurgear_max_teeth; teeth2++) {
                 var newLayer = [teeth1, teeth2];
-                var newRatio = layers.reduce((acc, pair) => acc * (pair[1] / pair[0]), teeth2 / teeth1); // Cumulative ratio
-
-                var newLayers = layers.concat([newLayer]);
+                var newRatio = currentRatio * (teeth2 / teeth1);
 
                 if (newRatio === target_gear_ratio) {
-                    foundIdeal = true;
-                    self.postMessage([0, newLayers, newRatio, newLayers.length * 2, newLayers.length]);
-                    console.log("Ideal solution found:", newLayers, "Ratio:", newRatio);
-                    return; // Exit early if ideal solution is found
+                    foundIdeal = true; // Mark solution as found
+                    self.postMessage([0, layers.concat([newLayer]), newRatio, (layers.length + 1) * 2, currentLayer]);
+                    console.log("Ideal solution found:", layers.concat([newLayer]), "Ratio:", newRatio);
+                    return; // Stop further exploration
                 }
 
                 checked++;
@@ -40,18 +40,19 @@ self.onmessage = function (msg) {
                     next += 10000;
                 }
 
-                if (newLayers.length < spurgear_max_layers) {
-                    exploreCombination(newLayers); // Continue exploring deeper layers
+                // Continue exploring if under max layers
+                if (currentLayer < spurgear_max_layers) {
+                    exploreCombination(layers.concat([newLayer]), currentLayer + 1, newRatio);
                 }
 
-                if (foundIdeal) return; // Exit loops if the solution is found
+                if (foundIdeal) return; // Stop recursion if solution found
             }
         }
     }
 
-    for (var layers = 1; layers <= spurgear_max_layers; layers++) {
-        if (foundIdeal) break; // Stop adding layers if solution is already found
-        exploreCombination([]); // Start exploring with no initial layers
+    for (var initialLayer = 1; initialLayer <= spurgear_max_layers; initialLayer++) {
+        if (foundIdeal) break; // Stop exploring layers if solution found
+        exploreCombination([], initialLayer, 1); // Start exploration from initial ratio of 1
     }
 
     console.log("Processing complete");
