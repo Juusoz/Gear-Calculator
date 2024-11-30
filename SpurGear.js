@@ -17,53 +17,53 @@ self.onmessage = function (msg) {
     next = 10000;  // Progress update threshold
     var foundIdeal = false; // Flag to prevent unnecessary exploration
 
-    // Recursive function to explore gear combinations across layers
-    function exploreLayer(currentLayer, currentRatio, gears) {
-        if (currentLayer > spurgear_max_layers || foundIdeal) {
-            // Stop exploration if max layers are reached or ideal solution found
-            if (gears.length > 0) {
-                var totalGears = gears.length * 2; // Two gears per layer
-                self.postMessage([0, gears, currentRatio, totalGears, currentLayer - 1]);
-                console.log("Sent result message");
-            }
-            return;
-        }
-
-        // Loop through all gear combinations for this layer
-        for (var teeth1 = spurgear_min_teeth; teeth1 <= spurgear_max_teeth; teeth1++) {
-            for (var teeth2 = spurgear_min_teeth; teeth2 <= spurgear_max_teeth; teeth2++) {
-                var newRatio = currentRatio * (teeth2 / teeth1); // Calculate cumulative ratio
-
-                if (newRatio === target_gear_ratio) {
-                    // If target ratio is reached, send ideal result
-                    foundIdeal = true; // Mark as ideal solution found
-                    spurgear_max_layers = currentLayer; // Stop further exploration beyond this layer
-                    console.log("Ideal solution found");
+    function exploreLayerByLayer() {
+        for (var currentLayer = 1; currentLayer <= spurgear_max_layers; currentLayer++) {
+            console.log(`Exploring layer ${currentLayer}`);
+            
+            function exploreLayer(currentLayer, currentRatio, gears) {
+                if (currentLayer > spurgear_max_layers || foundIdeal) {
+                    return;
                 }
 
-                // Proceed to the next layer
-                exploreLayer(currentLayer + 1, newRatio, gears.concat([[teeth1, teeth2]]));
+                for (var teeth1 = spurgear_min_teeth; teeth1 <= spurgear_max_teeth; teeth1++) {
+                    for (var teeth2 = spurgear_min_teeth; teeth2 <= spurgear_max_teeth; teeth2++) {
+                        var newRatio = currentRatio * (teeth2 / teeth1); // Cumulative ratio
 
-                checked++; // Increment the combination counter
+                        if (newRatio === target_gear_ratio) {
+                            foundIdeal = true;  // Mark as ideal solution found
+                            spurgear_max_layers = currentLayer;  // Stop further exploration
+                            var totalGears = gears.length * 2 + 2; // Each layer adds 2 gears
+                            self.postMessage([0, gears.concat([[teeth1, teeth2]]), newRatio, totalGears, currentLayer]);
+                            console.log("Ideal solution found:", gears.concat([[teeth1, teeth2]]));
+                            return;
+                        }
 
-                // Send periodic progress updates
-                if (checked >= next) {
-                    self.postMessage([1, checked]);
-                    next += 10000;
+                        if (currentLayer < spurgear_max_layers && !foundIdeal) {
+                            exploreLayer(currentLayer + 1, newRatio, gears.concat([[teeth1, teeth2]]));
+                        }
+
+                        checked++;  // Increment combination counter
+                        if (checked >= next) {
+                            self.postMessage([1, checked]);  // Send progress update
+                            next += 10000;
+                        }
+
+                        if (foundIdeal) return;  // Stop processing if ideal solution is found
+                    }
                 }
-
-                if (foundIdeal) return; // Exit loop early if ideal solution found
             }
+
+            exploreLayer(1, 1, []);  // Start from the first layer with an initial ratio of 1
+
+            if (foundIdeal) break;  // Stop after finding a solution
         }
     }
 
-    // Explore each layer progressively, only increasing layers when all combinations are exhausted
-    for (var layer = 1; layer <= spurgear_max_layers; layer++) {
-        console.log(`Exploring layer ${layer}`);
-        exploreLayer(1, 1, []); // Start from the first layer with an initial ratio of 1
-        if (foundIdeal) break; // Stop further exploration if ideal solution is found
-    }
+    exploreLayerByLayer();  // Begin the layer-by-layer exploration
+    console.log("Started processing");
 
+    // Notify the main thread that processing is complete
+    self.postMessage([2]);
     console.log("Processing complete");
-    self.postMessage([2]); // Notify that processing is complete
 };
