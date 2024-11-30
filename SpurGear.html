@@ -137,9 +137,9 @@
         //Disable input fields and button during calculation
         $("#spur-gear").find("input").toArray().forEach(function(child) {
             child.disabled = true;
-        });
-        $("#spurgear_find")[0].hide();	//Hide the Find! button
-		$("#spurgear_abort")[0].show();	//Show the Abort! button
+        });		
+        $("#spur-gear").find("#spurgear_find")[0].hide();	//Hide the Find! button
+		$("#spur-gear").find("#spurgear_abort")[0].show();	//Show the Abort! button
 
         //Create a web worker for asynchronous computation
         worker = new Worker("SpurGear.js");

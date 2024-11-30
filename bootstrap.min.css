@@ -2376,13 +2376,13 @@ fieldset:disabled a.btn {
 }
 .btn-warning {
   color: #fff;
-  background-color: ##ff1f1f;
-  border-color: ##ff1f1f;
+  background-color: #ff1f1f;
+  border-color: #ff1f1f;
 }
 .btn-warning:hover {
   color: #fff;
-  background-color: #db1a1a;
-  border-color: #db1a1a;
+  background-color: #ac0000;
+  border-color: #ac0000;
 }
 .btn-warning.focus,
 .btn-warning:focus {
