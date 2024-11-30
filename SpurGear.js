@@ -1,89 +1,69 @@
-onmessage = function(msg) {
-    // Parsing input data
-    const spurgear_min_teeth = parseInt(msg.data[0]);  // Minimum teeth for a spur gear
-    const spurgear_max_teeth = parseInt(msg.data[1]);  // Maximum teeth for a spur gear
-    const spurgear_max_layers = parseInt(msg.data[2]); // Maximum number of layers
-    const target_gear_ratio = parseFloat(msg.data[3]); // Target gear ratio
-    
-    // Variables to store best gear system and its ratio
-    let best_ratio = Number.MAX_VALUE;
-    let best_system = null;
-    let calculatedSystems = 0;
-    let gearCount = 0;
+self.onmessage = function (msg) {
+    // Parse the input data
+    let spurgear_min_teeth = parseInt(msg.data[0]);  // Minimum teeth for a spur gear
+    let spurgear_max_teeth = parseInt(msg.data[1]);  // Maximum teeth for a spur gear
+    let spurgear_max_layers = parseInt(msg.data[2]); // Maximum number of layers
+    let target_gear_ratio = parseFloat(msg.data[3]); // Target gear ratio
 
-    // Function to calculate gear ratio
+    let best_ratio_diff = Infinity; // To track the closest ratio
+    let best_gear_system = null; // To track the best gear system found so far
+    let total_calculated = 0; // To count the number of calculated gear systems
+    let gear_systems = []; // To store valid gear systems as we calculate them
+
+    // Helper function to calculate gear ratio for a given pair of gears
     function calculateGearRatio(gear1, gear2) {
-        return gear2 / gear1;
+        return gear1 / gear2;
     }
 
-    // Function to calculate maximum possible gear ratio for a layer
-    function calculateMaxPossibleRatio(layer) {
-        let maxRatio = 1; // Start with a minimum ratio of 1 (next gear is the same size)
-        for (let i = 0; i < layer.length; i++) {
-            let gear1 = layer[i][0];
-            let gear2 = layer[i][1];
-            let ratio = calculateGearRatio(gear1, gear2);
-            maxRatio *= ratio;
-        }
-        return maxRatio;
+    // Helper function to calculate the max possible gear ratio for a given layer
+    function calculateMaxLayerRatio(layer) {
+        let max_ratio = 1; // Start with the minimum ratio, 1:1
+        layer.forEach((gear_pair) => {
+            let ratio = calculateGearRatio(gear_pair[0], gear_pair[1]);
+            if (ratio > max_ratio) {
+                max_ratio = ratio;
+            }
+        });
+        return max_ratio;
     }
 
-    // Recursive function to generate all possible gear systems layer by layer
-    function generateGearSystems(currentLayer, previousGear = 0, layerIndex = 1) {
-        // Terminate if layers exceed max layers
-        if (layerIndex > spurgear_max_layers) {
-            postMessage([2]);  // Process finished
+    // Function to calculate gear systems layer by layer
+    function calculateGearSystems(layer, current_layer) {
+        // Base case: if the number of layers exceeds max, stop.
+        if (current_layer > spurgear_max_layers) {
             return;
         }
 
-        let layerSystems = [];
-        let maxPossibleRatio = calculateMaxPossibleRatio(currentLayer);
-        
-        // Skip this layer if the max possible ratio is below the target
-        if (maxPossibleRatio < target_gear_ratio) {
-            return;  // This layer doesn't contribute to a valid system
-        }
-
-        // Generate all combinations of spur gears for the current layer
-        for (let i = spurgear_min_teeth; i <= spurgear_max_teeth; i++) {
-            for (let j = i + 1; j <= spurgear_max_teeth; j++) {
-                let gearPair = [i, j];
-                currentLayer.push(gearPair);  // Add the current pair to the layer
-
-                // Calculate the gear ratio for the current pair
-                let currentGearRatio = calculateGearRatio(gearPair[0], gearPair[1]);
-                let currentSystemRatio = previousGear * currentGearRatio;
-
-                // Check if the current ratio is closer to the target and record the system
-                if (Math.abs(currentSystemRatio - target_gear_ratio) < Math.abs(best_ratio - target_gear_ratio)) {
-                    best_ratio = currentSystemRatio;
-                    best_system = [...currentLayer];
-                    gearCount = currentLayer.length * 2; // 2 gears per layer
-                    postMessage([0, currentLayer, currentSystemRatio, gearCount, layerIndex]); // Send results back
+        // Try adding every possible pair of gears to the current layer
+        for (let gear1 = spurgear_min_teeth; gear1 <= spurgear_max_teeth; gear1++) {
+            for (let gear2 = spurgear_min_teeth; gear2 <= spurgear_max_teeth; gear2++) {
+                // Calculate gear ratio
+                let ratio = calculateGearRatio(gear1, gear2);
+                if (Math.abs(ratio - target_gear_ratio) < best_ratio_diff) {
+                    best_ratio_diff = Math.abs(ratio - target_gear_ratio);
+                    best_gear_system = [...layer, [gear1, gear2]];
+                    postMessage([0, best_gear_system, ratio, best_gear_system.length * 2, current_layer]);
                 }
 
-                // If we're in the last layer, we should stop (we're calculating 2 layers)
-                if (layerIndex === spurgear_max_layers || currentSystemRatio >= target_gear_ratio) {
-                    calculatedSystems++;
-                    // Update progress every 10,000 systems
-                    if (calculatedSystems % 10000 === 0) {
-                        postMessage([1, calculatedSystems]);
-                    }
+                // If the current gear pair meets the ratio, move on to the next layer
+                let new_layer = [...layer, [gear1, gear2]];
+                let max_possible_ratio = calculateMaxLayerRatio(new_layer);
+                if (max_possible_ratio >= target_gear_ratio) {
+                    total_calculated++;
+                    calculateGearSystems(new_layer, current_layer + 1);
                 }
-                
-                // Continue generating the next layer if not finished
-                if (currentSystemRatio < target_gear_ratio) {
-                    generateGearSystems([...currentLayer], currentSystemRatio, layerIndex + 1);
-                }
-                
-                currentLayer.pop(); // Remove the last gear pair for the next iteration
             }
         }
     }
 
-    // Initial call to generate gear systems from the first layer
-    generateGearSystems([], 1);
+    // Start calculating gear systems from layer 1
+    calculateGearSystems([], 1);
 
-    // If we reach here, the calculation is complete
-    postMessage([2]); // Finish processing
+    // Send the number of calculated systems after every 10000 iterations
+    if (total_calculated % 10000 === 0 || current_layer > spurgear_max_layers) {
+        postMessage([1, total_calculated]);
+    }
+
+    // Finish processing
+    postMessage([2]);
 };
