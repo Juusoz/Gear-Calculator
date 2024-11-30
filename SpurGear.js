@@ -57,6 +57,7 @@ self.onmessage = function(msg) {
 	//---------------------------------------------------------------------------//
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
+	console.log("version 1");
 	for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 		
 		if(idealFound != true){										//If the ideal has not been found, proceed, else skip layer
