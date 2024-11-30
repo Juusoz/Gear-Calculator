@@ -18,42 +18,42 @@ self.onmessage = function (msg) {
     next = 10000;  // Progress update threshold
 
     function exploreCombination(layers, currentLayer, currentRatio) {
-        if (foundIdeal) return; // Stop further exploration if an ideal solution is found
+		if (foundIdeal) return;
 
-        console.log(`Exploring layer ${currentLayer} with ratio ${currentRatio}`);
+		// If we reached the exact number of layers allowed, stop recursion.
+		if (currentLayer > spurgear_max_layers) return;
 
-        for (var teeth1 = spurgear_min_teeth; teeth1 <= spurgear_max_teeth; teeth1++) {
-            for (var teeth2 = spurgear_min_teeth; teeth2 <= spurgear_max_teeth; teeth2++) {
-                var newLayer = [teeth1, teeth2];
-                var newRatio = currentRatio * (teeth2 / teeth1);
+		for (var teeth1 = spurgear_min_teeth; teeth1 <= spurgear_max_teeth; teeth1++) {
+			for (var teeth2 = spurgear_min_teeth; teeth2 <= spurgear_max_teeth; teeth2++) {
+				var newLayer = [teeth1, teeth2];
+				var newRatio = currentRatio * (teeth2 / teeth1);
 
-                if (newRatio === target_gear_ratio) {
-                    foundIdeal = true; // Mark solution as found
-                    self.postMessage([0, layers.concat([newLayer]), newRatio, (layers.length + 1) * 2, currentLayer]);
-                    console.log("Ideal solution found:", layers.concat([newLayer]), "Ratio:", newRatio);
-                    return; // Stop further exploration
-                }
+				if (newRatio === target_gear_ratio) {
+					foundIdeal = true;
+					self.postMessage([0, layers.concat([newLayer]), newRatio, (layers.length + 1) * 2, currentLayer]);
+					console.log("Ideal solution found:", layers.concat([newLayer]), "Ratio:", newRatio);
+					return;
+				}
 
-                checked++;
-                if (checked >= next) {
-                    self.postMessage([1, checked]);
-                    next += 10000;
-                }
+				checked++;
+				if (checked >= next) {
+					self.postMessage([1, checked]);
+					next += 10000;
+				}
 
-                // Continue exploring if under max layers
-                if (currentLayer < spurgear_max_layers) {
-                    exploreCombination(layers.concat([newLayer]), currentLayer + 1, newRatio);
-                }
+				// Recursively explore deeper layers starting from current layer depth
+				exploreCombination(layers.concat([newLayer]), currentLayer + 1, newRatio);
 
-                if (foundIdeal) return; // Stop recursion if solution found
-            }
-        }
-    }
+				if (foundIdeal) return;
+			}
+		}
+	}
 
-    for (var initialLayer = 1; initialLayer <= spurgear_max_layers; initialLayer++) {
-        if (foundIdeal) break; // Stop exploring layers if solution found
-        exploreCombination([], initialLayer, 1); // Start exploration from initial ratio of 1
-    }
+	// Start the exploration for each depth, sequentially ensuring all combinations per depth
+	for (var initialLayerDepth = 1; initialLayerDepth <= spurgear_max_layers; initialLayerDepth++) {
+		if (foundIdeal) break; // Stop all exploration if the solution is found
+		exploreCombination([], 1, 1); // Start fresh exploration from depth 1, at every new depth tier
+	}
 
     console.log("Processing complete");
     self.postMessage([2]); // Notify main thread that processing is complete
