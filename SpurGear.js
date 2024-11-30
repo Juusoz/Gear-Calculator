@@ -57,6 +57,7 @@ self.onmessage = function (msg) {
 
 		// Start the exploration with an empty layers array and initial ratio of 1.
 		exploreCombination([], 1, 1); // Begin with layer 1
+		console.log("Started processing");
 	}
 
 	console.log("Processing complete");
