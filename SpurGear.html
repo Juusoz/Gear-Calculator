@@ -51,7 +51,7 @@
   <button type="button" id="spurgear_find" class="btn btn-primary" onclick="spurgear_find()">Find!</button>
   
     <!-- Button to cancel the gear combination search -->
-  <button type="button" id="spurgear_abort" class="btn btn-warning" onclick="spurgear_stopsearch()">Abort!</button>
+  <button type="button" id="spurgear_abort" class="btn btn-warning" onclick="spurgear_stopsearch()" style="display: none">Abort!</button>
 
   <!-- Display of possible combinations and estimated time remaining -->
   <p class="ml-2 mr-3" id="spurgear_combinations" style="display:inline;">Possible combinations: 25</p>
@@ -214,8 +214,8 @@
 		$("#spur-gear").find("input").toArray().forEach(function(child) {	//Re-enable input fields
 			child.disabled = false;
 		});
-		$("#spurgear_find")[0].show();	//Re-enable the Find! button
-		$("#spurgear_abort")[0].hide();	//Hide the Abort! button
+		$("#spurgear_find").show();	//Re-enable the Find! button
+		$("#spurgear_abort").hide();	//Hide the Abort! button
 		
 		updateStatus1(); //Final update to progress and time
 		spurgear_update();
