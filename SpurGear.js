@@ -58,7 +58,7 @@ self.onmessage = function(msg) {
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	console.log("version 1");
-	for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
+	/*for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 		
 		if(idealFound != true){										//If the ideal has not been found, proceed, else skip layer
 			if(MaxGearRatio(currentLayer) >= target_gear_ratio){	//If max gear ratio is above or equal to target ratio, proceed, else skip layer
@@ -74,11 +74,12 @@ self.onmessage = function(msg) {
 		}else{
 			console.log("Skipped layer " + currentLayer + ", ideal has been found.");
 		}
-	}
+	}*/
+	
+	postDone();
 }
 		
 	
-	postDone();
 	
 	
 	/*
