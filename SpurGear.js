@@ -1,64 +1,91 @@
-// Global variables
-var checked = 0;  // Counter for the number of combinations checked
-var next = 10000;  // Threshold for sending progress updates
-var foundIdeal = false; // Flag to prevent unnecessary exploration
+// This is the worker script that calculates spur gear systems based on input parameters
 
-function assert(condition) {
-    if (!condition) {
-        throw "assertion failed";
-    }
+// Helper function to calculate the maximum gear ratio for a given layer
+function maxGearRatio(minTeeth, maxTeeth) {
+    return maxTeeth / minTeeth;
 }
 
-self.onmessage = function (msg) {
-    var spurgear_min_teeth = parseInt(msg.data[0]);  // Minimum teeth for a spur gear
-    var spurgear_max_teeth = parseInt(msg.data[1]);  // Maximum teeth for a spur gear
-    var spurgear_max_layers = parseInt(msg.data[2]); // Maximum number of layers
-    var target_gear_ratio = parseFloat(msg.data[3]); // Target gear ratio
+// Main function that runs the gear system calculations
+onmessage = function(msg) {
+    // Parsing the input data
+    let spurgear_min_teeth = parseInt(msg.data[0]); // Minimum teeth for a spur gear
+    let spurgear_max_teeth = parseInt(msg.data[1]); // Maximum teeth for a spur gear
+    let spurgear_max_layers = parseInt(msg.data[2]); // Maximum number of layers
+    let target_gear_ratio = parseFloat(msg.data[3]); // Target gear ratio
 
-    next = 10000;  // Progress update threshold
+    // Initializing variables for tracking calculations
+    let gearSystems = [];
+    let totalCalculations = 0;
+    let spurgear_checked = 0;
+    let foundIdeal = false;
 
-    // Recursive function to explore combinations
-    function exploreCombination(layers, currentLayer, currentRatio) {
-        if (foundIdeal) return; // Stop if ideal solution is found
-
-        console.log(`Exploring layer ${currentLayer}, Current Ratio: ${currentRatio}`);
-        
-        // Loop through all combinations for the current layer
-        for (var teeth1 = spurgear_min_teeth; teeth1 <= spurgear_max_teeth; teeth1++) {
-            for (var teeth2 = spurgear_min_teeth; teeth2 <= spurgear_max_teeth; teeth2++) {
-                var newLayer = [teeth1, teeth2];
-                var newRatio = currentRatio * (teeth2 / teeth1);
-
-                if (newRatio === target_gear_ratio) {
-                    foundIdeal = true; // Mark solution as found
-                    self.postMessage([0, layers.concat([newLayer]), newRatio, (layers.length + 1) * 2, currentLayer]);
-                    console.log("Ideal solution found:", layers.concat([newLayer]), "Ratio:", newRatio);
-                    return; // Stop exploration
-                }
-
-                checked++;  // Increment checked combinations
-                if (checked >= next) {
-                    self.postMessage([1, checked]);
-                    next += 10000;
-                }
-
-                // Explore deeper layers if we haven't reached the max layers
-                if (currentLayer < spurgear_max_layers) {
-                    exploreCombination(layers.concat([newLayer]), currentLayer + 1, newRatio);
-                }
-
-                if (foundIdeal) return; // Stop if solution is found
+    // Function to generate all possible gear pairs for the current layer
+    function generateGearPairs(minTeeth, maxTeeth) {
+        let pairs = [];
+        for (let i = minTeeth; i <= maxTeeth; i++) {
+            for (let j = minTeeth; j <= maxTeeth; j++) {
+                pairs.push([i, j]); // Each pair represents a possible gear system in the current layer
             }
+        }
+        return pairs;
+    }
+
+    // Recursive function to explore all gear systems layer by layer
+    function exploreLayer(currentLayer, currentGearSystem, currentGearRatio) {
+        // Base case: if we reach the maximum number of layers, stop
+        if (currentLayer > spurgear_max_layers) {
+            return;
+        }
+
+        // Generate possible gear pairs for the current layer
+        let gearPairs = generateGearPairs(spurgear_min_teeth, spurgear_max_teeth);
+        let maxPossibleRatio = maxGearRatio(spurgear_min_teeth, spurgear_max_teeth);
+        console.log(`Exploring layer ${currentLayer} with max ratio ${maxPossibleRatio}`);
+
+        // If the max possible ratio is below the target, skip this layer
+        if (maxPossibleRatio < target_gear_ratio && !foundIdeal) {
+            return;
+        }
+
+        // Loop through each possible gear pair and calculate the system
+        gearPairs.forEach(pair => {
+            totalCalculations++;
+            spurgear_checked++;
+
+            // Calculate new gear ratio for this pair
+            let newGearRatio = currentGearRatio * (pair[1] / pair[0]);
+
+            // Check if this gear ratio is close enough to the target
+            if (Math.abs(newGearRatio - target_gear_ratio) <= 0.01) {
+                foundIdeal = true;
+            }
+
+            // Add this pair to the current gear system
+            let newGearSystem = [...currentGearSystem, pair];
+            let totalGearCount = newGearSystem.length * 2; // Two gears per layer
+
+            // Post message with the current gear system and ratio
+            postMessage([0, newGearSystem, newGearRatio, totalGearCount, currentLayer]);
+
+            // If the gear ratio is sufficiently close to the target, we stop exploring further layers
+            if (foundIdeal) {
+                return;
+            }
+
+            // Otherwise, continue exploring the next layer
+            exploreLayer(currentLayer + 1, newGearSystem, newGearRatio);
+        });
+
+        // After every 10,000 calculations, update progress
+        if (totalCalculations % 10000 === 0) {
+            postMessage([1, spurgear_checked]); // Send progress update
         }
     }
 
-    // Start exploration for each layer depth, from 1 to spurgear_max_layers
-    for (var initialLayerDepth = 1; initialLayerDepth <= spurgear_max_layers; initialLayerDepth++) {
-        if (foundIdeal) break; // Stop if the ideal solution is found
-        console.log(`Starting exploration for layer depth ${initialLayerDepth}`);
-        exploreCombination([], 1, 1); // Start exploration from layer 1 for each new depth
-    }
+    // Start calculating from the first layer
+    exploreLayer(1, [], 1);
 
-    console.log("Processing complete");
-    self.postMessage([2]); // Notify main thread that processing is done
+    // When done calculating, signal that the process is finished
+    postMessage([2]);
 };
+
