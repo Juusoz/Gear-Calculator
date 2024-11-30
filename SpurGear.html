@@ -43,7 +43,7 @@
   </div>
   
    <!-- Highest possible gear rate -->
-  <p class="ml-2 mr-3" id="spurgear_gearrate" style="display:inline;">Highest possible gear rate: 1.5:1</p>
+  <p class="ml-2 mr-3" id="spurgear_gearrate">Highest possible gear rate: 1.5:1</p>
 
   <!-- Button to initiate the gear combination search -->
   <button type="button" class="btn btn-primary" onclick="spurgear_find()">Find!</button>
@@ -92,7 +92,7 @@
         spurgear_combinations = Math.pow(spurgear_combinations, $("#spurgear_layers")[0].value);
         $("#spurgear_combinations")[0].innerHTML = "Possible combinations: " + spurgear_combinations; //Update the possible combinations
 		
-		spurgear_gearrate = ($("#spurgear_max_teeth")[0].value / $("#spurgear_min_teeth")[0].value) + 1;
+		spurgear_gearrate = ($("#spurgear_max_teeth")[0].value / $("#spurgear_min_teeth")[0].value);
         spurgear_gearrate = Math.pow(spurgear_gearrate, $("#spurgear_layers")[0].value);
         $("#spurgear_gearrate")[0].innerHTML = "Highest possible gear rate: " + spurgear_gearrate + ":1"; //Update the maximum gear rate
     }
