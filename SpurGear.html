@@ -151,6 +151,7 @@
             parseInt($("#spurgear_layers")[0].value),	 //Layer count
 			$("#spurgear_target_ratio")[0].value	 //Target gear ratio
         ]);
+		console.log("Posted message to worker");
 		
 		// On each worker response
 		worker.onmessage = function(msg) {
