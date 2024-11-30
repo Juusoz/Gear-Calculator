@@ -17,12 +17,12 @@ self.onmessage = function (msg) {
 
     next = 10000;  // Progress update threshold
 
-    function exploreCombination(layers, currentLayer, currentRatio) {
+	function exploreCombination(layers, currentLayer, currentRatio) {
 		if (foundIdeal) return;
 
-		// If we reached the exact number of layers allowed, stop recursion.
-		if (currentLayer > spurgear_max_layers) return;
+		console.log(`Exploring layer ${currentLayer} with ratio ${currentRatio}`);
 
+		// Loop through all combinations for the current layer
 		for (var teeth1 = spurgear_min_teeth; teeth1 <= spurgear_max_teeth; teeth1++) {
 			for (var teeth2 = spurgear_min_teeth; teeth2 <= spurgear_max_teeth; teeth2++) {
 				var newLayer = [teeth1, teeth2];
@@ -32,7 +32,7 @@ self.onmessage = function (msg) {
 					foundIdeal = true;
 					self.postMessage([0, layers.concat([newLayer]), newRatio, (layers.length + 1) * 2, currentLayer]);
 					console.log("Ideal solution found:", layers.concat([newLayer]), "Ratio:", newRatio);
-					return;
+					return; // Stop exploration after finding the ideal solution
 				}
 
 				checked++;
@@ -41,20 +41,23 @@ self.onmessage = function (msg) {
 					next += 10000;
 				}
 
-				// Recursively explore deeper layers starting from current layer depth
-				exploreCombination(layers.concat([newLayer]), currentLayer + 1, newRatio);
+				// If we haven't reached the max layer depth, explore deeper combinations
+				if (currentLayer < spurgear_max_layers) {
+					exploreCombination(layers.concat([newLayer]), currentLayer + 1, newRatio);
+				}
 
-				if (foundIdeal) return;
+				if (foundIdeal) return; // Exit if the solution is found
 			}
 		}
 	}
 
-	// Start the exploration for each depth, sequentially ensuring all combinations per depth
+	// Start exploration for all combinations of 1, 2, ..., up to spurgear_max_layers layers.
 	for (var initialLayerDepth = 1; initialLayerDepth <= spurgear_max_layers; initialLayerDepth++) {
-		if (foundIdeal) break; // Stop all exploration if the solution is found
-		exploreCombination([], 1, 1); // Start fresh exploration from depth 1, at every new depth tier
+		if (foundIdeal) break; // Stop early if the solution is found
+
+		// Start the exploration with an empty layers array and initial ratio of 1.
+		exploreCombination([], 1, 1); // Begin with layer 1
 	}
 
-    console.log("Processing complete");
-    self.postMessage([2]); // Notify main thread that processing is complete
-};
+	console.log("Processing complete");
+	self.postMessage([2]); // Notify the main thread that processing is done
