@@ -1,6 +1,6 @@
 // Global variables
 var checked = 0;  // Counter for the number of combinations checked
-var next = 0;  // Threshold for sending progress updates
+var next = 10000;  // Threshold for sending progress updates
 var foundIdeal = false; // Flag to prevent unnecessary exploration
 
 function assert(condition) {
@@ -17,48 +17,48 @@ self.onmessage = function (msg) {
 
     next = 10000;  // Progress update threshold
 
-	function exploreCombination(layers, currentLayer, currentRatio) {
-		if (foundIdeal) return;
+    // Recursive function to explore combinations
+    function exploreCombination(layers, currentLayer, currentRatio) {
+        if (foundIdeal) return; // Stop if ideal solution is found
 
-		console.log(`Exploring layer ${currentLayer} with ratio ${currentRatio}`);
+        console.log(`Exploring layer ${currentLayer}, Current Ratio: ${currentRatio}`);
+        
+        // Loop through all combinations for the current layer
+        for (var teeth1 = spurgear_min_teeth; teeth1 <= spurgear_max_teeth; teeth1++) {
+            for (var teeth2 = spurgear_min_teeth; teeth2 <= spurgear_max_teeth; teeth2++) {
+                var newLayer = [teeth1, teeth2];
+                var newRatio = currentRatio * (teeth2 / teeth1);
 
-		// Loop through all combinations for the current layer
-		for (var teeth1 = spurgear_min_teeth; teeth1 <= spurgear_max_teeth; teeth1++) {
-			for (var teeth2 = spurgear_min_teeth; teeth2 <= spurgear_max_teeth; teeth2++) {
-				var newLayer = [teeth1, teeth2];
-				var newRatio = currentRatio * (teeth2 / teeth1);
+                if (newRatio === target_gear_ratio) {
+                    foundIdeal = true; // Mark solution as found
+                    self.postMessage([0, layers.concat([newLayer]), newRatio, (layers.length + 1) * 2, currentLayer]);
+                    console.log("Ideal solution found:", layers.concat([newLayer]), "Ratio:", newRatio);
+                    return; // Stop exploration
+                }
 
-				if (newRatio === target_gear_ratio) {
-					foundIdeal = true;
-					self.postMessage([0, layers.concat([newLayer]), newRatio, (layers.length + 1) * 2, currentLayer]);
-					console.log("Ideal solution found:", layers.concat([newLayer]), "Ratio:", newRatio);
-					return; // Stop exploration after finding the ideal solution
-				}
+                checked++;  // Increment checked combinations
+                if (checked >= next) {
+                    self.postMessage([1, checked]);
+                    next += 10000;
+                }
 
-				checked++;
-				if (checked >= next) {
-					self.postMessage([1, checked]);
-					next += 10000;
-				}
+                // Explore deeper layers if we haven't reached the max layers
+                if (currentLayer < spurgear_max_layers) {
+                    exploreCombination(layers.concat([newLayer]), currentLayer + 1, newRatio);
+                }
 
-				// If we haven't reached the max layer depth, explore deeper combinations
-				if (currentLayer < spurgear_max_layers) {
-					exploreCombination(layers.concat([newLayer]), currentLayer + 1, newRatio);
-				}
+                if (foundIdeal) return; // Stop if solution is found
+            }
+        }
+    }
 
-				if (foundIdeal) return; // Exit if the solution is found
-			}
-		}
-	}
+    // Start exploration for each layer depth, from 1 to spurgear_max_layers
+    for (var initialLayerDepth = 1; initialLayerDepth <= spurgear_max_layers; initialLayerDepth++) {
+        if (foundIdeal) break; // Stop if the ideal solution is found
+        console.log(`Starting exploration for layer depth ${initialLayerDepth}`);
+        exploreCombination([], 1, 1); // Start exploration from layer 1 for each new depth
+    }
 
-	// Start exploration for all combinations of 1, 2, ..., up to spurgear_max_layers layers.
-	for (var initialLayerDepth = 1; initialLayerDepth <= spurgear_max_layers; initialLayerDepth++) {
-		if (foundIdeal) break; // Stop early if the solution is found
-
-		// Start the exploration with an empty layers array and initial ratio of 1.
-		exploreCombination([], 1, 1); // Begin with layer 1
-		console.log("Started processing");
-	}
-
-	console.log("Processing complete");
-	self.postMessage([2]); // Notify the main thread that processing is done
+    console.log("Processing complete");
+    self.postMessage([2]); // Notify main thread that processing is done
+};
