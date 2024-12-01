@@ -11,7 +11,7 @@ self.onmessage = function (msg) {
 	let update_limit = 10000; //Update every x calculations
 	
 	//Function for posting the new best gear system
-	function postNewBestSystem(){
+	function postNewBestSystem(gear_system, gear_ratio, currentLayer){
 		self.postMessage([0, gear_system, gear_ratio, gear_system.length * 2, currentLayer]);
 	}
 	
@@ -43,17 +43,22 @@ self.onmessage = function (msg) {
 					
 					let goal_gear = currentLayer*2;	//The gear number before starting the next layer
 					let gearSystem = [];
+					let gearRatio = 1;
 					
 					for(let current_gear = 0; current_gear < goal_gear; current_gear++){	//Populate the gear system
 						gearSystem.push(min_teeth);
-						console.log("Added gear");
 					}
 					console.log(gearSystem);
 					
-					
-					for(let gearTeeth = min_teeth; gearTeeth <= max_teeth; gearTeeth++){
-						
+					for(let i=0; i < gearSystem.length;){	//Calculate the current gear ratio
+						gearRatio = gearRatio * (gearSystem[i+1]/gearSystem[i]);
+						i += 2;
 					}
+					
+					postNewBestSystem(gearSystem, gearRatio, currentLayer)
+					/*for(let gearTeeth = min_teeth; gearTeeth <= max_teeth; gearTeeth++){
+						
+					}*/
 					
 				}else{
 					console.log("Skipped layer " + currentLayer + ", not high enough of a gear ratio.");
