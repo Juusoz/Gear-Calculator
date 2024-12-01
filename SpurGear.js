@@ -35,7 +35,7 @@ self.onmessage = function (msg) {
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 6");
+		console.log("version 7");
 		for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 			
 			if(idealFound != true){										//If the ideal has not been found, proceed, else skip layer
@@ -51,7 +51,7 @@ self.onmessage = function (msg) {
 					}
 					console.log(gearSystem);
 					
-					while(gearSystem[gearSystem.length] <= max_teeth){		//While the last value in the gear system is below max tooth count, loop.
+					while(true){		//While the last value in the gear system is below max tooth count, loop.
 						
 						for(let i=0; i < gearSystem.length;){	//Calculate the current gear ratio
 							gearRatio = gearRatio * (gearSystem[i+1]/gearSystem[i]);
@@ -71,7 +71,11 @@ self.onmessage = function (msg) {
 							if(gearSystem[1] > max_teeth){
 								gearSystem[1] = min_teeth;	//Reset first gear
 								gearSystem[2]++;			//Add 1 to the next gear
-								
+								if(gearSystem[2] > max_teeth){
+									gearSystem[3] = min_teeth;	//Reset first gear
+									gearSystem[3]++;			//Add 1 to the next gear
+									break;
+								}
 							}
 						}
 						
