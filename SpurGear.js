@@ -11,8 +11,9 @@ self.onmessage = function (msg) {
 	let update_limit = 10000; //Update every x calculations
 	
 	//Function for posting the new best gear system
-	function postNewBestSystem(gear_system, gear_ratio, currentLayer){
-		self.postMessage([0, gear_system, gear_ratio, gear_system.length * 2, currentLayer]);
+	function postNewBestSystem(gear_system, gear_ratio, currentLayer, gearRatio_distance){
+		self.postMessage([0, gear_system, gear_ratio, gear_system.length * 2, currentLayer]); //Reminder to add distance
+		console.log("Posted message: " + 0 + " " + gear_system + " " + gear_ratio + " " + gear_system.length * 2 + " " + currentLayer + " " + gearRatio_distance);
 	}
 	
 	//Function for posting an update on the progress
@@ -34,7 +35,7 @@ self.onmessage = function (msg) {
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 4");
+		console.log("version 6");
 		for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 			
 			if(idealFound != true){										//If the ideal has not been found, proceed, else skip layer
@@ -50,16 +51,31 @@ self.onmessage = function (msg) {
 					}
 					console.log(gearSystem);
 					
-					for(let i=0; i < gearSystem.length;){	//Calculate the current gear ratio
-						gearRatio = gearRatio * (gearSystem[i+1]/gearSystem[i]);
-						i += 2;
-						console.log(gearRatio);
-					}
-					
-					postNewBestSystem(gearSystem, gearRatio, currentLayer);
-					/*for(let gearTeeth = min_teeth; gearTeeth <= max_teeth; gearTeeth++){
+					while(gearSystem[gearSystem.length] <= max_teeth){		//While the last value in the gear system is below max tooth count, loop.
 						
-					}*/
+						for(let i=0; i < gearSystem.length;){	//Calculate the current gear ratio
+							gearRatio = gearRatio * (gearSystem[i+1]/gearSystem[i]);
+							i += 2;
+							console.log("gear ratio: " + gearRatio + ":1");
+							postNewBestSystem(gearSystem, gearRatio, currentLayer);
+						}
+						gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
+						postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);
+						
+						//Create the next gear system
+						gearSystem[0]++;	//Add 1 to the first gear
+						if(gearSystem[0] > max_teeth){
+							gearSystem[0] = min_teeth;	//Reset first gear
+							gearSystem[1]++;			//Add 1 to the next gear
+							
+							if(gearSystem[1] > max_teeth){
+								gearSystem[1] = min_teeth;	//Reset first gear
+								gearSystem[2]++;			//Add 1 to the next gear
+								
+							}
+						}
+						
+					}
 					
 				}else{
 					console.log("Skipped layer " + currentLayer + ", not high enough of a gear ratio.");
