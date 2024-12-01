@@ -34,7 +34,7 @@ self.onmessage = function (msg) {
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 3");
+		console.log("version 4");
 		for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 			
 			if(idealFound != true){										//If the ideal has not been found, proceed, else skip layer
@@ -56,7 +56,7 @@ self.onmessage = function (msg) {
 						console.log(gearRatio);
 					}
 					
-					postNewBestSystem(gearSystem, gearRatio, currentLayer)
+					postNewBestSystem(gearSystem, gearRatio, currentLayer);
 					/*for(let gearTeeth = min_teeth; gearTeeth <= max_teeth; gearTeeth++){
 						
 					}*/
