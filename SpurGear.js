@@ -53,6 +53,7 @@ self.onmessage = function (msg) {
 					for(let i=0; i < gearSystem.length;){	//Calculate the current gear ratio
 						gearRatio = gearRatio * (gearSystem[i+1]/gearSystem[i]);
 						i += 2;
+						console.log(gearRatio);
 					}
 					
 					postNewBestSystem(gearSystem, gearRatio, currentLayer)
