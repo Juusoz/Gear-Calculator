@@ -1,12 +1,5 @@
 console.log("Worker started");
 
-function assert(condition) {
-    // Throws an error if the condition is false.
-    if (!condition) {
-        throw "assertion failed";
-    }
-}
-
 self.onmessage = function (msg) {
 	console.log("Message received");
     //Parse inputs from the message
@@ -43,7 +36,7 @@ self.onmessage = function (msg) {
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	console.log("version 1");
-	/*for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
+	for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 		
 		if(idealFound != true){										//If the ideal has not been found, proceed, else skip layer
 			if(MaxGearRatio(currentLayer) >= target_gear_ratio){	//If max gear ratio is above or equal to target ratio, proceed, else skip layer
@@ -59,7 +52,7 @@ self.onmessage = function (msg) {
 		}else{
 			console.log("Skipped layer " + currentLayer + ", ideal has been found.");
 		}
-	}*/
+	}
 	
 	postDone();
 };
@@ -100,4 +93,4 @@ self.onmessage = function (msg) {
 
     // Start the process with layer 1
     calculateLayer(1, min_teeth, 1);
-};
+};*/
