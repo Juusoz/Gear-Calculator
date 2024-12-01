@@ -34,17 +34,18 @@ self.onmessage = function (msg) {
 	//---------------------------------------------------------------------------//
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
+					
+	var goal_gear = currentLayer*2;	//The gear number before starting the next layer
+	var gearSystem = [];
+	var gearRatio = 1;
+	
 	try {
-		console.log("version 7");
+		console.log("version 8");
 		for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 			
 			if(idealFound != true){										//If the ideal has not been found, proceed, else skip layer
 				if(MaxGearRatio(currentLayer) >= target_gear_ratio){	//If max gear ratio is above or equal to target ratio, proceed, else skip layer
 					console.log("Starting from layer " + currentLayer + " with " + currentLayer*2 + " gears.");
-					
-					let goal_gear = currentLayer*2;	//The gear number before starting the next layer
-					let gearSystem = [];
-					let gearRatio = 1;
 					
 					for(let current_gear = 0; current_gear < goal_gear; current_gear++){	//Populate the gear system
 						gearSystem.push(min_teeth);
