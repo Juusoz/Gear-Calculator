@@ -35,7 +35,7 @@ self.onmessage = function (msg) {
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 9");
+		console.log("version 10");
 		for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 			
 			if(idealFound != true){										//If the ideal has not been found, proceed, else skip layer
@@ -49,7 +49,6 @@ self.onmessage = function (msg) {
 					for(let current_gear = 0; current_gear < goal_gear; current_gear++){	//Populate the gear system
 						gearSystem.push(min_teeth);
 					}
-					console.log(gearSystem);
 					
 					while(true){		//While the last value in the gear system is below max tooth count, loop.
 						
@@ -61,6 +60,8 @@ self.onmessage = function (msg) {
 						}
 						gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
 						postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);
+						
+						console.log(gearSystem);
 						
 						//Create the next gear system
 						gearSystem[0]++;	//Add 1 to the first gear
