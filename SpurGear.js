@@ -40,7 +40,7 @@ self.onmessage = function (msg) {
 			if(MaxGearRatio(currentLayer) >= target_gear_ratio){	//If max gear ratio is above or equal to target ratio, proceed, else skip layer
 				console.log("Starting from layer " + currentLayer + " with " + currentLayer*2 + " gears.");
 				
-				let goal_gear = currentLayer*2;	//The gear number before starting the next layer
+				/*let goal_gear = currentLayer*2;	//The gear number before starting the next layer
 				const gearSystem;
 				
 				for(let current_gear = 0; current_gear < goal_gear; current_gear++){	//Populate the gear system
@@ -51,7 +51,7 @@ self.onmessage = function (msg) {
 				
 				for(let gearTeeth = min_teeth; gearTeeth <= max_teeth; gearTeeth++){
 					
-				}
+				}*/
 				
 			}else{
 				console.log("Skipped layer " + currentLayer + ", not high enough of a gear ratio.");
