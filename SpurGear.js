@@ -13,7 +13,7 @@ self.onmessage = function (msg) {
 	//Function for posting the new best gear system
 	function postNewBestSystem(gear_system, gear_ratio, currentLayer, gearRatio_distance){
 		self.postMessage([0, gear_system, gear_ratio, gear_system.length * 2, currentLayer]); //Reminder to add distance
-		console.log("Posted message: " + 0 + " " + gear_system + " " + gear_ratio + " " + gear_system.length * 2 + " " + currentLayer + " " + gearRatio_distance);
+		console.log("Posted message: " + 0 + "\n Gear system: " + gear_system + "\n Gear ratio: " + gear_ratio + "\n Array length: " + gear_system.length * 2 + "\n Current layer: " + currentLayer + "\n Gear ratio distance: " + gearRatio_distance);
 	}
 	
 	//Function for posting an update on the progress
@@ -35,7 +35,7 @@ self.onmessage = function (msg) {
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 8");
+		console.log("version 9");
 		for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 			
 			if(idealFound != true){										//If the ideal has not been found, proceed, else skip layer
