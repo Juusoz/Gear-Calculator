@@ -1,5 +1,7 @@
+console.log("Worker started");
+
 self.onmessage = function(msg) {
-	
+	console.log("Message received");
     //Parse inputs from the message
     let min_teeth = parseInt(msg.data[0]);  //Minimum teeth for a spur gear
     let max_teeth = parseInt(msg.data[1]);  //Maximum teeth for a spur gear
