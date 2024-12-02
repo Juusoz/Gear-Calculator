@@ -84,9 +84,8 @@ self.onmessage = function (msg) {
 		increment());
 	}*/
 	
-	let counter = [];
 	let complete = false;
-	console.log("version 2");
+	console.log("version 3");
 
 	function initializeCounter(size) {
 		counter = new Array(size).fill(1);
