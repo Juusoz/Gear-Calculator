@@ -116,11 +116,6 @@ self.onmessage = function (msg) {
 		};
 	}
 
-	// Example usage:
-	cycleGears(2);
-	
-	postDone();
-/*
 	
 	
 	//---------------------------------------------------------------------------//
@@ -156,7 +151,7 @@ self.onmessage = function (msg) {
 						}
 						if(finalGear_achieved == true){
 							break;
-						}
+						}*/
 					
 				}else{
 					console.log("Skipped layer " + currentLayer + ", not high enough of a gear ratio.");
@@ -171,7 +166,7 @@ self.onmessage = function (msg) {
 		} catch (error) {
 			console.log(error.message);
 		}
-		*/
+		
 };
 		
 	
