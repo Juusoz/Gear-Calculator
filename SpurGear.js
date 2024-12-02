@@ -32,7 +32,7 @@ self.onmessage = function (msg) {
 	}
 	
 	function cycleGears(gearSystem, currentLayer){
-		function increment(){
+		function increment(gearSystem, currentLayer){
 			for (let i = 0; i < gearSystem.length; i++) {
 				
 				gearRatio = 1;	//Reset gear ratio
@@ -57,6 +57,7 @@ self.onmessage = function (msg) {
 				
 				//Tooth count is below or equal to the limit, restart the i
 				if (gearSystem[i] <= max_teeth) {
+					console.log("Gear " + i + " over limit");
 					break;
 				}
 				
