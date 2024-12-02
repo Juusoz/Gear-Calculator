@@ -71,27 +71,25 @@ self.onmessage = function (msg) {
 	var oldBest_gearRatio = Infinity;
 	
 	function calculateGearRatio(gearSystem, currentLayer){
+			
+		console.log("Currently looking at gears " + gearSystem);
 		
-		for (let i = 0; i < gearSystem.length; i++) {
-			
-			console.log("Currently looking at gears " + gearSystem);
-			
-			gearRatio = 1;	//Reset gear ratio
-			for(let j=0; j < gearSystem.length; j += 2){	//Calculate the new gear ratio
-				gearRatio = gearRatio * (gearSystem[j+1]/gearSystem[j]);;
-			}
-			
-			gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
-			if(gearRatio_distance <= oldBest_gearRatio){
-				postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);	//Only post if the new ratio is better.
-				oldBest_gearRatio = gearRatio_distance;
-			}
-			
-			if(gearRatio == target_gear_ratio){
-				idealFound = true;
-				console.log("Ideal found");
-			}
+		gearRatio = 1;	//Reset gear ratio
+		for(let j=0; j < gearSystem.length; j += 2){	//Calculate the new gear ratio
+			gearRatio = gearRatio * (gearSystem[j+1]/gearSystem[j]);;
 		}
+		
+		gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
+		if(gearRatio_distance <= oldBest_gearRatio){
+			postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);	//Only post if the new ratio is better.
+			oldBest_gearRatio = gearRatio_distance;
+		}
+		
+		if(gearRatio == target_gear_ratio){
+			idealFound = true;
+			console.log("Ideal found");
+		}
+		
 	}
 	
 	let complete = false;
