@@ -99,11 +99,11 @@ self.onmessage = function (msg) {
 				counter[i] = 1;
 			}
 			console.log(counter);
-			increment(); // Adjust the cycle speed here
+			setTimeout(increment, 10); // Adjust the cycle speed here
 		}
 
-		//console.log(counter);
-		increment();
+		console.log(counter);
+		setTimeout(increment, 10); // Adjust the cycle speed here
 	}
 
 	// Example usage:
