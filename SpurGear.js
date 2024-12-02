@@ -84,33 +84,35 @@ self.onmessage = function (msg) {
 		increment());
 	}*/
 	
-	function startCounter(arraySize) {
-		let counter = new Array(arraySize).fill(1);
+	let counter = [];
+	let arraySize = 1; // Change this to the desired size of the array
 
-		function increment() {
-			try {
-				for (let i = 0; i < counter.length; i++) {
-					counter[i]++;
-					if (counter[i] < 10) break;
-					if (i === counter.length - 1 && counter[i] === 10) {
-						counterFunction();
-						return;
-					}
-					counter[i] = 1;
-				}
-				console.log(counter);
-				setTimeout(increment, 1000); // Recursively call increment
-			} catch (err) {
-				console.error("Increment failed:", err);
-			}
-		}
+	function counterFunction() {
+		console.log("Counter has reached the end!");
+	}
 
+	function initializeCounter(size) {
+		counter = new Array(size).fill(1);
 		console.log(counter);
-		setTimeout(increment, 1000);
+		setTimeout(increment, 1);
+	}
+
+	function increment() {
+		for (let i = 0; i < counter.length; i++) {
+			counter[i]++;
+			if (counter[i] < 10) break;
+			if (i === counter.length - 1 && counter[i] === 10) {
+				counterFunction();
+				return;
+			}
+			counter[i] = 1;
+		}
+		console.log(counter);
+		setTimeout(increment, 1); // Adjust the cycle speed here
 	}
 
 	// Example usage:
-	startCounter(1); // Replace 3 with the desired array size*/
+	initializeCounter(arraySize);
 	
 	postDone();
 /*
