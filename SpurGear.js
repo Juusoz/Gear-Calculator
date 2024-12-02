@@ -35,7 +35,7 @@ self.onmessage = function (msg) {
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 14");
+		console.log("version 15");
 		
 		var gearSystem = [];
 		var gearRatio;
@@ -48,6 +48,7 @@ self.onmessage = function (msg) {
 				if(MaxGearRatio(currentLayer) >= target_gear_ratio){	//If max gear ratio is above or equal to target ratio, proceed, else skip layer
 					console.log("Starting from layer " + currentLayer + " with " + currentLayer*2 + " gears.");
 					
+					gearSystem = [];	//Reset gear system
 					goal_gear = currentLayer*2;	//The gear number before starting the next layer
 					
 					for(let current_gear = 0; current_gear < goal_gear; current_gear++){	//Populate the gear system
