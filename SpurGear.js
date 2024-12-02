@@ -44,7 +44,8 @@ self.onmessage = function (msg) {
 					
 					var goal_gear = currentLayer*2;	//The gear number before starting the next layer
 					var gearSystem = [];
-					var gearRatio = 1;
+					var gearRatio;
+					var oldBest_gearRatio = Infinity;
 					
 					for(let current_gear = 0; current_gear < goal_gear; current_gear++){	//Populate the gear system
 						gearSystem.push(min_teeth);
@@ -59,7 +60,15 @@ self.onmessage = function (msg) {
 							//console.log("gear ratio: " + gearRatio + ":1");
 						}
 						gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
-						postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);
+						
+						if(gearRatio_distance <= oldBest_gearRatio){
+						postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);	//Only post if the new ratio is better.
+						}
+						
+						if(gearRatio == target_gear_ratio){
+							idealFound = true;
+							console.log("Ideal found");
+						}
 						
 						console.log(gearSystem);
 						
