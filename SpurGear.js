@@ -35,23 +35,26 @@ self.onmessage = function (msg) {
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 13");
+		console.log("version 14");
+		
+		var gearSystem = [];
+		var gearRatio;
+		var oldBest_gearRatio = Infinity;
+		var goal_gear = 2;
+		
 		for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 			
 			if(idealFound != true){										//If the ideal has not been found, proceed, else skip layer
 				if(MaxGearRatio(currentLayer) >= target_gear_ratio){	//If max gear ratio is above or equal to target ratio, proceed, else skip layer
 					console.log("Starting from layer " + currentLayer + " with " + currentLayer*2 + " gears.");
 					
-					var goal_gear = currentLayer*2;	//The gear number before starting the next layer
-					var gearSystem = [];
-					var gearRatio;
-					var oldBest_gearRatio = Infinity;
+					goal_gear = currentLayer*2;	//The gear number before starting the next layer
 					
 					for(let current_gear = 0; current_gear < goal_gear; current_gear++){	//Populate the gear system
 						gearSystem.push(min_teeth);
 					}
 					
-					while(gearSystem[gearSystem.length-1] < max_teeth){		//While the last value in the gear system is below max tooth count, loop.
+					while(true){		//While the last value in the gear system is below max tooth count, loop.
 					
 						gearRatio = 1;	//Reset gear ratio
 						for(let i=0; i < gearSystem.length;){	//Calculate the new gear ratio
@@ -80,12 +83,14 @@ self.onmessage = function (msg) {
 							gearSystem[1]++;			//Add 1 to the next gear
 							if(gearSystem[1] > max_teeth){
 								gearSystem[1] = min_teeth;	//Reset first gear
+								
+								break;
+								
 								gearSystem[2]++;			//Add 1 to the next gear
 								if(gearSystem[2] > max_teeth){
 									gearSystem[2] = min_teeth;	//Reset first gear
 									gearSystem[3]++;			//Add 1 to the next gear
 									if(gearSystem[3] > max_teeth){
-										break;
 									}
 								}
 							}
