@@ -55,7 +55,7 @@ self.onmessage = function (msg) {
 						gearSystem.push(min_teeth);
 					}
 					
-					while(true){		//While the last value in the gear system is below max tooth count, loop.
+					while(let gearUpdated == false){		//While the last value in the gear system is below max tooth count, loop.
 					
 						gearRatio = 1;	//Reset gear ratio
 						for(let i=0; i < gearSystem.length;){	//Calculate the new gear ratio
@@ -79,12 +79,12 @@ self.onmessage = function (msg) {
 						
 						//Create the next gear system
 						gearSystem[0]++;	//Add 1 to the first gear
-						for(let gearCycler = 0; let gearUpdated == false; gearCycler++){
+						for(let gearCycler = 0; gearUpdated == false; gearCycler++){
 							
 							if(gearSystem[GearCycler] > max_teeth){
 								gearSystem[GearCycler] = min_teeth;	//Reset first gear
 								gearSystem[GearCycler+1]++;			//Increase the value of the next gear by one
-								gearUpdated = true;
+								gearUpdated = true;					//Still got more to go
 							}
 							if(gearCycler[gearSystem.length-1] == max_teeth && gearUpdated == false){
 								break;
