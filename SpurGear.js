@@ -84,6 +84,33 @@ self.onmessage = function (msg) {
 		increment());
 	}
 	
+	
+	function startCounter(arraySize) {
+		let counter = new Array(arraySize).fill(1);
+
+		function increment() {
+			for (let i = 0; i < counter.length; i++) {
+				counter[i]++;
+				if (counter[i] < 10) break;
+				if (i === counter.length - 1 && counter[i] === 10) {
+					console.log("Counter has reached the end!");
+					return;
+				}
+				counter[i] = 1;
+			}
+			console.log(counter);
+			increment(); // Adjust the cycle speed here
+		}
+
+		//console.log(counter);
+		increment();
+	}
+
+	// Example usage:
+	startCounter(1); // Replace 3 with the desired array size
+/*
+	
+	
 	//---------------------------------------------------------------------------//
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
@@ -119,7 +146,7 @@ self.onmessage = function (msg) {
 						}
 						if(finalGear_achieved == true){
 							break;
-						}*/
+						}
 					
 				}else{
 					console.log("Skipped layer " + currentLayer + ", not high enough of a gear ratio.");
@@ -135,7 +162,7 @@ self.onmessage = function (msg) {
 			console.log(error.message);
 		}
 };
-		
+		*/
 	
 	
 	
