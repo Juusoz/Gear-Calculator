@@ -160,7 +160,7 @@
 		// On each worker response
 		worker.onmessage = function(msg) {
 			if (msg.data[0] === 0) { // New valid result
-					// Process data from worker message
+					/*// Process data from worker message
 					var gearSystem = msg.data[1]; // Spur gear system as array of [gear1, gear2] pairs
 					var ratio = msg.data[2];      // Calculated gear ratio
 					var gearCount = msg.data[3];  // Total number of gears in the system
@@ -168,7 +168,7 @@
 					var deviation = msg.data[5];  // Gear ratio deviation from target
 
 					// Clone result template and populate with data
-					var entry = $($("#resultTemplate1").clone().prop("content"));
+					var entry = $($("#spurgear_result_template").clone().prop("content"));
 
 					// Generate a unique ID based on gear system details
 					var id = gearSystem.map(pair => `${pair[0]}S${pair[1]}P`).join('_') + `_${layers}L_${gearCount}G`;
@@ -194,7 +194,7 @@
 
 					// Append to results container and sort entries
 					$("#spurgear_results").append(entry);
-					sort1(); // Sort results
+					sort1(); // Sort results*/
 
 			} else if (msg.data[0] === 1) { // Time for progress update
 				spurgear_checked = msg.data[1];
