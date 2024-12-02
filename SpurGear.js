@@ -87,6 +87,7 @@ self.onmessage = function (msg) {
 	let counter = [];
 	let arraySize = 1; // Change this to the desired size of the array
 	let intervalId;
+	let complete = false;
 
 	function counterFunction() {
 		console.log("Counter has reached the end!");
@@ -96,12 +97,25 @@ self.onmessage = function (msg) {
 	function initializeCounter(size) {
 		counter = new Array(size).fill(1);
 		console.log(counter);
-		
+		startCounter();
+	}
+
+	function startCounter() {
+		while(true){
+			increment();
+			if(complete == true){
+				break;
+			}
+		}; // Increment every 1 second
+	}
+
+	function increment() {
 		for (let i = 0; i < counter.length; i++) {
 			counter[i]++;
 			if (counter[i] < 10) break;
 			if (i == counter.length - 1 && counter[i] == 10) {
 				counterFunction();
+				complete = true;
 				return;
 			}
 			counter[i] = 1;
