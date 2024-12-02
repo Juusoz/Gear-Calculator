@@ -56,16 +56,15 @@ self.onmessage = function (msg) {
 					}
 					
 					//Cycle through the possibilities
-					for (let i = 0; i <= gearSystem.length; i++) {
+					for (let i = 0; i < gearSystem.length; i++) {
 						gearSystem[i]++;
 						
 						//Tooth count is below or equal to the limit
 						if (gearSystem[i] <= max_teeth) {
 							
 							gearRatio = 1;	//Reset gear ratio
-							for(let i=0; i < gearSystem.length;){	//Calculate the new gear ratio
-								gearRatio = gearRatio * (gearSystem[i+1]/gearSystem[i]);
-								i += 2;
+							for(let j=0; j < gearSystem.length; j += 2){	//Calculate the new gear ratio
+								gearRatio = gearRatio * (gearSystem[i+1]/gearSystem[i]);;
 								//console.log("gear ratio: " + gearRatio + ":1");
 							}
 							
@@ -84,11 +83,12 @@ self.onmessage = function (msg) {
 							break;
 						}
 						
+						gearSystem[i] = min_teeth;
+						
 						//The layer has reached the end
 						if (i === gearSystem.length - 1 && gearSystem[i] == max_teeth) {
 							nextLayer = true;
 						}
-						gearSystem[i] = min_teeth;
 					}
 
 						/*for(let gearCycler = 0; true; gearCycler++){		//Stop the update cycle once a gear has been updated.						
