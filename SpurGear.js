@@ -67,7 +67,7 @@ self.onmessage = function (msg) {
 		increment());
 	}*/
 	
-	function calculateGearRatio(gearSystem){
+	function calculateGearRatio(gearSystem, currentLayer){
 		for (let i = 0; i < gearSystem.length; i++) {
 			
 			gearRatio = 1;	//Reset gear ratio
@@ -92,8 +92,8 @@ self.onmessage = function (msg) {
 	let complete = false;
 	console.log("version 7");
 
-	function cycleGears(size) {
-		gearSystem = new Array(size).fill(min_teeth);
+	function cycleGears(currentLayer) {
+		gearSystem = new Array(currentLayer*2).fill(min_teeth);
 		console.log(gearSystem);
 		while(true){
 			for (let i = 0; i < gearSystem.length; i++) {
@@ -114,7 +114,7 @@ self.onmessage = function (msg) {
 	}
 
 	// Example usage:
-	cycleGears(3);
+	cycleGears(2);
 	
 	postDone();
 /*
