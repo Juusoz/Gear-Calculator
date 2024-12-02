@@ -67,13 +67,15 @@ self.onmessage = function (msg) {
 		increment());
 	}*/
 	
+	var gearRatio;
+	var oldBest_gearRatio = Infinity;
+	
 	function calculateGearRatio(gearSystem, currentLayer){
 		for (let i = 0; i < gearSystem.length; i++) {
 			
 			gearRatio = 1;	//Reset gear ratio
 			for(let j=0; j < gearSystem.length; j += 2){	//Calculate the new gear ratio
 				gearRatio = gearRatio * (gearSystem[j+1]/gearSystem[j]);;
-				//console.log("gear ratio: " + gearRatio + ":1");
 			}
 			
 			gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
@@ -94,7 +96,7 @@ self.onmessage = function (msg) {
 
 	function cycleGears(currentLayer) {
 		gearSystem = new Array(currentLayer*2).fill(min_teeth);
-		console.log(gearSystem);
+		calculateGearRatio(gearSystem, currentLayer)
 		while(true){
 			for (let i = 0; i < gearSystem.length; i++) {
 				gearSystem[i]++;
@@ -106,7 +108,7 @@ self.onmessage = function (msg) {
 				}
 				gearSystem[i] = min_teeth;
 			}
-			console.log(gearSystem);
+			calculateGearRatio(gearSystem, currentLayer)
 			if(complete == true){
 				break;
 			}
@@ -126,8 +128,6 @@ self.onmessage = function (msg) {
 	try {
 		console.log("version 28");
 		
-		var gearRatio;
-		var oldBest_gearRatio = Infinity;
 		
 		for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 			
