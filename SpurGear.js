@@ -89,7 +89,7 @@ self.onmessage = function (msg) {
 							}
 							
 							if(gearCycler[gearSystem.length-1] == max_teeth && gearUpdated == false){
-								finalGear_achieved == true;				
+								finalGear_achieved = true;				
 								break;								//Final gear is at max and still no updates
 							}
 							
