@@ -114,6 +114,7 @@ self.onmessage = function (msg) {
 
 	// Example usage:
 	initializeCounter(arraySize);
+	increment();
 	
 	postDone();
 /*
