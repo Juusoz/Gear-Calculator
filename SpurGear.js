@@ -85,23 +85,23 @@ self.onmessage = function (msg) {
 	}*/
 	
 	let complete = false;
-	console.log("version 4");
+	console.log("version 5");
 
-	function initializeCounter(size) {
-		counter = new Array(size).fill(1);
-		console.log(counter);
+	function cycleGears(size) {
+		gearSystem = new Array(size).fill(min_teeth);
+		console.log(gearSystem);
 		while(true){
-			for (let i = 0; i < counter.length; i++) {
-				counter[i]++;
-				if (counter[i] < 10) break;
-				if (i == counter.length - 1 && counter[i] == 10) {
-					console.log("Counter has reached the end!");
+			for (let i = 0; i < gearSystem.length; i++) {
+				gearSystem[i]++;
+				if (gearSystem[i] <= max_teeth) break;
+				if (i == gearSystem.length - 1 && gearSystem[i] == max_teeth) {
+					console.log("gearSystem has reached the end!");
 					complete = true;
 					return;
 				}
-				counter[i] = 1;
+				gearSystem[i] = 1;
 			}
-			console.log(counter);
+			console.log(gearSystem);
 			if(complete == true){
 				break;
 			}
@@ -109,7 +109,7 @@ self.onmessage = function (msg) {
 	}
 
 	// Example usage:
-	initializeCounter(3);
+	cycleGears(3);
 	
 	postDone();
 /*
