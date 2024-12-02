@@ -108,6 +108,7 @@ self.onmessage = function (msg) {
 
 	// Example usage:
 	startCounter(1); // Replace 3 with the desired array size*/
+	postDone();
 /*
 	
 	
