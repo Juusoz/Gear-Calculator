@@ -85,41 +85,28 @@ self.onmessage = function (msg) {
 	}*/
 	
 	let counter = [];
-	let intervalId;
 	let complete = false;
-	console.log("version 1");
-	function counterFunction() {
-		console.log("Counter has reached the end!");
-		clearInterval(intervalId); // Stop the interval when the cycle is complete
-	}
+	console.log("version 2");
 
 	function initializeCounter(size) {
 		counter = new Array(size).fill(1);
 		console.log(counter);
-		startCounter();
-	}
-
-	function startCounter() {
 		while(true){
-			increment();
+			for (let i = 0; i < counter.length; i++) {
+				counter[i]++;
+				if (counter[i] < 10) break;
+				if (i == counter.length - 1 && counter[i] == 10) {
+					console.log("Counter has reached the end!");
+					complete = true;
+					return;
+				}
+				counter[i] = 1;
+			}
+			console.log(counter);
 			if(complete == true){
 				break;
 			}
 		}; // Increment every 1 second
-	}
-
-	function increment() {
-		for (let i = 0; i < counter.length; i++) {
-			counter[i]++;
-			if (counter[i] < 10) break;
-			if (i == counter.length - 1 && counter[i] == 10) {
-				counterFunction();
-				complete = true;
-				return;
-			}
-			counter[i] = 1;
-		}
-		console.log(counter);
 	}
 
 	// Example usage:
