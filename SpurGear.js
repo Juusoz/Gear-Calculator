@@ -35,12 +35,13 @@ self.onmessage = function (msg) {
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 15");
+		console.log("version 16");
 		
 		var gearSystem = [];
 		var gearRatio;
 		var oldBest_gearRatio = Infinity;
 		var goal_gear = 2;
+		var gearUpdated;
 		
 		for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 			
@@ -48,14 +49,15 @@ self.onmessage = function (msg) {
 				if(MaxGearRatio(currentLayer) >= target_gear_ratio){	//If max gear ratio is above or equal to target ratio, proceed, else skip layer
 					console.log("Starting from layer " + currentLayer + " with " + currentLayer*2 + " gears.");
 					
-					gearSystem = [];	//Reset gear system
+					gearSystem = [];		//Reset gear system
+					gearUpdated = true;	//Reset gear updates
 					goal_gear = currentLayer*2;	//The gear number before starting the next layer
 					
 					for(let current_gear = 0; current_gear < goal_gear; current_gear++){	//Populate the gear system
 						gearSystem.push(min_teeth);
 					}
 					
-					while(let gearUpdated == false){		//While the last value in the gear system is below max tooth count, loop.
+					while(gearUpdated == true){		//While there is space for gear updates in the layer, loop.
 					
 						gearRatio = 1;	//Reset gear ratio
 						for(let i=0; i < gearSystem.length;){	//Calculate the new gear ratio
@@ -81,13 +83,15 @@ self.onmessage = function (msg) {
 						gearSystem[0]++;	//Add 1 to the first gear
 						for(let gearCycler = 0; gearUpdated == false; gearCycler++){
 							
+							gearUpdated == false;					//Reset gear updates
 							if(gearSystem[GearCycler] > max_teeth){
 								gearSystem[GearCycler] = min_teeth;	//Reset first gear
 								gearSystem[GearCycler+1]++;			//Increase the value of the next gear by one
 								gearUpdated = true;					//Still got more to go
 							}
+							
 							if(gearCycler[gearSystem.length-1] == max_teeth && gearUpdated == false){
-								break;
+								break;								//Final gear is at max and still no updates
 							}
 							
 						}
