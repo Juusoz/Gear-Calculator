@@ -13,7 +13,7 @@ self.onmessage = function (msg) {
 	//Function for posting the new best gear system
 	function postNewBestSystem(gear_system, gear_ratio, currentLayer, gearRatio_distance){
 		self.postMessage([0, gear_system, gear_ratio, gear_system.length * 2, currentLayer, gearRatio_distance]); //Reminder to add distance
-		console.log("Posted message: " + 0 + "\n Gear system: " + gear_system + "\n Gear ratio: " + gear_ratio + "\n Array length: " + gear_system.length * 2 + "\n Current layer: " + currentLayer + "\n Gear ratio distance: " + gearRatio_distance);
+		console.log("Posted message: " + 0 + "\n Gear system: " + gear_system + "\n Gear ratio: " + gear_ratio + "\n Array length: " + gear_system.length * 2 + "\n Current layer: " + currentLayer + "\n Deviation: " + gearRatio_distance);
 	}
 	
 	//Function for posting an update on the progress
