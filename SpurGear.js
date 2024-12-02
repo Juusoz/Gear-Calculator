@@ -31,42 +31,6 @@ self.onmessage = function (msg) {
 		return Math.pow((max_teeth / min_teeth), currentLayer);
 	}
 	
-	/*function cycleGears(currentLayer){
-		
-		let gearSystem = new Array(currentLayer*2).fill(min_teeth);	//Populate the gear system
-		//for(let current_gear = 0; current_gear < goal_gear; current_gear++){
-		//	gearSystem.push(min_teeth);
-		//}
-		
-		function increment(){
-			
-				
-				
-				gearSystem[i]++;
-				
-				//Tooth count is below or equal to the limit, restart the i
-				if (gearSystem[i] <= max_teeth) {
-					console.log("Gear " + i+1 + " over limit");
-					break;
-				}
-				
-				//The layer has reached the end
-				if (i === gearSystem.length - 1 && gearSystem[i] == max_teeth) {
-					console.log("Layer ended");
-					return;		//Stop the loop
-				}
-				
-				gearSystem[i] = min_teeth;
-				
-				console.log(gearSystem);
-				increment();
-				
-			}
-		}
-		console.log(gearSystem);
-		increment());
-	}*/
-	
 	var gearRatio;
 	var oldBest_gearRatio = Infinity;
 	
@@ -93,7 +57,6 @@ self.onmessage = function (msg) {
 	}
 	
 	let complete = false;
-	console.log("version 8");
 
 	function cycleGears(currentLayer) {
 		gearSystem = new Array(currentLayer*2).fill(min_teeth);
@@ -121,6 +84,7 @@ self.onmessage = function (msg) {
 	//---------------------------------------------------------------------------//
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
+	console.log("version 9");
 	try {		
 		for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 			
@@ -158,12 +122,6 @@ self.onmessage = function (msg) {
         for (let gear1 = min_teeth; gear1 <= max_teeth; gear1++) {
             for (let gear2 = min_teeth; gear2 <= max_teeth; gear2++) {
                 let newGearRatio = calculateGearRatio(previousLayerTeeth, gear1) * calculateGearRatio(gear1, gear2);
-
-                // Check if this combination gets closer to the target gear ratio
-                if (Math.abs(newGearRatio - target_gear_ratio) < Math.abs(best_gear_ratio - target_gear_ratio)) {
-                    best_gear_ratio = newGearRatio;
-                    best_gear_systems.push([gear1, gear2]); // Add new gear system to the best systems
-                }
 
                 // Update the calculation count
                 calculation_count++;

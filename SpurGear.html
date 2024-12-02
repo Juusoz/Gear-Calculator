@@ -44,8 +44,8 @@
   
    <!-- Highest possible gear rate -->
 	<div class="form-group row mb-3">
-		<p class="ml-3" id="spurgear_gearrate">Highest possible gear ratio per layer: 1.50:1</p>
-		<p class="ml-3" id="spurgear_gearrate">Highest possible gear ratio in total: 1.50:1</p>
+		<p class="ml-3" id="spurgear_gearrate">Highest possible gear ratio per layer: 1.50:1</p><br>
+		<p class="ml-3" id="spurgear_gearrate_total">Highest possible gear ratio in total: 1.50:1</p>
 	</div>
 
   <!-- Button to initiate the gear combination search -->
@@ -99,7 +99,6 @@
         $("#spurgear_combinations")[0].innerHTML = "Possible combinations: " + spurgear_combinations; //Update the possible combinations
 		
 		spurgear_gearrate = ($("#spurgear_max_teeth")[0].value / $("#spurgear_min_teeth")[0].value);
-        spurgear_gearrate = Math.pow(spurgear_gearrate, $("#spurgear_layers")[0].value);
         $("#spurgear_gearrate")[0].innerHTML = "Highest possible gear ratio per layer: " + spurgear_gearrate.toFixed(2) + ":1"; //Update the maximum gear rate
 		
         spurgear_gearrate_total = Math.pow(spurgear_gearrate, $("#spurgear_layers")[0].value);
@@ -163,6 +162,7 @@
 				var gearSystem = msg.data[1]; // Received gear system as an array of layers
 				var ratio = msg.data[2]; // Received gear ratio
 				var gearCount = msg.data[3]; // Total number of gears in system
+				var layers = msg.data[4];	// The amount of layers in the system
 
 				var entry = $($("#spurgear_result_template").clone().prop("content"));
 				
