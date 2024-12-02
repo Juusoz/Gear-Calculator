@@ -85,7 +85,7 @@ self.onmessage = function (msg) {
 	}*/
 	
 	let counter = [];
-	let arraySize = 1; // Change this to the desired size of the array
+	let arraySize = 3; // Change this to the desired size of the array
 	let intervalId;
 	let complete = false;
 
