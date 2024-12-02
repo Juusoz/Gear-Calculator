@@ -31,7 +31,7 @@ self.onmessage = function (msg) {
 		return Math.pow((max_teeth / min_teeth), currentLayer);
 	}
 	
-	function cycleGears(gearSystem){
+	function cycleGears(gearSystem, currentLayer){
 		for (let i = 0; i < gearSystem.length; i++) {
 			
 			gearRatio = 1;	//Reset gear ratio
@@ -96,7 +96,7 @@ self.onmessage = function (msg) {
 					}
 					
 					//Cycle through the possibilities
-					cycleGears(gearSystem);
+					cycleGears(gearSystem, currentLayer);
 
 						/*for(let gearCycler = 0; true; gearCycler++){		//Stop the update cycle once a gear has been updated.						
 						
