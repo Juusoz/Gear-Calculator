@@ -31,11 +31,17 @@ self.onmessage = function (msg) {
 		return Math.pow((max_teeth / min_teeth), currentLayer);
 	}
 	
-	function cycleGears(gearSystem, currentLayer){
-		function increment(gearSystem, currentLayer){
+	function cycleGears(currentLayer){
+		
+		let gearSystem = new Array(currentLayer*2).fill(min_teeth);	//Populate the gear system
+		/*for(let current_gear = 0; current_gear < goal_gear; current_gear++){
+			gearSystem.push(min_teeth);
+		}*/
+		
+		function increment(){
 			for (let i = 0; i < gearSystem.length; i++) {
 				
-				gearRatio = 1;	//Reset gear ratio
+				/*gearRatio = 1;	//Reset gear ratio
 				for(let j=0; j < gearSystem.length; j += 2){	//Calculate the new gear ratio
 					gearRatio = gearRatio * (gearSystem[j+1]/gearSystem[j]);;
 					//console.log("gear ratio: " + gearRatio + ":1");
@@ -50,43 +56,42 @@ self.onmessage = function (msg) {
 				if(gearRatio == target_gear_ratio){
 					idealFound = true;
 					console.log("Ideal found");
-				}
+				}*/
 				
 				
 				gearSystem[i]++;
 				
 				//Tooth count is below or equal to the limit, restart the i
 				if (gearSystem[i] <= max_teeth) {
-					console.log("Gear " + i + " over limit");
+					console.log("Gear " + i+1 + " over limit");
 					break;
+				}
+				
+				//The layer has reached the end
+				if (i === gearSystem.length - 1 && gearSystem[i] == max_teeth) {
+					console.log("Layer ended");
+					return;		//Stop the loop
 				}
 				
 				gearSystem[i] = min_teeth;
 				
-				//The layer has reached the end
-				if (i === gearSystem.length - 1 && gearSystem[i] == max_teeth) {
-					return;		//Stop the loop
-				}
-				
 				console.log(gearSystem);
-				setTimeout(increment, 1);
+				increment();
 				
 			}
 		}
 		console.log(gearSystem);
-		setTimeout(increment, 1);
+		increment());
 	}
 	
 	//---------------------------------------------------------------------------//
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 27");
+		console.log("version 28");
 		
-		var gearSystem = [];
 		var gearRatio;
 		var oldBest_gearRatio = Infinity;
-		var goal_gear = 2;
 		
 		for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 			
@@ -94,15 +99,8 @@ self.onmessage = function (msg) {
 				if(MaxGearRatio(currentLayer) >= target_gear_ratio){	//If max gear ratio is above or equal to target ratio, proceed, else skip layer
 					console.log("Starting from layer " + currentLayer + " with " + currentLayer*2 + " gears.");
 					
-					gearSystem = [];		//Reset gear system
-					goal_gear = currentLayer*2;	//The gear number before starting the next layer
-					
-					for(let current_gear = 0; current_gear < goal_gear; current_gear++){	//Populate the gear system
-						gearSystem.push(min_teeth);
-					}
-					
 					//Cycle through the possibilities
-					cycleGears(gearSystem, currentLayer);
+					cycleGears(currentLayer);
 
 						/*for(let gearCycler = 0; true; gearCycler++){		//Stop the update cycle once a gear has been updated.						
 						
