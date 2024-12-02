@@ -39,7 +39,25 @@ self.onmessage = function (msg) {
 		//}
 		
 		function increment(){
-					
+			for (let i = 0; i < gearSystem.length; i++) {
+				
+				gearRatio = 1;	//Reset gear ratio
+				for(let j=0; j < gearSystem.length; j += 2){	//Calculate the new gear ratio
+					gearRatio = gearRatio * (gearSystem[j+1]/gearSystem[j]);;
+					//console.log("gear ratio: " + gearRatio + ":1");
+				}
+				
+				gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
+				if(gearRatio_distance <= oldBest_gearRatio){
+					postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);	//Only post if the new ratio is better.
+					oldBest_gearRatio = gearRatio_distance;
+				}
+				
+				if(gearRatio == target_gear_ratio){
+					idealFound = true;
+					console.log("Ideal found");
+				}
+				
 				
 				gearSystem[i]++;
 				
@@ -66,45 +84,24 @@ self.onmessage = function (msg) {
 		increment());
 	}*/
 	
-	function checkGearRatio(){
-		for (let i = 0; i < gearSystem.length; i++) {
-				
-				gearRatio = 1;	//Reset gear ratio
-				for(let j=0; j < gearSystem.length; j += 2){	//Calculate the new gear ratio
-					gearRatio = gearRatio * (gearSystem[j+1]/gearSystem[j]);;
-					//console.log("gear ratio: " + gearRatio + ":1");
-				}
-				
-				gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
-				if(gearRatio_distance <= oldBest_gearRatio){
-					postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);	//Only post if the new ratio is better.
-					oldBest_gearRatio = gearRatio_distance;
-				}
-				
-				if(gearRatio == target_gear_ratio){
-					idealFound = true;
-					console.log("Ideal found");
-				}
-	}
-	
 	let complete = false;
-	console.log("version 3");
+	console.log("version 4");
 
-	function cycleGears(size) {
-		gearSystem = new Array(size).fill(min_teeth);
-		console.log(gearSystem);
+	function initializeCounter(size) {
+		counter = new Array(size).fill(1);
+		console.log(counter);
 		while(true){
-			for (let i = 0; i < gearSystem.length; i++) {
-				gearSystem[i]++;
-				if (gearSystem[i] < 10) break;
-				if (i == gearSystem.length - 1 && gearSystem[i] == 10) {
-					console.log("gearSystem has reached the end!");
+			for (let i = 0; i < counter.length; i++) {
+				counter[i]++;
+				if (counter[i] < 10) break;
+				if (i == counter.length - 1 && counter[i] == 10) {
+					console.log("Counter has reached the end!");
 					complete = true;
 					return;
 				}
-				gearSystem[i] = 1;
+				counter[i] = 1;
 			}
-			console.log(gearSystem);
+			console.log(counter);
 			if(complete == true){
 				break;
 			}
@@ -112,7 +109,7 @@ self.onmessage = function (msg) {
 	}
 
 	// Example usage:
-	cycleGears(3);
+	initializeCounter(3);
 	
 	postDone();
 /*
