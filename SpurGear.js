@@ -72,7 +72,7 @@ self.onmessage = function (msg) {
 	
 	function calculateGearRatio(gearSystem, currentLayer){
 			
-		console.log("Currently looking at gears " + gearSystem);
+		//console.log("Currently looking at gears " + gearSystem);
 		
 		gearRatio = 1;	//Reset gear ratio
 		for(let j=0; j < gearSystem.length; j += 2){	//Calculate the new gear ratio
