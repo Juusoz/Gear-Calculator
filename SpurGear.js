@@ -63,8 +63,12 @@ self.onmessage = function (msg) {
 			
 			//The layer has reached the end
 			if (i === gearSystem.length - 1 && gearSystem[i] == max_teeth) {
-				nextLayer = true;
+				return;		//Stop the loop
 			}
+			
+			console.log(gearSystem);
+			setTimeout(cycleGears, 1);
+			
 		}
 		
 		console.log(gearSystem);
@@ -75,7 +79,7 @@ self.onmessage = function (msg) {
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 24");
+		console.log("version 25");
 		
 		var gearSystem = [];
 		var gearRatio;
