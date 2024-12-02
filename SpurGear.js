@@ -85,7 +85,7 @@ self.onmessage = function (msg) {
 	}*/
 	
 	let complete = false;
-	console.log("version 6");
+	console.log("version 7");
 
 	function cycleGears(size) {
 		gearSystem = new Array(size).fill(min_teeth);
@@ -94,7 +94,7 @@ self.onmessage = function (msg) {
 			for (let i = 0; i < gearSystem.length; i++) {
 				gearSystem[i]++;
 				if (gearSystem[i] < max_teeth+1) break;
-				if (i == gearSystem.length - 1 && gearSystem[i] == max_teeth) {
+				if (i == gearSystem.length - 1 && gearSystem[i] == max_teeth+1) {
 					console.log("gearSystem has reached the end!");
 					complete = true;
 					return;
@@ -105,7 +105,7 @@ self.onmessage = function (msg) {
 			if(complete == true){
 				break;
 			}
-		}; // Increment every 1 second
+		};
 	}
 
 	// Example usage:
