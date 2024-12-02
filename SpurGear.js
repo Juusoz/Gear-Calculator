@@ -35,7 +35,7 @@ self.onmessage = function (msg) {
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 19");
+		console.log("version 20");
 		
 		var gearSystem = [];
 		var gearRatio;
@@ -58,8 +58,9 @@ self.onmessage = function (msg) {
 					//Cycle through the possibilities
 					for (let i = 0; i <= gearSystem.length; i++) {
 						gearSystem[i]++;
-						//Tooth count is below the limit
-						if (gearSystem[i] < max_teeth) {
+						
+						//Tooth count is below or equal to the limit
+						if (gearSystem[i] <= max_teeth) {
 							
 							gearRatio = 1;	//Reset gear ratio
 							for(let i=0; i < gearSystem.length;){	//Calculate the new gear ratio
@@ -79,8 +80,8 @@ self.onmessage = function (msg) {
 								console.log("Ideal found");
 							}
 							
+							console.log(gearSystem);
 							break;
-							
 						}
 						
 						//The layer has reached the end
@@ -89,7 +90,6 @@ self.onmessage = function (msg) {
 						}
 						gearSystem[i] = min_teeth;
 					}
-					console.log(gearSystem);
 
 						/*for(let gearCycler = 0; true; gearCycler++){		//Stop the update cycle once a gear has been updated.						
 						
