@@ -85,7 +85,7 @@ self.onmessage = function (msg) {
 	}*/
 	
 	let complete = false;
-	console.log("version 5");
+	console.log("version 6");
 
 	function cycleGears(size) {
 		gearSystem = new Array(size).fill(min_teeth);
@@ -93,13 +93,12 @@ self.onmessage = function (msg) {
 		while(true){
 			for (let i = 0; i < gearSystem.length; i++) {
 				gearSystem[i]++;
+				if (gearSystem[i] < max_teeth+1) break;
 				if (i == gearSystem.length - 1 && gearSystem[i] == max_teeth) {
-					console.log(gearSystem);
 					console.log("gearSystem has reached the end!");
 					complete = true;
 					return;
 				}
-				if (gearSystem[i] <= max_teeth) break;
 				gearSystem[i] = min_teeth;
 			}
 			console.log(gearSystem);
