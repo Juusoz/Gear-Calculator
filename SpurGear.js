@@ -96,6 +96,7 @@ self.onmessage = function (msg) {
 
 	function cycleGears(currentLayer) {
 		gearSystem = new Array(currentLayer*2).fill(min_teeth);
+		console.log("gearSystem");
 		calculateGearRatio(gearSystem, currentLayer)
 		while(true){
 			for (let i = 0; i < gearSystem.length; i++) {
@@ -108,6 +109,7 @@ self.onmessage = function (msg) {
 				}
 				gearSystem[i] = min_teeth;
 			}
+			console.log("gearSystem");
 			calculateGearRatio(gearSystem, currentLayer)
 			if(complete == true){
 				break;
