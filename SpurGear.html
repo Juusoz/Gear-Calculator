@@ -104,6 +104,7 @@
         spurgear_gearrate_total = Math.pow(spurgear_gearrate, $("#spurgear_layers")[0].value);
 		
         $("#spurgear_gearrate")[0].innerHTML = "Highest possible gear ratio per layer: " + spurgear_gearrate.toFixed(2) + ":1<br>Highest possible gear ratio in total: " + spurgear_gearrate_total.toFixed(2) + ":1"; //Update the maximum gear rate
+	}
 
     //Function to update progress status and estimated remaining time
     function updateStatus1() {
@@ -234,7 +235,7 @@
 				}
 
 				updateStatus1(); // Update progress bar and time
-				spurgear_update(); // Refresh combinations count
+				//spurgear_update(); // Refresh combinations count
 				
             } else if (msg.data[0] == 2) { //Calculation complete
 				spurgear_stopsearch();	//Stop search
