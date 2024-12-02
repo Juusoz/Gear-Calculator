@@ -55,7 +55,7 @@ self.onmessage = function (msg) {
 						gearSystem.push(min_teeth);
 					}
 					
-					while(let gearUpdated == false){		//While there is space for gear updates in the layer, loop.
+					for(let gearUpdated = false; true;){		//While there is space for gear updates in the layer, loop.
 					
 						gearRatio = 1;	//Reset gear ratio
 						for(let i=0; i < gearSystem.length;){	//Calculate the new gear ratio
@@ -78,10 +78,9 @@ self.onmessage = function (msg) {
 						console.log(gearSystem);
 						
 						//Create the next gear system
+						let finalGear_achieved = false;
 						gearSystem[0]++;		//Add 1 to the first gear
-						gearUpdated == false;	//Reset gear updates
-						
-						for(let gearCycler = 0; gearUpdated == true; gearCycler++){		//Stop the update cycle once a gear has been updated.
+						for(let gearCycler = 0; gearUpdated == false; gearCycler++){		//Stop the update cycle once a gear has been updated.
 							
 							if(gearSystem[gearCycler] > max_teeth){
 								gearSystem[gearCycler] = min_teeth;	//Reset first gear
@@ -90,10 +89,13 @@ self.onmessage = function (msg) {
 							}
 							
 							if(gearCycler[gearSystem.length-1] == max_teeth && gearUpdated == false){
-								//noGearUpdates == false;				
+								finalGear_achieved == true;				
 								break;								//Final gear is at max and still no updates
 							}
 							
+						}
+						if(finalGear_achieved == true){
+							break;
 						}
 						/*if(gearSystem[0] > max_teeth){
 							gearSystem[0] = min_teeth;	//Reset first gear
