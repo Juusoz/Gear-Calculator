@@ -85,10 +85,9 @@ self.onmessage = function (msg) {
 	}*/
 	
 	let counter = [];
-	let arraySize = 3; // Change this to the desired size of the array
 	let intervalId;
 	let complete = false;
-
+	console.log("version 1");
 	function counterFunction() {
 		console.log("Counter has reached the end!");
 		clearInterval(intervalId); // Stop the interval when the cycle is complete
@@ -124,7 +123,7 @@ self.onmessage = function (msg) {
 	}
 
 	// Example usage:
-	initializeCounter(arraySize);
+	initializeCounter(3);
 	
 	postDone();
 /*
