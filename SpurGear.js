@@ -139,7 +139,7 @@ self.onmessage = function (msg) {
 			console.log(error.message);
 		}
 		*/
-}
+};
 		
 	
 	
