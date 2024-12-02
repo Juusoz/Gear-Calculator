@@ -94,7 +94,7 @@ self.onmessage = function (msg) {
 	function initializeCounter(size) {
 		counter = new Array(size).fill(1);
 		console.log(counter);
-		setTimeout(increment, 1);
+		increment();
 	}
 
 	function increment() {
