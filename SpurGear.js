@@ -98,6 +98,7 @@ self.onmessage = function (msg) {
 	}
 
 	function increment() {
+		console.log("increment started");
 		for (let i = 0; i < counter.length; i++) {
 			counter[i]++;
 			if (counter[i] < 10) break;
