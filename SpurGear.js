@@ -72,7 +72,7 @@ self.onmessage = function (msg) {
 	
 	function calculateGearRatio(gearSystem, currentLayer){
 			
-		console.log("Currently looking at gears " + gearSystem);
+		//console.log("Currently looking at gears " + gearSystem);
 		
 		gearRatio = 1;	//Reset gear ratio
 		for(let j=0; j < gearSystem.length; j += 2){	//Calculate the new gear ratio
@@ -121,10 +121,7 @@ self.onmessage = function (msg) {
 	//---------------------------------------------------------------------------//
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
-	try {
-		console.log("version 28");
-		
-		
+	try {		
 		for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 			
 			if(idealFound != true){										//If the ideal has not been found, proceed, else skip layer
@@ -133,25 +130,6 @@ self.onmessage = function (msg) {
 					
 					//Cycle through the possibilities
 					cycleGears(currentLayer);
-
-						/*for(let gearCycler = 0; true; gearCycler++){		//Stop the update cycle once a gear has been updated.						
-						
-							if(gearSystem[gearCycler] > max_teeth){
-								gearSystem[gearCycler] = min_teeth;	//Reset first gear
-								gearSystem[gearCycler+1]++;			//Increase the value of the next gear by one
-								console.log("Added 1 to gear " + gearCycler+1 + ", new value " + gearSystem[gearCycler+1]);
-								break;								//Still got more to go
-							}
-							
-							if(gearCycler[gearSystem.length-1] == max_teeth && gearUpdated == false){
-								finalGear_achieved = true;				
-								break;								//Final gear is at max and still no updates
-							}
-							
-						}
-						if(finalGear_achieved == true){
-							break;
-						}*/
 					
 				}else{
 					console.log("Skipped layer " + currentLayer + ", not high enough of a gear ratio.");
