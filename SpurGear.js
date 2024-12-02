@@ -91,11 +91,11 @@ self.onmessage = function (msg) {
 		console.log("Counter has reached the end!");
 	}
 
-	function initializeCounter(size) {
+	/*function initializeCounter(size) {
 		counter = new Array(size).fill(1);
 		console.log(counter);
 		increment();
-	}
+	}*/
 
 	function increment() {
 		console.log("increment started");
@@ -113,7 +113,7 @@ self.onmessage = function (msg) {
 	}
 
 	// Example usage:
-	initializeCounter(arraySize);
+	//initializeCounter(arraySize);
 	increment();
 	
 	postDone();
