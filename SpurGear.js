@@ -31,17 +31,17 @@ self.onmessage = function (msg) {
 		return Math.pow((max_teeth / min_teeth), currentLayer);
 	}
 	
-	function cycleGears(currentLayer){
+	/*function cycleGears(currentLayer){
 		
 		let gearSystem = new Array(currentLayer*2).fill(min_teeth);	//Populate the gear system
-		/*for(let current_gear = 0; current_gear < goal_gear; current_gear++){
-			gearSystem.push(min_teeth);
-		}*/
+		//for(let current_gear = 0; current_gear < goal_gear; current_gear++){
+		//	gearSystem.push(min_teeth);
+		//}
 		
 		function increment(){
 			for (let i = 0; i < gearSystem.length; i++) {
 				
-				/*gearRatio = 1;	//Reset gear ratio
+				gearRatio = 1;	//Reset gear ratio
 				for(let j=0; j < gearSystem.length; j += 2){	//Calculate the new gear ratio
 					gearRatio = gearRatio * (gearSystem[j+1]/gearSystem[j]);;
 					//console.log("gear ratio: " + gearRatio + ":1");
@@ -56,7 +56,7 @@ self.onmessage = function (msg) {
 				if(gearRatio == target_gear_ratio){
 					idealFound = true;
 					console.log("Ideal found");
-				}*/
+				}
 				
 				
 				gearSystem[i]++;
@@ -82,10 +82,10 @@ self.onmessage = function (msg) {
 		}
 		console.log(gearSystem);
 		increment());
-	}
+	}*/
 	
 	
-	/*function startCounter(arraySize) {
+	function startCounter(arraySize) {
 		let counter = new Array(arraySize).fill(1);
 
 		function increment() {
