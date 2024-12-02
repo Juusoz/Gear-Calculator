@@ -35,7 +35,7 @@ self.onmessage = function (msg) {
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 17");
+		console.log("version 18");
 		
 		var gearSystem = [];
 		var gearRatio;
@@ -55,32 +55,32 @@ self.onmessage = function (msg) {
 						gearSystem.push(min_teeth);
 					}
 					
-					while(true){		//While there is space for gear updates in the layer, loop.
 					
-						gearRatio = 1;	//Reset gear ratio
-						for(let i=0; i < gearSystem.length;){	//Calculate the new gear ratio
-							gearRatio = gearRatio * (gearSystem[i+1]/gearSystem[i]);
-							i += 2;
-							//console.log("gear ratio: " + gearRatio + ":1");
-						}
-						
-						gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
-						if(gearRatio_distance <= oldBest_gearRatio){
-							postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);	//Only post if the new ratio is better.
-							oldBest_gearRatio = gearRatio_distance;
-						}
-						
-						if(gearRatio == target_gear_ratio){
-							idealFound = true;
-							console.log("Ideal found");
-						}
-						
-						console.log(gearSystem);
-						
 						//Create the next gear system
 						let finalGear_achieved = false;
-						for(let gearCycler = 0; true; gearCycler++){		//Stop the update cycle once a gear has been updated.
+						for(let gearCycler = 0; true; gearCycler++){		//While there is space for gear updates in the layer, loop.
+					
+							gearRatio = 1;	//Reset gear ratio
+							for(let i=0; i < gearSystem.length;){	//Calculate the new gear ratio
+								gearRatio = gearRatio * (gearSystem[i+1]/gearSystem[i]);
+								i += 2;
+								//console.log("gear ratio: " + gearRatio + ":1");
+							}
 							
+							gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
+							if(gearRatio_distance <= oldBest_gearRatio){
+								postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);	//Only post if the new ratio is better.
+								oldBest_gearRatio = gearRatio_distance;
+							}
+							
+							if(gearRatio == target_gear_ratio){
+								idealFound = true;
+								console.log("Ideal found");
+							}
+							
+							console.log(gearSystem);
+									//Stop the update cycle once a gear has been updated.
+								
 							gearSystem[0]++;		//Add 1 to the first gear
 							if(gearSystem[gearCycler] > max_teeth){
 								gearSystem[gearCycler] = min_teeth;	//Reset first gear
@@ -93,10 +93,6 @@ self.onmessage = function (msg) {
 								finalGear_achieved = true;				
 								break;								//Final gear is at max and still no updates
 							}
-							
-						}
-						if(finalGear_achieved == true){
-							break;
 						}
 						/*if(gearSystem[0] > max_teeth){
 							gearSystem[0] = min_teeth;	//Reset first gear
