@@ -85,7 +85,7 @@ self.onmessage = function (msg) {
 	}
 	
 	
-	function startCounter(arraySize) {
+	/*function startCounter(arraySize) {
 		let counter = new Array(arraySize).fill(1);
 
 		function increment() {
@@ -107,7 +107,7 @@ self.onmessage = function (msg) {
 	}
 
 	// Example usage:
-	startCounter(1); // Replace 3 with the desired array size
+	startCounter(1); // Replace 3 with the desired array size*/
 /*
 	
 	
@@ -162,7 +162,7 @@ self.onmessage = function (msg) {
 			console.log(error.message);
 		}
 		*/
-};
+}
 		
 	
 	
