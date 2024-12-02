@@ -81,12 +81,12 @@ self.onmessage = function (msg) {
 			
 			gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
 			if(gearRatio_distance <= oldBest_gearRatio){
-				postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);	//Only post if the new ratio is better.
+				//postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);	//Only post if the new ratio is better.
 				oldBest_gearRatio = gearRatio_distance;
 			}
 			
 			if(gearRatio == target_gear_ratio){
-				idealFound = true;
+				//idealFound = true;
 				console.log("Ideal found");
 			}
 		}
