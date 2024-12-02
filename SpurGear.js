@@ -96,14 +96,7 @@ self.onmessage = function (msg) {
 	function initializeCounter(size) {
 		counter = new Array(size).fill(1);
 		console.log(counter);
-		startCounter();
-	}
-
-	function startCounter() {
-		intervalId = setInterval(increment, 1); // Increment every 1 second
-	}
-
-	function increment() {
+		
 		for (let i = 0; i < counter.length; i++) {
 			counter[i]++;
 			if (counter[i] < 10) break;
