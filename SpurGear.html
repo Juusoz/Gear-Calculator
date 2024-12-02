@@ -163,12 +163,12 @@
 				var gearSystem = msg.data[1]; // Received gear system as an array of layers
 				var ratio = msg.data[2]; // Received gear ratio
 				var gearCount = msg.data[3]; // Total number of gears in system
-				var layers = msg.data[4]; // The amount of layers in the system
-				var gearRatio_deviation = msg.data[5]; // The amount of deviation
+				var layers = msg.data[4];	// The amount of layers in the system
+				var gearRatio_deviation = msg.data[5];	// The amount of deviation
 
 				var entry = $($("#spurgear_result_template").clone().prop("content"));
-
-				var id = gearSystem.map(pair => pair[0] + 'T' + pair[1] + 'T').join('_'); // Unique ID based on gear teeth in all layers
+				
+				var id = gearSystem.map(pair => pair.join('T')).join('_'); // Unique ID based on gear teeth in all layers
 				var attr = document.createAttribute("data-ratio");
 				attr.value = ratio;
 				entry.find(".spurgear_result")[0].setAttributeNode(attr);
@@ -176,22 +176,22 @@
 				entry.find("#title")[0].attributes["data-target"].value = "#" + id;
 				entry.find("#col1")[0].id = id;
 				entry.find("#title")[0].attributes["aria-controls"].value = id;
-
+				
 				// Format the title with ratio and gear count
-				entry.find("#title")[0].innerHTML = `${Math.round(ratio * 100) / 100}:1 Ratio, ${gearCount} gears`;
+				entry.find("#title")[0].innerHTML = ${Math.round(ratio * 100) / 100}:1 Ratio, ${gearCount} gears;
 
 				// Format layer details
 				var layerDetails = gearSystem.map((pair, index) => {
 					return "<b>Layer " + (index + 1) + ":</b>" + 
 						   "<ul><li> Spur gear 1: " + pair[0] + " teeth" + 
 						   "<li> Spur gear 2: " + pair[1] + " teeth</ul>";
-				}).join(''); // Join the details to display as a single string
+				});
 
-				entry.find("#layer_details")[0].innerHTML = layerDetails; // Set layer details
+				entry.find("#layer_details")[0].innerHTML = layerDetails;	//Join layerDetails
 
 				// Placeholder calculations (replace with real ones as needed)
-				entry.find("#dist")[0].innerHTML = `Planet distance from center: Distance: N/A`;
-				entry.find("#rot")[0].innerHTML = `Rotate planets by multiple of: Rotation: N/A`;
+				entry.find("#dist")[0].innerHTML = Planet distance from center: Distance: N/A;
+				entry.find("#rot")[0].innerHTML = Rotate planets by multiple of: Rotation: N/A;
 
 				$("#spurgear_results").append(entry);
 				spurgear_sort(); // Sort results
