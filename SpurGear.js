@@ -81,12 +81,12 @@ self.onmessage = function (msg) {
 						
 						//Create the next gear system
 						gearSystem[0]++;	//Add 1 to the first gear
-						for(let gearCycler = 0; gearUpdated == true; gearCycler++){
+						for(let gearCycler = 0; gearUpdated == true; gearCycler++){		//Stop the update cycle once a gear has been updated.
 							
 							gearUpdated == false;					//Reset gear updates
-							if(gearSystem[GearCycler] > max_teeth){
-								gearSystem[GearCycler] = min_teeth;	//Reset first gear
-								gearSystem[GearCycler+1]++;			//Increase the value of the next gear by one
+							if(gearSystem[gearCycler] > max_teeth){
+								gearSystem[gearCycler] = min_teeth;	//Reset first gear
+								gearSystem[gearCycler+1]++;			//Increase the value of the next gear by one
 								gearUpdated = true;					//Still got more to go
 							}
 							
