@@ -159,34 +159,42 @@
 		
 		// On each worker response
 		worker.onmessage = function(msg) {
-		try {		
 			if (msg.data[0] === 0) { // New valid result
-					const gearSystem = msg.data[1]; // Gear system as array of [gear1, gear2] pairs
-					const ratio = msg.data[2];      // Calculated gear ratio
-					const gearCount = msg.data[3];  // Total number of gears in the system
-					const layers = msg.data[4];     // Number of layers in the system
-					const deviation = msg.data[5];  // Gear ratio deviation from target
+					// Process data from worker message
+					var gearSystem = msg.data[1]; // Spur gear system as array of [gear1, gear2] pairs
+					var ratio = msg.data[2];      // Calculated gear ratio
+					var gearCount = msg.data[3];  // Total number of gears in the system
+					var layers = msg.data[4];     // Number of layers in the system
+					var deviation = msg.data[5];  // Gear ratio deviation from target
 
-					// Clone the result template
-					const entry = $($("#spurgear_result_template").clone().prop("content"));
+					// Clone result template and populate with data
+					var entry = $($("#resultTemplate1").clone().prop("content"));
 
-					// Update title with ratio and gear count
-					entry.find("#title").html(`${Math.round(ratio * 100) / 100}:1 Ratio, ${gearCount} gears`);
+					// Generate a unique ID based on gear system details
+					var id = gearSystem.map(pair => `${pair[0]}S${pair[1]}P`).join('_') + `_${layers}L_${gearCount}G`;
+					var attr = document.createAttribute("data-ratio");
+					attr.value = ratio;
+					entry.find(".result1")[0].setAttributeNode(attr);
+					entry.find("#title")[0].attributes["data-target"].value = "#" + id;
+					entry.find("#col1")[0].id = id;
+					entry.find("#title")[0].attributes["aria-controls"].value = id;
 
-					// Format and display layer details
-					const layerDetails = gearSystem.map((pair, index) => {
-						return "<b>Layer " + ${index + 1}: + "</b><ul><li>Spur gear 1: " + ${pair[0]} + " teeth</li><li>Spur gear 2: " + ${pair[1]} + "teeth</li></ul>";
+					// Title includes the ratio and total number of gears
+					entry.find("#title")[0].innerHTML = `${Math.round(ratio * 100) / 100}:1 Ratio, ${gearCount} Gears`;
+
+					// Populate the layers and gear details
+					var layerDetails = gearSystem.map((pair, index) => {
+						return "<b>Layer " + ${index + 1} + ":</b><ul><li>Spur gear 1: " + ${pair[0]} + "teeth</li><li>Spur gear 2: " + ${pair[1]} + " teeth</li></ul>";
 					}).join('');
+					entry.find("#layer_details")[0].innerHTML = layerDetails;
 
-					entry.find("#layer_details").html(layerDetails);
+					// Placeholder calculations
+					entry.find("#dist")[0].innerHTML = `Planet distance from center: ${(gearSystem[0][0] + gearSystem[0][1]) / 2} * module`;
+					entry.find("#rot")[0].innerHTML = `Rotate planets by multiple of: ${(360 / layers) / (360 / gearSystem[0][0]) * (360 / gearSystem[0][1])}&#176;`;
 
-					// Placeholder for additional calculations
-					entry.find("#dist").html("Planet distance from center: Distance: N/A");
-					entry.find("#rot").html("Rotate planets by multiple of: Rotation: N/A");
-
-					// Append the new entry and sort results
+					// Append to results container and sort entries
 					$("#spurgear_results").append(entry);
-					spurgear_sort();
+					sort1(); // Sort results
 
 			} else if (msg.data[0] === 1) { // Time for progress update
 				spurgear_checked = msg.data[1];
@@ -205,9 +213,6 @@
             } else if (msg.data[0] == 2) { //Calculation complete
 				spurgear_stopsearch();	//Stop search
             }
-		} catch (error) {
-			console.log(error.message);
-		}
         };
     }
 
