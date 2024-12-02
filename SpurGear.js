@@ -79,7 +79,19 @@ self.onmessage = function (msg) {
 						
 						//Create the next gear system
 						gearSystem[0]++;	//Add 1 to the first gear
-						if(gearSystem[0] > max_teeth){
+						for(let gearCycler = 0; let gearUpdated == false; gearCycler++){
+							
+							if(gearSystem[GearCycler] > max_teeth){
+								gearSystem[GearCycler] = min_teeth;	//Reset first gear
+								gearSystem[GearCycler+1]++;			//Increase the value of the next gear by one
+								gearUpdated = true;
+							}
+							if(gearCycler[gearSystem.length-1] == max_teeth && gearUpdated == false){
+								break;
+							}
+							
+						}
+						/*if(gearSystem[0] > max_teeth){
 							gearSystem[0] = min_teeth;	//Reset first gear
 							gearSystem[1]++;			//Add 1 to the next gear
 							if(gearSystem[1] > max_teeth){
@@ -95,7 +107,7 @@ self.onmessage = function (msg) {
 									}
 								}
 							}
-						}
+						}*/
 					}
 					
 				}else{
