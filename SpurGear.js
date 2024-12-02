@@ -72,7 +72,7 @@ self.onmessage = function (msg) {
 								gearSystem[1] = min_teeth;	//Reset first gear
 								gearSystem[2]++;			//Add 1 to the next gear
 								if(gearSystem[2] > max_teeth){
-									gearSystem[3] = min_teeth;	//Reset first gear
+									gearSystem[2] = min_teeth;	//Reset first gear
 									gearSystem[3]++;			//Add 1 to the next gear
 									if(gearSystem[3] > max_teeth){
 										break;
