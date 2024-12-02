@@ -94,6 +94,7 @@ self.onmessage = function (msg) {
 			for (let i = 0; i < gearSystem.length; i++) {
 				gearSystem[i]++;
 				if (i == gearSystem.length - 1 && gearSystem[i] == max_teeth) {
+					console.log(gearSystem);
 					console.log("gearSystem has reached the end!");
 					complete = true;
 					return;
