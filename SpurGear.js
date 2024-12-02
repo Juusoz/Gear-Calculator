@@ -50,9 +50,10 @@ self.onmessage = function (msg) {
 						gearSystem.push(min_teeth);
 					}
 					
-					while(true){		//While the last value in the gear system is below max tooth count, loop.
-						
-						for(let i=0; i < gearSystem.length;){	//Calculate the current gear ratio
+					while(gearSystem[gearSystem.length-1] < min_teeth){		//While the last value in the gear system is below max tooth count, loop.
+					
+						gearRatio = 1;	//Reset gear ratio
+						for(let i=0; i < gearSystem.length;){	//Calculate the new gear ratio
 							gearRatio = gearRatio * (gearSystem[i+1]/gearSystem[i]);
 							i += 2;
 							//console.log("gear ratio: " + gearRatio + ":1");
