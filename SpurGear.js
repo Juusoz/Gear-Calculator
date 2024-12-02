@@ -35,7 +35,7 @@ self.onmessage = function (msg) {
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 16");
+		console.log("version 17");
 		
 		var gearSystem = [];
 		var gearRatio;
@@ -79,12 +79,13 @@ self.onmessage = function (msg) {
 						
 						//Create the next gear system
 						let finalGear_achieved = false;
-						gearSystem[0]++;		//Add 1 to the first gear
 						for(let gearCycler = 0; true; gearCycler++){		//Stop the update cycle once a gear has been updated.
 							
+							gearSystem[0]++;		//Add 1 to the first gear
 							if(gearSystem[gearCycler] > max_teeth){
 								gearSystem[gearCycler] = min_teeth;	//Reset first gear
 								gearSystem[gearCycler+1]++;			//Increase the value of the next gear by one
+								console.log("Added 1 to gear " + gearCycler+1 + ", new value " + gearSystem[gearCycler+1]);
 								break;								//Still got more to go
 							}
 							
