@@ -44,8 +44,10 @@
   
    <!-- Highest possible gear rate -->
 	<div class="form-group mb-3">
-		<p id="spurgear_gearrate">Highest possible gear ratio per layer: 1.50:1</p>
-		<p id="spurgear_gearrate_total">Highest possible gear ratio in total: 1.50:1</p>
+		<p id="spurgear_gearrate">
+		Highest possible gear ratio per layer: 1.50:1<br>
+		Highest possible gear ratio in total: 1.50:1
+		</p>
 	</div>
 
   <!-- Button to initiate the gear combination search -->
@@ -165,7 +167,34 @@
 
 				var entry = $($("#spurgear_result_template").clone().prop("content"));
 
-				var id = gearSystem.map(pair => pair[0] + 'T' + pair[1] + 'T').join('_'); // Unique ID based on gear teeth in all layers
+				var id = gearSystem.map(pair => pair.join('T')).join('_'); // Unique ID based on gear teeth in all layers
+				var attr = document.createAttribute("data-ratio");
+				attr.value = ratio;
+				entry.find(".spurgear_result")[0].setAttributeNode(attr);
+
+				entry.find("#title")[0].attributes["data-target"].value = "#" + id;
+				entry.find("#col1")[0].id = id;
+				entry.find("#title")[0].attributes["aria-controls"].value = id;
+				
+				// Format the title with ratio and gear count
+				entry.find("#title")[0].innerHTML = `${Math.round(ratio * 100) / 100}:1 Ratio, ${gearCount} gears`;
+
+				// Format layer details
+				var layerDetails = gearSystem.map((pair, index) => {
+					return (index === 0 ? `Layer ${index + 1}:<br>Spur gear 1: ${pair[0]}T & ${pair[1]}T` 
+										: `Layer ${index + 1}: ${pair[0]}T & ${pair[1]}T`);
+				}).join('<br>');
+
+				entry.find("#s")[0].innerHTML = layerDetails;
+
+				// Placeholder calculations (replace with real ones as needed)
+				entry.find("#dist")[0].innerHTML = `Planet distance from center: Distance: N/A`;
+				entry.find("#rot")[0].innerHTML = `Rotate planets by multiple of: Rotation: N/A`;
+
+				$("#spurgear_results").append(entry);
+				spurgear_sort(); // Sort results
+
+				/*var id = gearSystem.map(pair => pair[0] + 'T' + pair[1] + 'T').join('_'); // Unique ID based on gear teeth in all layers
 				var attr = document.createAttribute("data-ratio");
 				attr.value = ratio;
 				entry.find(".spurgear_result")[0].setAttributeNode(attr);
@@ -191,7 +220,7 @@
 				entry.find("#rot")[0].innerHTML = `Rotate planets by multiple of: Rotation: N/A`;
 
 				$("#spurgear_results").append(entry);
-				spurgear_sort(); // Sort results
+				spurgear_sort(); // Sort results*/
 
 			} else if (msg.data[0] === 1) { // Time for progress update
 				spurgear_checked = msg.data[1];
