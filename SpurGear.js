@@ -39,25 +39,7 @@ self.onmessage = function (msg) {
 		//}
 		
 		function increment(){
-			for (let i = 0; i < gearSystem.length; i++) {
-				
-				gearRatio = 1;	//Reset gear ratio
-				for(let j=0; j < gearSystem.length; j += 2){	//Calculate the new gear ratio
-					gearRatio = gearRatio * (gearSystem[j+1]/gearSystem[j]);;
-					//console.log("gear ratio: " + gearRatio + ":1");
-				}
-				
-				gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
-				if(gearRatio_distance <= oldBest_gearRatio){
-					postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);	//Only post if the new ratio is better.
-					oldBest_gearRatio = gearRatio_distance;
-				}
-				
-				if(gearRatio == target_gear_ratio){
-					idealFound = true;
-					console.log("Ideal found");
-				}
-				
+					
 				
 				gearSystem[i]++;
 				
@@ -84,24 +66,49 @@ self.onmessage = function (msg) {
 		increment());
 	}*/
 	
+		
+	var gearRatio;
+	var oldBest_gearRatio = Infinity;
+	
+	function checkGearRatio(gearSystem){
+		for (let i = 0; i < gearSystem.length; i++) {
+				
+			gearRatio = 1;	//Reset gear ratio
+			for(let j=0; j < gearSystem.length; j += 2){	//Calculate the new gear ratio
+				gearRatio = gearRatio * (gearSystem[j+1]/gearSystem[j]);;
+				//console.log("gear ratio: " + gearRatio + ":1");
+			}
+			
+			gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
+			if(gearRatio_distance <= oldBest_gearRatio){
+				postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);	//Only post if the new ratio is better.
+				oldBest_gearRatio = gearRatio_distance;
+			}
+			
+			if(gearRatio == target_gear_ratio){
+				idealFound = true;
+				console.log("Ideal found");
+			}
+		}
+	}
+	
 	let complete = false;
-	console.log("version 3");
 
-	function initializeCounter(size) {
-		counter = new Array(size).fill(1);
-		console.log(counter);
+	function cycleGears(size) {
+		gearSystem = new Array(size).fill(min_teeth);
+		checkGearRatio(gearSystem);
 		while(true){
-			for (let i = 0; i < counter.length; i++) {
-				counter[i]++;
-				if (counter[i] < 10) break;
-				if (i == counter.length - 1 && counter[i] == 10) {
-					console.log("Counter has reached the end!");
+			for (let i = 0; i < gearSystem.length; i++) {
+				gearSystem[i]++;
+				if (gearSystem[i] < 10) break;
+				if (i == gearSystem.length - 1 && gearSystem[i] == 10) {
+					console.log("gearSystem has reached the end!");
 					complete = true;
 					return;
 				}
-				counter[i] = 1;
+				gearSystem[i] = 1;
 			}
-			console.log(counter);
+			checkGearRatio(gearSystem);
 			if(complete == true){
 				break;
 			}
@@ -109,20 +116,15 @@ self.onmessage = function (msg) {
 	}
 
 	// Example usage:
-	initializeCounter(3);
 	
 	postDone();
-/*
 	
 	
 	//---------------------------------------------------------------------------//
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 28");
-		
-		var gearRatio;
-		var oldBest_gearRatio = Infinity;
+		console.log("version 29");
 		
 		for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 			
@@ -132,25 +134,7 @@ self.onmessage = function (msg) {
 					
 					//Cycle through the possibilities
 					cycleGears(currentLayer);
-
-						/*for(let gearCycler = 0; true; gearCycler++){		//Stop the update cycle once a gear has been updated.						
-						
-							if(gearSystem[gearCycler] > max_teeth){
-								gearSystem[gearCycler] = min_teeth;	//Reset first gear
-								gearSystem[gearCycler+1]++;			//Increase the value of the next gear by one
-								console.log("Added 1 to gear " + gearCycler+1 + ", new value " + gearSystem[gearCycler+1]);
-								break;								//Still got more to go
-							}
-							
-							if(gearCycler[gearSystem.length-1] == max_teeth && gearUpdated == false){
-								finalGear_achieved = true;				
-								break;								//Final gear is at max and still no updates
-							}
-							
-						}
-						if(finalGear_achieved == true){
-							break;
-						}
+					
 					
 				}else{
 					console.log("Skipped layer " + currentLayer + ", not high enough of a gear ratio.");
