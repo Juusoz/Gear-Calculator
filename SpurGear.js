@@ -35,7 +35,7 @@ self.onmessage = function (msg) {
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 17");
+		console.log("version 19");
 		
 		var gearSystem = [];
 		var gearRatio;
@@ -55,66 +55,59 @@ self.onmessage = function (msg) {
 						gearSystem.push(min_teeth);
 					}
 					
-					while(true){		//While there is space for gear updates in the layer, loop.
-					
-						gearRatio = 1;	//Reset gear ratio
-						for(let i=0; i < gearSystem.length;){	//Calculate the new gear ratio
-							gearRatio = gearRatio * (gearSystem[i+1]/gearSystem[i]);
-							i += 2;
-							//console.log("gear ratio: " + gearRatio + ":1");
-						}
-						
-						gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
-						if(gearRatio_distance <= oldBest_gearRatio){
-							postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);	//Only post if the new ratio is better.
-							oldBest_gearRatio = gearRatio_distance;
-						}
-						
-						if(gearRatio == target_gear_ratio){
-							idealFound = true;
-							console.log("Ideal found");
-						}
-						
-						console.log(gearSystem);
-						
-						//Create the next gear system
-						let finalGear_achieved = false;
-						gearSystem[0]++;		//Add 1 to the first gear
-						if(gearSystem[0] > max_teeth){
-							for(let gearCycler = 0; true; gearCycler++){		//Stop the update cycle once a gear has been updated.
-								if(gearSystem[gearCycler] > max_teeth){
-									gearSystem[gearCycler] = min_teeth;	//Reset first gear
-									gearSystem[gearCycler+1]++;			//Increase the value of the next gear by one
-									console.log("Added 1 to gear " + gearCycler+1 + ", new value " + gearSystem[gearCycler+1]);
-									break;								//Still got more to go
-								}
-								
-								if(gearCycler[gearSystem.length-1] == max_teeth && gearUpdated == false){
-									finalGear_achieved = true;				
-									break;								//Final gear is at max and still no updates
-								}
-								
+					//Cycle through the possibilities
+					for (let i = 0; i <= gearSystem.length; i++) {
+						gearSystem[i]++;
+						//Tooth count is below the limit
+						if (gearSystem[i] < max_teeth) {
+							
+							gearRatio = 1;	//Reset gear ratio
+							for(let i=0; i < gearSystem.length;){	//Calculate the new gear ratio
+								gearRatio = gearRatio * (gearSystem[i+1]/gearSystem[i]);
+								i += 2;
+								//console.log("gear ratio: " + gearRatio + ":1");
 							}
+							
+							gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
+							if(gearRatio_distance <= oldBest_gearRatio){
+								postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);	//Only post if the new ratio is better.
+								oldBest_gearRatio = gearRatio_distance;
+							}
+							
+							if(gearRatio == target_gear_ratio){
+								idealFound = true;
+								console.log("Ideal found");
+							}
+							
+							break;
+							
+						}
+						
+						//The layer has reached the end
+						if (i === gearSystem.length - 1 && gearSystem[i] == max_teeth) {
+							nextLayer = true;
+						}
+						gearSystem[i] = min_teeth;
+					}
+					console.log(gearSystem);
+
+						/*for(let gearCycler = 0; true; gearCycler++){		//Stop the update cycle once a gear has been updated.						
+						
+							if(gearSystem[gearCycler] > max_teeth){
+								gearSystem[gearCycler] = min_teeth;	//Reset first gear
+								gearSystem[gearCycler+1]++;			//Increase the value of the next gear by one
+								console.log("Added 1 to gear " + gearCycler+1 + ", new value " + gearSystem[gearCycler+1]);
+								break;								//Still got more to go
+							}
+							
+							if(gearCycler[gearSystem.length-1] == max_teeth && gearUpdated == false){
+								finalGear_achieved = true;				
+								break;								//Final gear is at max and still no updates
+							}
+							
 						}
 						if(finalGear_achieved == true){
 							break;
-						}
-						/*if(gearSystem[0] > max_teeth){
-							gearSystem[0] = min_teeth;	//Reset first gear
-							gearSystem[1]++;			//Add 1 to the next gear
-							if(gearSystem[1] > max_teeth){
-								gearSystem[1] = min_teeth;	//Reset first gear
-								
-								break;
-								
-								gearSystem[2]++;			//Add 1 to the next gear
-								if(gearSystem[2] > max_teeth){
-									gearSystem[2] = min_teeth;	//Reset first gear
-									gearSystem[3]++;			//Add 1 to the next gear
-									if(gearSystem[3] > max_teeth){
-									}
-								}
-							}
 						}*/
 					}
 					
