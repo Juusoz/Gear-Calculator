@@ -32,54 +32,55 @@ self.onmessage = function (msg) {
 	}
 	
 	function cycleGears(gearSystem, currentLayer){
-		for (let i = 0; i < gearSystem.length; i++) {
-			
-			gearRatio = 1;	//Reset gear ratio
-			for(let j=0; j < gearSystem.length; j += 2){	//Calculate the new gear ratio
-				gearRatio = gearRatio * (gearSystem[j+1]/gearSystem[j]);;
-				//console.log("gear ratio: " + gearRatio + ":1");
+		function increment(){
+			for (let i = 0; i < gearSystem.length; i++) {
+				
+				gearRatio = 1;	//Reset gear ratio
+				for(let j=0; j < gearSystem.length; j += 2){	//Calculate the new gear ratio
+					gearRatio = gearRatio * (gearSystem[j+1]/gearSystem[j]);;
+					//console.log("gear ratio: " + gearRatio + ":1");
+				}
+				
+				gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
+				if(gearRatio_distance <= oldBest_gearRatio){
+					postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);	//Only post if the new ratio is better.
+					oldBest_gearRatio = gearRatio_distance;
+				}
+				
+				if(gearRatio == target_gear_ratio){
+					idealFound = true;
+					console.log("Ideal found");
+				}
+				
+				
+				gearSystem[i]++;
+				
+				//Tooth count is below or equal to the limit, restart the i
+				if (gearSystem[i] <= max_teeth) {
+					break;
+				}
+				
+				gearSystem[i] = min_teeth;
+				
+				//The layer has reached the end
+				if (i === gearSystem.length - 1 && gearSystem[i] == max_teeth) {
+					return;		//Stop the loop
+				}
+				
+				console.log(gearSystem);
+				setTimeout(increment, 1);
+				
 			}
-			
-			gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
-			if(gearRatio_distance <= oldBest_gearRatio){
-				postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);	//Only post if the new ratio is better.
-				oldBest_gearRatio = gearRatio_distance;
-			}
-			
-			if(gearRatio == target_gear_ratio){
-				idealFound = true;
-				console.log("Ideal found");
-			}
-			
-			
-			gearSystem[i]++;
-			
-			//Tooth count is below or equal to the limit, restart the i
-			if (gearSystem[i] <= max_teeth) {
-				break;
-			}
-			
-			gearSystem[i] = min_teeth;
-			
-			//The layer has reached the end
-			if (i === gearSystem.length - 1 && gearSystem[i] == max_teeth) {
-				return;		//Stop the loop
-			}
-			
-			console.log(gearSystem);
-			setTimeout(cycleGears(gearSystem, currentLayer), 1);
-			
 		}
-		
 		console.log(gearSystem);
-		setTimeout(cycleGears(gearSystem, currentLayer), 1);
+		setTimeout(increment, 1);
 	}
 	
 	//---------------------------------------------------------------------------//
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 26");
+		console.log("version 27");
 		
 		var gearSystem = [];
 		var gearRatio;
