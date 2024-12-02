@@ -50,14 +50,14 @@ self.onmessage = function (msg) {
 					console.log("Starting from layer " + currentLayer + " with " + currentLayer*2 + " gears.");
 					
 					gearSystem = [];		//Reset gear system
-					gearUpdated = true;	//Reset gear updates
+					gearUpdated = true;		//Reset gear updates
 					goal_gear = currentLayer*2;	//The gear number before starting the next layer
 					
 					for(let current_gear = 0; current_gear < goal_gear; current_gear++){	//Populate the gear system
 						gearSystem.push(min_teeth);
 					}
 					
-					while(gearUpdated == true){		//While there is space for gear updates in the layer, loop.
+					/*while(gearUpdated == true){		//While there is space for gear updates in the layer, loop.
 					
 						gearRatio = 1;	//Reset gear ratio
 						for(let i=0; i < gearSystem.length;){	//Calculate the new gear ratio
@@ -94,7 +94,7 @@ self.onmessage = function (msg) {
 								break;								//Final gear is at max and still no updates
 							}
 							
-						}
+						}*/
 						/*if(gearSystem[0] > max_teeth){
 							gearSystem[0] = min_teeth;	//Reset first gear
 							gearSystem[1]++;			//Add 1 to the next gear
