@@ -107,7 +107,7 @@ self.onmessage = function (msg) {
 		for (let i = 0; i < counter.length; i++) {
 			counter[i]++;
 			if (counter[i] < 10) break;
-			if (i === counter.length - 1 && counter[i] === 10) {
+			if (i == counter.length - 1 && counter[i] == 10) {
 				counterFunction();
 				return;
 			}
