@@ -35,7 +35,7 @@ self.onmessage = function (msg) {
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 20");
+		console.log("version 21");
 		
 		var gearSystem = [];
 		var gearRatio;
@@ -64,7 +64,7 @@ self.onmessage = function (msg) {
 							
 							gearRatio = 1;	//Reset gear ratio
 							for(let j=0; j < gearSystem.length; j += 2){	//Calculate the new gear ratio
-								gearRatio = gearRatio * (gearSystem[i+1]/gearSystem[i]);;
+								gearRatio = gearRatio * (gearSystem[j+1]/gearSystem[j]);;
 								//console.log("gear ratio: " + gearRatio + ":1");
 							}
 							
