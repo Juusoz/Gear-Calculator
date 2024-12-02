@@ -84,25 +84,29 @@ self.onmessage = function (msg) {
 		increment());
 	}*/
 	
-		function startCounter(arraySize) {
+	function startCounter(arraySize) {
 		let counter = new Array(arraySize).fill(1);
 
 		function increment() {
-			for (let i = 0; i < counter.length; i++) {
-				counter[i]++;
-				if (counter[i] < 10) break;
-				if (i === counter.length - 1 && counter[i] === 10) {
-					console.log("Counter has reached the end!");
-					return;
+			try {
+				for (let i = 0; i < counter.length; i++) {
+					counter[i]++;
+					if (counter[i] < 10) break;
+					if (i === counter.length - 1 && counter[i] === 10) {
+						counterFunction();
+						return;
+					}
+					counter[i] = 1;
 				}
-				counter[i] = 1;
+				console.log(counter);
+				setTimeout(increment, 1000); // Recursively call increment
+			} catch (err) {
+				console.error("Increment failed:", err);
 			}
-			console.log(counter);
-			setTimeout(increment, 100); // Adjust the cycle speed here
 		}
 
 		console.log(counter);
-		setTimeout(increment, 100); // Adjust the cycle speed here
+		setTimeout(increment, 1000);
 	}
 
 	// Example usage:
