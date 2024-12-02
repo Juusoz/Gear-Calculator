@@ -84,6 +84,30 @@ self.onmessage = function (msg) {
 		increment());
 	}*/
 	
+		function startCounter(arraySize) {
+		let counter = new Array(arraySize).fill(1);
+
+		function increment() {
+			for (let i = 0; i < counter.length; i++) {
+				counter[i]++;
+				if (counter[i] < 10) break;
+				if (i === counter.length - 1 && counter[i] === 10) {
+					console.log("Counter has reached the end!");
+					return;
+				}
+				counter[i] = 1;
+			}
+			console.log(counter);
+			setTimeout(increment, 100); // Adjust the cycle speed here
+		}
+
+		console.log(counter);
+		setTimeout(increment, 100); // Adjust the cycle speed here
+	}
+
+	// Example usage:
+	startCounter(1); // Replace 3 with the desired array size*/
+	
 	postDone();
 /*
 	
