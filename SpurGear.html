@@ -160,7 +160,7 @@
 		// On each worker response
 		worker.onmessage = function(msg) {
 			if (msg.data[0] === 0) { // New valid result
-				var gearSystem = msg.data[1]; // Received gear system as an array of layers
+				/*var gearSystem = msg.data[1]; // Received gear system as an array of layers
 				var ratio = msg.data[2]; // Received gear ratio
 				var gearCount = msg.data[3]; // Total number of gears in system
 				var layers = msg.data[4];	// The amount of layers in the system
@@ -194,7 +194,7 @@
 				entry.find("#rot")[0].innerHTML = Rotate planets by multiple of: Rotation: N/A;
 
 				$("#spurgear_results").append(entry);
-				spurgear_sort(); // Sort results
+				spurgear_sort(); // Sort results*/
 
 			} else if (msg.data[0] === 1) { // Time for progress update
 				spurgear_checked = msg.data[1];
