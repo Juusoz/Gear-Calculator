@@ -35,7 +35,7 @@ self.onmessage = function (msg) {
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 21");
+		console.log("version 22");
 		
 		var gearSystem = [];
 		var gearRatio;
@@ -57,29 +57,30 @@ self.onmessage = function (msg) {
 					
 					//Cycle through the possibilities
 					for (let i = 0; i < gearSystem.length; i++) {
+						
+						gearRatio = 1;	//Reset gear ratio
+						for(let j=0; j < gearSystem.length; j += 2){	//Calculate the new gear ratio
+							gearRatio = gearRatio * (gearSystem[j+1]/gearSystem[j]);;
+							//console.log("gear ratio: " + gearRatio + ":1");
+						}
+						
+						gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
+						if(gearRatio_distance <= oldBest_gearRatio){
+							postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);	//Only post if the new ratio is better.
+							oldBest_gearRatio = gearRatio_distance;
+						}
+						
+						if(gearRatio == target_gear_ratio){
+							idealFound = true;
+							console.log("Ideal found");
+						}
+						
+						console.log(gearSystem);
+						
 						gearSystem[i]++;
 						
-						//Tooth count is below or equal to the limit
+						//Tooth count is below or equal to the limit, restart the i
 						if (gearSystem[i] <= max_teeth) {
-							
-							gearRatio = 1;	//Reset gear ratio
-							for(let j=0; j < gearSystem.length; j += 2){	//Calculate the new gear ratio
-								gearRatio = gearRatio * (gearSystem[j+1]/gearSystem[j]);;
-								//console.log("gear ratio: " + gearRatio + ":1");
-							}
-							
-							gearRatio_distance = Math.abs(target_gear_ratio - gearRatio); //The distance to the goal ratio, forced positive.
-							if(gearRatio_distance <= oldBest_gearRatio){
-								postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);	//Only post if the new ratio is better.
-								oldBest_gearRatio = gearRatio_distance;
-							}
-							
-							if(gearRatio == target_gear_ratio){
-								idealFound = true;
-								console.log("Ideal found");
-							}
-							
-							console.log(gearSystem);
 							break;
 						}
 						
