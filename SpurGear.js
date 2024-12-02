@@ -93,13 +93,13 @@ self.onmessage = function (msg) {
 		while(true){
 			for (let i = 0; i < gearSystem.length; i++) {
 				gearSystem[i]++;
-				if (gearSystem[i] <= max_teeth) break;
+				if (gearSystem[i] < max_teeth) break;
 				if (i == gearSystem.length - 1 && gearSystem[i] == max_teeth) {
 					console.log("gearSystem has reached the end!");
 					complete = true;
 					return;
 				}
-				gearSystem[i] = 1;
+				gearSystem[i] = min_teeth;
 			}
 			console.log(gearSystem);
 			if(complete == true){
