@@ -67,19 +67,19 @@ self.onmessage = function (msg) {
 			}
 			
 			console.log(gearSystem);
-			setTimeout(cycleGears, 1);
+			setTimeout(cycleGears(gearSystem, currentLayer), 1);
 			
 		}
 		
 		console.log(gearSystem);
-		setTimeout(cycleGears, 1);
+		setTimeout(cycleGears(gearSystem, currentLayer), 1);
 	}
 	
 	//---------------------------------------------------------------------------//
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	try {
-		console.log("version 25");
+		console.log("version 26");
 		
 		var gearSystem = [];
 		var gearRatio;
