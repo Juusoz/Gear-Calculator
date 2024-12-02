@@ -159,8 +159,9 @@
 		
 		// On each worker response
 		worker.onmessage = function(msg) {
+		try {		
 			if (msg.data[0] === 0) { // New valid result
-				   const gearSystem = msg.data[1]; // Gear system as array of [gear1, gear2] pairs
+					const gearSystem = msg.data[1]; // Gear system as array of [gear1, gear2] pairs
 					const ratio = msg.data[2];      // Calculated gear ratio
 					const gearCount = msg.data[3];  // Total number of gears in the system
 					const layers = msg.data[4];     // Number of layers in the system
@@ -204,6 +205,9 @@
             } else if (msg.data[0] == 2) { //Calculation complete
 				spurgear_stopsearch();	//Stop search
             }
+		} catch (error) {
+			console.log(error.message);
+		}
         };
     }
 
