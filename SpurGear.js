@@ -86,19 +86,24 @@ self.onmessage = function (msg) {
 	
 	let counter = [];
 	let arraySize = 1; // Change this to the desired size of the array
+	let intervalId;
 
 	function counterFunction() {
 		console.log("Counter has reached the end!");
+		clearInterval(intervalId); // Stop the interval when the cycle is complete
 	}
 
 	function initializeCounter(size) {
 		counter = new Array(size).fill(1);
 		console.log(counter);
-		increment();
+		startCounter();
+	}
+
+	function startCounter() {
+		intervalId = setInterval(increment, 1); // Increment every 1 second
 	}
 
 	function increment() {
-		console.log("increment started");
 		for (let i = 0; i < counter.length; i++) {
 			counter[i]++;
 			if (counter[i] < 10) break;
@@ -109,7 +114,6 @@ self.onmessage = function (msg) {
 			counter[i] = 1;
 		}
 		console.log(counter);
-		setTimeout(increment, 1); // Adjust the cycle speed here
 	}
 
 	// Example usage:
