@@ -109,7 +109,6 @@ self.onmessage = function (msg) {
 						if(finalGear_achieved == true){
 							break;
 						}*/
-					}
 					
 				}else{
 					console.log("Skipped layer " + currentLayer + ", not high enough of a gear ratio.");
