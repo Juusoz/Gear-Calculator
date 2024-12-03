@@ -33,18 +33,31 @@
 		
 		<!------------ Selection button area ----------->
 		<div class="mb-3" role="group" aria-label="Planetary Type Selection">
-				<button type="button" class="btn btn-primary active" id="simplePlanetaryBtn" 
-						onclick="selectPlanetaryType('simple')">Planetary gears</button>
-				<button type="button" class="btn btn-primary" id="compoundPlanetaryBtn" 
-						onclick="selectPlanetaryType('compound')">Compound Planetary</button>
+		
 				<button type="button" class="btn btn-primary" id="compoundSpurBtn" 
 						onclick="selectPlanetaryType('spur')">Spur gears</button>
+						
+				<button type="button" class="btn btn-primary active" id="simplePlanetaryBtn" 
+						onclick="selectPlanetaryType('planetary')">Planetary gears</button>
+						
+				<button type="button" class="btn btn-primary" id="compoundPlanetaryBtn" 
+						onclick="selectPlanetaryType('compound')">Compound Planetary</button>
 		</div>
 
-		<!------------ JavaScript to Handle Button Logic ----------->
 		<script>
+		//---------------Button logic------------//
 			function selectPlanetaryType(type) {
-				if (type === 'simple') {
+					
+				if (type === 'spur') {
+					document.getElementById('simplePlanetaryBtn').classList.remove('active');
+					document.getElementById('compoundPlanetaryBtn').classList.remove('active');
+					document.getElementById('compoundSpurBtn').classList.add('active');
+					
+					document.getElementById('planetary-gear').style.display = 'none';
+					document.getElementById('compound-planetary').style.display = 'none';
+					document.getElementById('spur-gear').style.display = 'block';
+					
+				} else if (type === 'planetary') {
 					document.getElementById('simplePlanetaryBtn').classList.add('active');
 					document.getElementById('compoundPlanetaryBtn').classList.remove('active');
 					document.getElementById('compoundSpurBtn').classList.remove('active');
@@ -62,18 +75,22 @@
 					document.getElementById('planetary-gear').style.display = 'none';
 					document.getElementById('compound-planetary').style.display = 'block';
 					document.getElementById('spur-gear').style.display = 'none';
-					
-				} else if (type === 'spur') {
-					document.getElementById('simplePlanetaryBtn').classList.remove('active');
-					document.getElementById('compoundPlanetaryBtn').classList.remove('active');
-					document.getElementById('compoundSpurBtn').classList.add('active');
-					
-					document.getElementById('planetary-gear').style.display = 'none';
-					document.getElementById('compound-planetary').style.display = 'none';
-					document.getElementById('spur-gear').style.display = 'block';
 				}
 			}
 		</script>
+		
+		
+	  
+	  <script>		 <!-- Spur Gear selection area -->
+		   $(function() {
+			  $("#spur-gear").load("SpurGear.html", function(response, status, xhr) {
+				 if (status == "error") {
+					$("#spur-gear").text("Failed to load file: " + xhr.status + " " + xhr.statusText);
+				 }
+			  });
+		   });
+		</script>
+      <div class="card mb-3" id="spur-gear"></div>
 		
 		<script>		 <!-- Simple Panetary Gear selection area -->
 		   $(function() {
@@ -84,7 +101,7 @@
 			  });
 		   });
 		</script>
-		<div class="card mb-3" id="planetary-gear"></div>
+		<div class="card mb-3" id="planetary-gear" style="display: none;"></div>
 	  
 	  
 	  <script>		 <!-- Compound Panetary Gear selection area -->
@@ -97,17 +114,6 @@
 		   });
 		</script>
       <div class="card mb-3" id="compound-planetary" style="display: none;"></div>
-	  
-	  <script>		 <!-- Spur Gear selection area -->
-		   $(function() {
-			  $("#spur-gear").load("SpurGear.html", function(response, status, xhr) {
-				 if (status == "error") {
-					$("#spur-gear").text("Failed to load file: " + xhr.status + " " + xhr.statusText);
-				 }
-			  });
-		   });
-		</script>
-      <div class="card mb-3" id="spur-gear" style="display: none;"></div>
 	  
     </div>
 	
