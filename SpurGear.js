@@ -56,9 +56,9 @@ self.onmessage = function (msg) {
 		
 	}
 	
-	let complete = false;
 
 	function cycleGears(currentLayer) {
+		let complete = false;
 		gearSystem = new Array(currentLayer*2).fill(min_teeth);
 		calculateGearRatio(gearSystem, currentLayer)
 		while(true){
@@ -82,7 +82,7 @@ self.onmessage = function (msg) {
 	//---------------------------------------------------------------------------//
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
-	console.log("version 9");
+	console.log("version 10");
 	try {		
 		for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 			
