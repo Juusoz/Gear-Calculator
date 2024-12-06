@@ -46,7 +46,7 @@ self.onmessage = function (msg) {
 		gearRatio_distance = target_gear_ratio - gearRatio; //The distance to the goal ratio, forced positive.
 		if(Math.abs(gearRatio_distance) <= oldBest_gearRatio){
 			postNewBestSystem(gearSystem, gearRatio, currentLayer, -gearRatio_distance);	//Only post if the new ratio is better.
-			oldBest_gearRatio = gearRatio_distance;
+			oldBest_gearRatio = Math.abs(gearRatio_distance);
 		}
 		
 		if(gearRatio == target_gear_ratio){
@@ -82,7 +82,7 @@ self.onmessage = function (msg) {
 	//---------------------------------------------------------------------------//
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
-	console.log("version 10");
+	console.log("version 11");
 	try {		
 		for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 			
