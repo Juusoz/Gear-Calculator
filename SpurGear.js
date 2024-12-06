@@ -45,7 +45,7 @@ self.onmessage = function (msg) {
 		
 		gearRatio_distance = target_gear_ratio - gearRatio; //The distance to the goal ratio, forced positive.
 		if(Math.abs(gearRatio_distance) <= oldBest_gearRatio){
-			postNewBestSystem(gearSystem, gearRatio, currentLayer, gearRatio_distance);	//Only post if the new ratio is better.
+			postNewBestSystem(gearSystem, gearRatio, currentLayer, -gearRatio_distance);	//Only post if the new ratio is better.
 			oldBest_gearRatio = gearRatio_distance;
 		}
 		
