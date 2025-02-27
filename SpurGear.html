@@ -166,7 +166,30 @@
 		worker.onmessage = function(msg) {
             if (msg.data[0] == 0) { // New valid result, create a new response
 			
-				createNewSpurResponse(msg);
+				//createNewSpurResponse(msg);
+				var s = msg.data[1]; // Sun gear teeth
+				var p = msg.data[2]; // Planet gear teeth
+				var r = msg.data[3]; // Ring gear teeth
+				var pn = msg.data[4]; // Number of planets
+				var ratio = eval(ratioFunction); // Calculate gear ratio
+
+				// Clone result template and populate with data
+				var entry = $($("#spurgear_result_template").clone().prop("content"));
+				var id = s + "S" + p + "P" + r + "R" + pn + "PN";
+				var attr = document.createAttribute("data-ratio");
+				attr.value = ratio;
+				entry.find("spurgear_result")[0].setAttributeNode(attr);
+				entry.find("#title")[0].attributes["data-target"].value = "#" + id;
+				entry.find("#spurgear_col")[0].id = id;
+				entry.find("#title")[0].attributes["aria-controls"].value = id;
+				entry.find("#title")[0].innerHTML = Math.round(ratio * 100) / 100 + ":1 Ratio, " + pn + " Planets";
+				entry.find("#s")[0].innerHTML += s;
+				entry.find("#p")[0].innerHTML += p;
+				entry.find("#r")[0].innerHTML += r;
+				entry.find("#dist")[0].innerHTML += (s + p) / 2 + " * module";
+				entry.find("#rot")[0].innerHTML += ((360 / pn) / (360 / s)) * (360 / p) + "&#176;";
+				$("#results1").append(entry);
+				spurgear_sort(); // Sort results
 				
             } else if (msg.data[0] == 1) { // Progress update
                 checked1 = msg.data[1];
@@ -185,7 +208,7 @@
         };
     }
 
-	function createNewSpurResponse(msg){
+	/*function createNewSpurResponse(msg){
 	
 		var s = msg.data[1]; // Sun gear teeth
 		var p = msg.data[2]; // Planet gear teeth
@@ -211,7 +234,7 @@
 		$("#results1").append(entry);
 		spurgear_sort(); // Sort results
 				
-	}
+	}*/
 
 	function spurgear_stopsearch(){
 		spurgear_checked = spurgear_combinations;
