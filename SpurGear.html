@@ -205,7 +205,7 @@
 		entry.find("#spurgear_title")[0].attributes["aria-controls"].value = id;
 		entry.find("#spurgear_title")[0].innerHTML = spurgear_gear_ratio + ":1 Ratio, " + spurgear_gear_layers + " Layers";
 		
-		entry.find("#s")[0].innerHTML += s;
+		entry.find("#s")[0].innerHTML += convertSpurGearsToLayers(s, 2);
 		entry.find("#spurgear_gear_ratio")[0].innerHTML += spurgear_gear_ratio;
 		entry.find("#r")[0].innerHTML += r;
 		entry.find("#dist")[0].innerHTML += (s + spurgear_gear_ratio) / 2 + " * module";
@@ -214,6 +214,26 @@
 		$("#spurgear_results").append(entry);
 		spurgear_sort(); // Sort results
 	}
+	
+	function convertSpurGearsToLayers(input, gearsPerLayer) {
+	  const numbers = input.split(',').map(Number);
+	  let result = '';
+	  let layer = 1;
+
+	  for (let i = 0; i < numbers.length; i += gearsPerLayer) {
+		result += "Layer ${layer}:";
+		for (let j = 0; j < gearsPerLayer && i + j < numbers.length; j++) {
+		  result += "Gear ${j + 1}: ${numbers[i + j]}";
+		}
+		layer++;
+	  }
+
+	  return result;
+	}
+
+	const input = '8,8,8,8';
+	const gearsPerLayer = 2;
+	console.log(convertGears(input, gearsPerLayer));
 
 	function spurgear_stopsearch(){
 		spurgear_checked = spurgear_combinations;
@@ -254,5 +274,6 @@
     function sortFunc1(a, b) {
         return Math.abs($("#spurgear_target_ratio")[0].value - Math.abs($(a).data("ratio"))) - Math.abs($("#spurgear_target_ratio")[0].value - Math.abs($(b).data("ratio")));
     }
+
 	
 </script>
