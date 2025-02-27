@@ -199,7 +199,7 @@
                 updateStatus1(); // Update progress bar and time
                 update1(); // Refresh combinations count
             } else if (msg.data[0] == 2) {	// Calculation complete
-                spurgear_stopsearch()		// Terminate the worker
+                spurgear_stopsearch();		// Terminate the worker
         };
     }
 
@@ -215,7 +215,7 @@
 		spurgear_update();
 		worker.terminate(); //Terminate web worker
 		worker = undefined;
-		console.log("Ended processing");
+		console.log("Worker terminated");
 	}
 
 
