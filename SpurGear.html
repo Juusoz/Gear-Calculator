@@ -166,7 +166,7 @@
 		worker.onmessage = function(msg) {
             if (msg.data[0] == 0) { // New valid result, create a new response
 			
-				createNewSpurResponse();
+				createNewSpurResponse(msg);
 				
             } else if (msg.data[0] == 1) { // Progress update
                 checked1 = msg.data[1];
@@ -185,7 +185,7 @@
         };
     }
 
-	function createNewSpurResponse(){
+	function createNewSpurResponse(msg){
 	
 		var s = msg.data[1]; // Sun gear teeth
 		var p = msg.data[2]; // Planet gear teeth
