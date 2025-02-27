@@ -205,7 +205,8 @@
 		entry.find("#spurgear_title")[0].attributes["aria-controls"].value = id;
 		entry.find("#spurgear_title")[0].innerHTML = spurgear_gear_ratio + ":1 Ratio, " + spurgear_gear_layers + " Layers";
 		
-		entry.find("#s")[0].innerHTML += convertSpurGearsToLayers(s, 2);
+		entry.find("#s")[0].innerHTML += convertArrayToHTML(s, 2);
+		
 		entry.find("#spurgear_gear_ratio")[0].innerHTML += spurgear_gear_ratio;
 		entry.find("#r")[0].innerHTML += r;
 		entry.find("#dist")[0].innerHTML += (s + spurgear_gear_ratio) / 2 + " * module";
@@ -215,25 +216,23 @@
 		spurgear_sort(); // Sort results
 	}
 	
-	function convertSpurGearsToLayers(input, gearsPerLayer) {
-	  const numbers = input.split(',').map(Number);
-	  let result = '';
+	function convertArrayToHTML(arr, gearsPerLayer) {
+	  let html = '';
 	  let layer = 1;
 
-	  for (let i = 0; i < numbers.length; i += gearsPerLayer) {
-		result += "Layer ${layer}:";
-		for (let j = 0; j < gearsPerLayer && i + j < numbers.length; j++) {
-		  result += "Gear ${j + 1}: ${numbers[i + j]}";
+	  for (let i = 0; i < arr.length; i += gearsPerLayer) {
+		html += "<p><b>Layer ${layer}:</b></p>\n<ul>";
+
+		for (let j = 0; j < gearsPerLayer && (i + j) < arr.length; j++) {
+		  html += "\n<li>Gear ${i + j + 1}: ${arr[i + j]}</li>";
 		}
+
+		html += "\n</ul>";
 		layer++;
 	  }
 
-	  return result;
+	  return html;
 	}
-
-	const input = '8,8,8,8';
-	const gearsPerLayer = 2;
-	console.log(convertGears(input, gearsPerLayer));
 
 	function spurgear_stopsearch(){
 		spurgear_checked = spurgear_combinations;
