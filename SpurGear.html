@@ -73,20 +73,21 @@
   <!-- List group to display search results -->
   <div class="list-group mt-3" id="spurgear_results"></div>
 
-  <!-- Template for individual result items -->
-  <template id="spurgear_result_template">
-    <div class="spurgear_result">
-      <!-- Collapsible list item for a result, initially collapsed -->
-      <a class="list-group-item list-group-item-action list-group-item-secondary" id="title" 
-         data-toggle="collapse" data-target="#col1" aria-expanded="false" aria-controls="col1" data-ratio="2"></a>
-      <div class="list-group-item collapse" id="col1">
-        <!-- Detailed result information placeholders -->
-        <div id="layer_details"></div>
-        <div id="dist">Planet distance from center: </div>
-        <div id="rot">Rotate planets by multiple of: </div>
-      </div>
-    </div>
-  </template>
+	<!--------------------------------------------------------------------------->
+	<!--------------------- Template for individual result items ------------------->
+	<template id="spurgear_result_template">
+		<div class="spurgear_result">
+			<!-- Collapsible list item for a result, initially collapsed -->
+			<a class="list-group-item list-group-item-action list-group-item-secondary" id="title" data-toggle="collapse" data-target="#col1" aria-expanded="false" aria-controls="col1" data-ratio="2"></a>
+			<div class="list-group-item collapse" id="col1">
+				<div id="s">Sun teeth: </div>
+				<div id="p">Planet teeth: </div>
+				<div id="r">Ring teeth: </div>
+				<div id="dist">Planet distance from center: </div>
+				<div id="rot">Rotate planets by multiple of: </div>
+			</div>
+		</div>
+	</template>
 </div>
 
 
@@ -163,30 +164,10 @@
 		
 		// On each worker response
 		worker.onmessage = function(msg) {
-            if (msg.data[0] == 0) { // New valid result
-                var s = msg.data[1]; // Sun gear teeth
-                var p = msg.data[2]; // Planet gear teeth
-                var r = msg.data[3]; // Ring gear teeth
-                var pn = msg.data[4]; // Number of planets
-                var ratio = eval(ratioFunction); // Calculate gear ratio
-
-                // Clone result template and populate with data
-                var entry = $($("#resultTemplate1").clone().prop("content"));
-                var id = s + "S" + p + "P" + r + "R" + pn + "PN";
-                var attr = document.createAttribute("data-ratio");
-                attr.value = ratio;
-                entry.find(".result1")[0].setAttributeNode(attr);
-                entry.find("#title")[0].attributes["data-target"].value = "#" + id;
-                entry.find("#col1")[0].id = id;
-                entry.find("#title")[0].attributes["aria-controls"].value = id;
-                entry.find("#title")[0].innerHTML = Math.round(ratio * 100) / 100 + ":1 Ratio, " + pn + " Planets";
-                entry.find("#s")[0].innerHTML += s;
-                entry.find("#p")[0].innerHTML += p;
-                entry.find("#r")[0].innerHTML += r;
-                entry.find("#dist")[0].innerHTML += (s + p) / 2 + " * module";
-                entry.find("#rot")[0].innerHTML += ((360 / pn) / (360 / s)) * (360 / p) + "&#176;";
-                $("#results1").append(entry);
-                sort1(); // Sort results
+            if (msg.data[0] == 0) { // New valid result, create a new response
+			
+				createNewSpurResponse();
+				
             } else if (msg.data[0] == 1) { // Progress update
                 checked1 = msg.data[1];
                 time.unshift([Date.now(), checked1]);
@@ -204,12 +185,40 @@
         };
     }
 
+	function createNewSpurResponse(){
+	
+		var s = msg.data[1]; // Sun gear teeth
+		var p = msg.data[2]; // Planet gear teeth
+		var r = msg.data[3]; // Ring gear teeth
+		var pn = msg.data[4]; // Number of planets
+		var ratio = eval(ratioFunction); // Calculate gear ratio
+
+		// Clone result template and populate with data
+		var entry = $($("#spurgear_result_template").clone().prop("content"));
+		var id = s + "S" + p + "P" + r + "R" + pn + "PN";
+		var attr = document.createAttribute("data-ratio");
+		attr.value = ratio;
+		entry.find("spurgear_result")[0].setAttributeNode(attr);
+		entry.find("#title")[0].attributes["data-target"].value = "#" + id;
+		entry.find("#col1")[0].id = id;
+		entry.find("#title")[0].attributes["aria-controls"].value = id;
+		entry.find("#title")[0].innerHTML = Math.round(ratio * 100) / 100 + ":1 Ratio, " + pn + " Planets";
+		entry.find("#s")[0].innerHTML += s;
+		entry.find("#p")[0].innerHTML += p;
+		entry.find("#r")[0].innerHTML += r;
+		entry.find("#dist")[0].innerHTML += (s + p) / 2 + " * module";
+		entry.find("#rot")[0].innerHTML += ((360 / pn) / (360 / s)) * (360 / p) + "&#176;";
+		$("#results1").append(entry);
+		spurgear_sort(); // Sort results
+				
+	}
+
 	function spurgear_stopsearch(){
 		spurgear_checked = spurgear_combinations;
 		$("#spur-gear").find("input").toArray().forEach(function(child) {	//Re-enable input fields
 			child.disabled = false;
 		});
-		$("#spurgear_find").show();	//Re-enable the Find! button
+		$("#spurgear_find").show();		//Re-enable the Find! button
 		$("#spurgear_abort").hide();	//Hide the Abort! button
 		
 		updateStatus1(); //Final update to progress and time
