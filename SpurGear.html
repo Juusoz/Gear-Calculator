@@ -221,10 +221,10 @@
 	  let layer = 1;
 
 	  for (let i = 0; i < arr.length; i += gearsPerLayer) {
-		html += "<p><b>Layer ${layer}:</b></p>\n<ul>";
+		html += "<p><b>Layer " + ${layer} + ":</b></p>\n<ul>";
 
 		for (let j = 0; j < gearsPerLayer && (i + j) < arr.length; j++) {
-		  html += "\n<li>Gear ${i + j + 1}: ${arr[i + j]}</li>";
+		  html += "\n<li>Gear " + ${i + j + 1} + ": " + ${arr[i + j]} + "</li>";
 		}
 
 		html += "\n</ul>";
