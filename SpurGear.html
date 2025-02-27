@@ -219,15 +219,17 @@
 	function convertArrayToHTML(arr, gearsPerLayer) {
 	  let html = '';
 	  let layer = 1;
+	  let gear = 1;
 
 	  for (let i = 0; i < arr.length; i += gearsPerLayer) {
-		html += "<p><b>Layer " + ${layer} + ":</b></p>\n<ul>";
-
-		for (let j = 0; j < gearsPerLayer && (i + j) < arr.length; j++) {
-		  html += "\n<li>Gear " + ${i + j + 1} + ": " + ${arr[i + j]} + "</li>";
+		html += "<p><b>Layer " + layer + ":</b></p>";
+		html += "<ul>";
+		for (let j = 0; j < gearsPerLayer && gear < arr.length; j++) {
+		  html += "<li>Gear " + gear + ": " + arr[gear] + "</li>";
+		  gear++;
 		}
 
-		html += "\n</ul>";
+		html += "</ul>";
 		layer++;
 	  }
 
