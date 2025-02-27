@@ -16,7 +16,7 @@
     <!-- Label for maximum teeth input -->
     <label for="spurgear_max_teeth" class="col-4 col-form-label">Spur gear maximum teeth</label>
     <!-- Input field for maximum teeth with constraints and dynamic update of minimum value -->
-    <input type="number" class="form-control col-2" id="spurgear_max_teeth" value="12" min="8" 
+    <input type="number" class="form-control col-2" id="spurgear_max_teeth" value="20" min="8" 
            onchange="spurgear_update(); this.min = $('#spurgear_min_teeth')[0].value; $('#spurgear_min_teeth')[0].max = this.value">
   </div>
 
@@ -34,7 +34,7 @@
     <label for="spurgear_target_ratio" class="col-4 col-form-label">Target gear ratio</label>
     <!-- Input field for target gear ratio with appended ratio text -->
     <div class="input-group col-2 p-0">
-      <input type="number" class="form-control" id="spurgear_target_ratio" value="4" min="0" aria-describedby="spurgear_ratio" onchange="spurgear_sort();">
+      <input type="number" class="form-control" id="spurgear_target_ratio" value="2" min="0" aria-describedby="spurgear_ratio" onchange="spurgear_sort();">
       <div class="input-group-append">
         <span class="input-group-text" id="spurgear_ratio">:1</span>
       </div>
@@ -198,18 +198,8 @@
                 }
                 updateStatus1(); // Update progress bar and time
                 update1(); // Refresh combinations count
-            } else if (msg.data[0] == 2) { // Calculation complete
-                checked1 = combinations1;
-                // Re-enable input fields and button
-                $("#planetary-gear").find("input").toArray().forEach(function(child) {
-                    child.disabled = false;
-                });
-                $("#planetary-gear").find("button")[0].disabled = false;
-                updateStatus1(); // Final update to progress and time
-                update1();
-                w.terminate(); // Terminate web worker
-                w = undefined;
-            }
+            } else if (msg.data[0] == 2) {	// Calculation complete
+                spurgear_stopsearch()		// Terminate the worker
         };
     }
 
