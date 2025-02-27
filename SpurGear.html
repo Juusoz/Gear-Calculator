@@ -78,7 +78,7 @@
 	<template id="spurgear_result_template">
 		<div class="spurgear_result">
 			<!-- Collapsible list item for a result, initially collapsed -->
-			<a class="list-group-item list-group-item-action list-group-item-secondary" id="title" data-toggle="collapse" data-target="#spurgear_col" aria-expanded="false" aria-controls="spurgear_col" data-ratio="2"></a>
+			<a class="list-group-item list-group-item-action list-group-item-secondary" id="spurgear_title" data-toggle="collapse" data-target="#spurgear_col" aria-expanded="false" aria-controls="spurgear_col" data-ratio="2"></a>
 			<div class="list-group-item collapse" id="spurgear_col">
 				<div id="s">Sun teeth: </div>
 				<div id="p">Planet teeth: </div>
@@ -199,10 +199,10 @@
 		var attr = document.createAttribute("data-ratio");
 		attr.value = ratio;
 		entry.find(".spurgear_result")[0].setAttributeNode(attr);
-		entry.find("#title")[0].attributes["data-target"].value = "#" + id;
+		entry.find("#spurgear_title")[0].attributes["data-target"].value = "#" + id;
 		entry.find("#spurgear_col")[0].id = id;
-		entry.find("#title")[0].attributes["aria-controls"].value = id;
-		entry.find("#title")[0].innerHTML = Math.round(ratio * 100) / 100 + ":1 Ratio, " + pn + " Planets";
+		entry.find("#spurgear_title")[0].attributes["aria-controls"].value = id;
+		entry.find("#spurgear_title")[0].innerHTML = Math.round(ratio * 100) / 100 + ":1 Ratio, " + pn + " Planets";
 		entry.find("#s")[0].innerHTML += s;
 		entry.find("#p")[0].innerHTML += p;
 		entry.find("#r")[0].innerHTML += r;
