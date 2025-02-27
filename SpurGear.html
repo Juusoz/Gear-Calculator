@@ -25,7 +25,7 @@
     <!-- Label for gear layers -->
     <label for="spurgear_layers" class="col-4 col-form-label">Gear layers</label>
     <!-- Input field for gear layers with a minimum value of 1 -->
-    <input type="number" class="form-control col-2" id="spurgear_layers" value="1" min="1" onchange="spurgear_update();">
+    <input type="number" class="form-control col-2" id="spurgear_layers" value="2" min="1" onchange="spurgear_update();">
   </div>
 
   <!-- Input group for target gear ratio and maximum number of results -->
@@ -34,7 +34,7 @@
     <label for="spurgear_target_ratio" class="col-4 col-form-label">Target gear ratio</label>
     <!-- Input field for target gear ratio with appended ratio text -->
     <div class="input-group col-2 p-0">
-      <input type="number" class="form-control" id="spurgear_target_ratio" value="2" min="0" aria-describedby="spurgear_ratio" onchange="spurgear_sort();">
+      <input type="number" class="form-control" id="spurgear_target_ratio" value="2.52" min="0" aria-describedby="spurgear_ratio" onchange="spurgear_sort();">
       <div class="input-group-append">
         <span class="input-group-text" id="spurgear_ratio">:1</span>
       </div>
@@ -49,8 +49,8 @@
    <!-- Highest possible gear rate -->
 	<div class="form-group mb-3">
 		<p id="spurgear_gearrate">
-		Highest possible gear ratio per layer: 1.50:1<br>
-		Highest possible gear ratio in total: 1.50:1
+		Highest possible gear ratio per layer: 2.50:1<br>
+		Highest possible gear ratio in total: 6.25:1
 		</p>
 	</div>
 
@@ -78,8 +78,8 @@
 	<template id="spurgear_result_template">
 		<div class="spurgear_result">
 			<!-- Collapsible list item for a result, initially collapsed -->
-			<a class="list-group-item list-group-item-action list-group-item-secondary" id="title" data-toggle="collapse" data-target="#col1" aria-expanded="false" aria-controls="col1" data-ratio="2"></a>
-			<div class="list-group-item collapse" id="col1">
+			<a class="list-group-item list-group-item-action list-group-item-secondary" id="title" data-toggle="collapse" data-target="#spurgear_col" aria-expanded="false" aria-controls="spurgear_col" data-ratio="2"></a>
+			<div class="list-group-item collapse" id="spurgear_col">
 				<div id="s">Sun teeth: </div>
 				<div id="p">Planet teeth: </div>
 				<div id="r">Ring teeth: </div>
@@ -200,7 +200,7 @@
 		attr.value = ratio;
 		entry.find("spurgear_result")[0].setAttributeNode(attr);
 		entry.find("#title")[0].attributes["data-target"].value = "#" + id;
-		entry.find("#col1")[0].id = id;
+		entry.find("#spurgear_col")[0].id = id;
 		entry.find("#title")[0].attributes["aria-controls"].value = id;
 		entry.find("#title")[0].innerHTML = Math.round(ratio * 100) / 100 + ":1 Ratio, " + pn + " Planets";
 		entry.find("#s")[0].innerHTML += s;
