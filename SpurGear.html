@@ -61,7 +61,7 @@
   <button type="button" id="spurgear_abort" class="btn btn-warning" onclick="spurgear_stopsearch()" style="display: none">Abort!</button>
 
   <!-- Display of possible combinations and estimated time remaining -->
-  <p class="ml-2 mr-3" id="spurgear_combinations" style="display:inline;">Possible combinations: 25</p>
+  <p class="ml-2 mr-3" id="spurgear_combinations" style="display:inline;">Possible combinations: 28561</p>
   <p id="spurgear_time" style="display:inline;">Estimated time remaining: N/A</p>
 
   <!-- Progress bar indicating the search progress -->
@@ -195,7 +195,7 @@
 
 		// Clone result template and populate with data
 		var entry = $($("#spurgear_result_template").clone().prop("content"));
-		var id = s + "S" + spurgear_gear_ratio + "GR" + r + "R" + spurgear_gear_layers + "GL";
+		var id = spurgear_gear_ratio + "GR" + r + "R" + spurgear_gear_layers + "GL";
 		var attr = document.createAttribute("data-ratio");
 		attr.value = ratio;
 		
