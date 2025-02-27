@@ -163,59 +163,52 @@
 		
 		// On each worker response
 		worker.onmessage = function(msg) {
-			if (msg.data[0] === 0) { // New valid result
-					/*// Process data from worker message
-					var gearSystem = msg.data[1]; // Spur gear system as array of [gear1, gear2] pairs
-					var ratio = msg.data[2];      // Calculated gear ratio
-					var gearCount = msg.data[3];  // Total number of gears in the system
-					var layers = msg.data[4];     // Number of layers in the system
-					var deviation = msg.data[5];  // Gear ratio deviation from target
+            if (msg.data[0] == 0) { // New valid result
+                var s = msg.data[1]; // Sun gear teeth
+                var p = msg.data[2]; // Planet gear teeth
+                var r = msg.data[3]; // Ring gear teeth
+                var pn = msg.data[4]; // Number of planets
+                var ratio = eval(ratioFunction); // Calculate gear ratio
 
-					// Clone result template and populate with data
-					var entry = $($("#spurgear_result_template").clone().prop("content"));
-
-					// Generate a unique ID based on gear system details
-					var id = gearSystem.map(pair => `${pair[0]}S${pair[1]}P`).join('_') + `_${layers}L_${gearCount}G`;
-					var attr = document.createAttribute("data-ratio");
-					attr.value = ratio;
-					entry.find(".result1")[0].setAttributeNode(attr);
-					entry.find("#title")[0].attributes["data-target"].value = "#" + id;
-					entry.find("#col1")[0].id = id;
-					entry.find("#title")[0].attributes["aria-controls"].value = id;
-
-					// Title includes the ratio and total number of gears
-					entry.find("#title")[0].innerHTML = `${Math.round(ratio * 100) / 100}:1 Ratio, ${gearCount} Gears`;
-
-					// Populate the layers and gear details
-					var layerDetails = gearSystem.map((pair, index) => {
-						return "<b>Layer " + ${index + 1} + ":</b><ul><li>Spur gear 1: " + ${pair[0]} + "teeth</li><li>Spur gear 2: " + ${pair[1]} + " teeth</li></ul>";
-					}).join('');
-					entry.find("#layer_details")[0].innerHTML = layerDetails;
-
-					// Placeholder calculations
-					entry.find("#dist")[0].innerHTML = `Planet distance from center: ${(gearSystem[0][0] + gearSystem[0][1]) / 2} * module`;
-					entry.find("#rot")[0].innerHTML = `Rotate planets by multiple of: ${(360 / layers) / (360 / gearSystem[0][0]) * (360 / gearSystem[0][1])}&#176;`;
-
-					// Append to results container and sort entries
-					$("#spurgear_results").append(entry);
-					sort1(); // Sort results*/
-
-			} else if (msg.data[0] === 1) { // Time for progress update
-				spurgear_checked = msg.data[1];
-				time.unshift([Date.now(), spurgear_checked]);
-				
-				if (time.length > 20) {
-					old = time.pop();
-					var deltaTime = time[0][0] - old[0];
-					var deltaCombinations = time[0][1] - old[1];
-					spurgear_cps = (1000 / deltaTime) * deltaCombinations; // Update CPS
-				}
-
-				updateStatus1(); // Update progress bar and time
-				spurgear_update(); // Refresh combinations count
-				
-            } else if (msg.data[0] == 2) { //Calculation complete
-				spurgear_stopsearch();	//Stop search
+                // Clone result template and populate with data
+                var entry = $($("#resultTemplate1").clone().prop("content"));
+                var id = s + "S" + p + "P" + r + "R" + pn + "PN";
+                var attr = document.createAttribute("data-ratio");
+                attr.value = ratio;
+                entry.find(".result1")[0].setAttributeNode(attr);
+                entry.find("#title")[0].attributes["data-target"].value = "#" + id;
+                entry.find("#col1")[0].id = id;
+                entry.find("#title")[0].attributes["aria-controls"].value = id;
+                entry.find("#title")[0].innerHTML = Math.round(ratio * 100) / 100 + ":1 Ratio, " + pn + " Planets";
+                entry.find("#s")[0].innerHTML += s;
+                entry.find("#p")[0].innerHTML += p;
+                entry.find("#r")[0].innerHTML += r;
+                entry.find("#dist")[0].innerHTML += (s + p) / 2 + " * module";
+                entry.find("#rot")[0].innerHTML += ((360 / pn) / (360 / s)) * (360 / p) + "&#176;";
+                $("#results1").append(entry);
+                sort1(); // Sort results
+            } else if (msg.data[0] == 1) { // Progress update
+                checked1 = msg.data[1];
+                time.unshift([Date.now(), checked1]);
+                if (time.length > 20) {
+                    old = time.pop();
+                    deltaTime = time[0][0] - old[0];
+                    deltaCombinations = time[0][1] - old[1];
+                    cps1 = (1000 / deltaTime) * deltaCombinations; // Update CPS
+                }
+                updateStatus1(); // Update progress bar and time
+                update1(); // Refresh combinations count
+            } else if (msg.data[0] == 2) { // Calculation complete
+                checked1 = combinations1;
+                // Re-enable input fields and button
+                $("#planetary-gear").find("input").toArray().forEach(function(child) {
+                    child.disabled = false;
+                });
+                $("#planetary-gear").find("button")[0].disabled = false;
+                updateStatus1(); // Final update to progress and time
+                update1();
+                w.terminate(); // Terminate web worker
+                w = undefined;
             }
         };
     }

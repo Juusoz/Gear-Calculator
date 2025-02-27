@@ -1,5 +1,5 @@
 self.onmessage = function (msg) {
-	console.log("Message received");
+	console.log("Worker received message");
     //Parse inputs from the message
     let min_teeth = parseInt(msg.data[0]);  //Minimum teeth for a spur gear
     let max_teeth = parseInt(msg.data[1]);  //Maximum teeth for a spur gear
@@ -13,7 +13,7 @@ self.onmessage = function (msg) {
 	//Function for posting the new best gear system
 	function postNewBestSystem(gear_system, gear_ratio, currentLayer, gearRatio_distance){
 		self.postMessage([0, gear_system, gear_ratio, gear_system.length * 2, currentLayer, gearRatio_distance]); //Reminder to add distance
-		console.log("Posted message: " + 0 + "\n Gear system: " + gear_system + "\n Gear ratio: " + gear_ratio + "\n Array length: " + gear_system.length * 2 + "\n Current layer: " + currentLayer + "\n Deviation: " + gearRatio_distance);
+		console.log("Worker posted message: " + 0 + "\n Gear system: " + gear_system + "\n Gear ratio: " + gear_ratio + "\n Array length: " + gear_system.length * 2 + "\n Current layer: " + currentLayer + "\n Deviation: " + gearRatio_distance);
 	}
 	
 	//Function for posting an update on the progress
@@ -43,7 +43,7 @@ self.onmessage = function (msg) {
 			gearRatio = gearRatio * (gearSystem[j+1]/gearSystem[j]);;
 		}
 		
-		gearRatio_distance = target_gear_ratio - gearRatio; //The distance to the goal ratio, forced positive.
+		gearRatio_distance = target_gear_ratio - gearRatio; //The deviation from goal gear ratio
 		if(Math.abs(gearRatio_distance) <= oldBest_gearRatio){
 			postNewBestSystem(gearSystem, gearRatio, currentLayer, -gearRatio_distance);	//Only post if the new ratio is better.
 			oldBest_gearRatio = Math.abs(gearRatio_distance);
