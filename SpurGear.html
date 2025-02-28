@@ -210,7 +210,12 @@
 		
 		entry.find("#s")[0].innerHTML += spurgear_toLayers(s, 2);		
 		entry.find("#spurgear_gear_ratio")[0].innerHTML += spurgear_gear_ratio + ":1";
-		entry.find("#spurgear_deviation")[0].innerHTML += Math.abs(spurgear_deviation);
+		
+		if(spurgear_deviation == 0){
+			entry.find("#spurgear_deviation")[0].innerHTML += "None";
+		}else{
+			entry.find("#spurgear_deviation")[0].innerHTML += Math.abs(spurgear_deviation);		
+		}
 		
 		entry.find("#r")[0].innerHTML += r;
 		entry.find("#dist")[0].innerHTML += (s + spurgear_gear_ratio) / 2 + " * module";
