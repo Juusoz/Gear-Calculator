@@ -11,13 +11,13 @@
     <label for="spurgear_min_teeth" class="col-4 col-form-label">Spur gear minimum teeth</label>
     <!-- Input field for minimum teeth with constraints and dynamic update of maximum value -->
     <input type="number" class="form-control col-2" id="spurgear_min_teeth" value="8" min="1" max="12" 
-           onchange="spurgear_updateCombinations(); this.max = $('#spurgear_max_teeth')[0].value; $('#spurgear_max_teeth')[0].min = this.value">
+           onchange="spurgear_updatePossibleCombinations(); this.max = $('#spurgear_max_teeth')[0].value; $('#spurgear_max_teeth')[0].min = this.value">
 
     <!-- Label for maximum teeth input -->
     <label for="spurgear_max_teeth" class="col-4 col-form-label">Spur gear maximum teeth</label>
     <!-- Input field for maximum teeth with constraints and dynamic update of minimum value -->
     <input type="number" class="form-control col-2" id="spurgear_max_teeth" value="20" min="8" 
-           onchange="spurgear_updateCombinations(); this.min = $('#spurgear_min_teeth')[0].value; $('#spurgear_min_teeth')[0].max = this.value">
+           onchange="spurgear_updatePossibleCombinations(); this.min = $('#spurgear_min_teeth')[0].value; $('#spurgear_min_teeth')[0].max = this.value">
   </div>
 
   <!-- Input for specifying the number of gear layers -->
@@ -25,7 +25,7 @@
     <!-- Label for gear layers -->
     <label for="spurgear_layers" class="col-4 col-form-label">Gear layers</label>
     <!-- Input field for gear layers with a minimum value of 1 -->
-    <input type="number" class="form-control col-2" id="spurgear_layers" value="2" min="1" onchange="spurgear_updateCombinations();">
+    <input type="number" class="form-control col-2" id="spurgear_layers" value="2" min="1" onchange="spurgear_updatePossibleCombinations();">
   </div>
 
   <!-- Input group for target gear ratio and maximum number of results -->
@@ -100,7 +100,7 @@
     var spurgear_combinations = 3080; //Total number of possible combinations
 
     //Function to update the total number of combinations and gear ratio based on user input
-    function spurgear_updateCombinations() {
+    function spurgear_updatePossibleCombinations() {
 	
         spurgear_combinations = ($("#spurgear_max_teeth")[0].value - $("#spurgear_min_teeth")[0].value) + 1;
         spurgear_combinations = Math.pow(spurgear_combinations, 2);
@@ -208,7 +208,9 @@
 		entry.find("#spurgear_title")[0].attributes["aria-controls"].value = id;
 		entry.find("#spurgear_title")[0].innerHTML = spurgear_gear_ratio + ":1 Ratio, " + s.length + " gears on " + spurgear_gear_layers + " layers";
 		
-		entry.find("#s")[0].innerHTML += spurgear_toLayers(s, 2);		
+		entry.find("#s")[0].innerHTML += spurgear_toLayers(s, 2);	
+
+		//--------------Gear ratio------------//
 		entry.find("#spurgear_gear_ratio")[0].innerHTML += spurgear_gear_ratio + ":1";
 		
 		//--------------Deviation------------//
@@ -216,10 +218,10 @@
 			entry.find("#spurgear_deviation")[0].innerHTML += "None";
 		}else{
 			if(spurgear_deviation > 0){
-				entry.find("#spurgear_deviation")[0].innerHTML += $("#spurgear_target_ratio")[0].value + " + " + spurgear_deviation;		
+				entry.find("#spurgear_deviation")[0].innerHTML += $("#spurgear_target_ratio")[0].value + " + " + spurgear_deviation.toString();		
 			}
 			else{
-				entry.find("#spurgear_deviation")[0].innerHTML += $("#spurgear_target_ratio")[0].value + " - " + -spurgear_deviation;
+				entry.find("#spurgear_deviation")[0].innerHTML += $("#spurgear_target_ratio")[0].value + " - " + -spurgear_deviation.toString();
 			}
 		}
 		
@@ -260,7 +262,7 @@
 		$("#spurgear_abort").hide();	//Hide the Abort! button
 		
 		spurgear_updateProgress(); //Final update to progress and time
-		spurgear_updateCombinations();
+		spurgear_updatePossibleCombinations();
 		worker.terminate(); //Terminate web worker
 		worker = undefined;
 		console.log("Worker terminated");
