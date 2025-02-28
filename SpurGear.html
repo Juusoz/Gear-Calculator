@@ -272,7 +272,7 @@
     //Sort results by closeness to the target ratio
     function spurgear_sort() {
 	
-        var results = $(".spurgear_result").sort(sortFunc1);
+        var results = $(".spurgear_result").sort(spurgear_sortFunction);
 		
         $(".spurgear_result").remove(); //Clear previous results
 		
@@ -289,7 +289,7 @@
     }
 
     //Comparison function for sorting results by ratio difference
-    function sortFunc1(a, b) {
+    function spurgear_sortFunction(a, b) {
         return Math.abs($("#spurgear_target_ratio")[0].value - Math.abs($(a).data("ratio"))) - Math.abs($("#spurgear_target_ratio")[0].value - Math.abs($(b).data("ratio")));
     }
 
