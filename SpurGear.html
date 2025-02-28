@@ -211,14 +211,15 @@
 		entry.find("#s")[0].innerHTML += spurgear_toLayers(s, 2);		
 		entry.find("#spurgear_gear_ratio")[0].innerHTML += spurgear_gear_ratio + ":1";
 		
+		//--------------Deviation------------//
 		if(spurgear_deviation == 0){
 			entry.find("#spurgear_deviation")[0].innerHTML += "None";
 		}else{
 			if(spurgear_deviation > 0){
-				entry.find("#spurgear_deviation")[0].innerHTML += $("#spurgear_target_ratio")[0].value + " + " spurgear_deviation;		
+				entry.find("#spurgear_deviation")[0].innerHTML += $("#spurgear_target_ratio")[0].value + " + " + spurgear_deviation;		
 			}
 			else{
-				entry.find("#spurgear_deviation")[0].innerHTML += $("#spurgear_target_ratio")[0].value + " - " -spurgear_deviation;
+				entry.find("#spurgear_deviation")[0].innerHTML += $("#spurgear_target_ratio")[0].value + " - " + -spurgear_deviation;
 			}
 		}
 		
