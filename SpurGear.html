@@ -81,7 +81,7 @@
 			<a class="list-group-item list-group-item-action list-group-item-secondary" id="spurgear_title" data-toggle="collapse" data-target="#spurgear_col" aria-expanded="false" aria-controls="spurgear_col" data-ratio="2"></a>
 			<div class="list-group-item collapse" id="spurgear_col">
 				<div id="s"></div>
-				<div id="spurgear_gear_ratio">Gear ratio: </div>
+				<div id="spurgear_gear_ratio"><b>Gear ratio: </b></div>
 				<div id="r">Ring teeth: </div>
 				<div id="dist">Planet distance from center: </div>
 				<div id="rot">Rotate planets by multiple of: </div>
@@ -112,7 +112,7 @@
 	}
 
     //Function to update progress status and estimated remaining time
-    function updateStatus1() {
+    function spurgear_updateProgress() {
         var percent = spurgear_checked / spurgear_combinations * 100; //Calculate percentage completed
         var bar = $("#spurgear_progressbar")[0]; //Progress bar element
         bar.attributes["aria-valuenow"] = Math.round(percent); //Update progress bar value
@@ -178,7 +178,7 @@
                     deltaCombinations = time[0][1] - old[1];
                     cps1 = (1000 / deltaTime) * deltaCombinations; // Update CPS
                 }
-                updateStatus1(); // Update progress bar and time
+                spurgear_updateProgress(); // Update progress bar and time
                 update1(); // Refresh combinations count
             } else if (msg.data[0] == 2) {	// Calculation complete
                 spurgear_stopsearch();		// Terminate the worker
@@ -225,7 +225,7 @@
 		html += "<p><b>Layer " + layer + ":</b></p>";
 		html += "<ul>";
 		for (let j = 0; j < gearsPerLayer && gear < gear_array.length; j++) {
-		  html += "<li>Gear " + (gear+1) + ": " + gear_array[gear] + "</li>";
+		  html += "<li>Gear " + (gear+1) + ": " + gear_array[gear] + " teeth</li>";
 		  gear++;
 		}
 
@@ -244,7 +244,7 @@
 		$("#spurgear_find").show();		//Re-enable the Find! button
 		$("#spurgear_abort").hide();	//Hide the Abort! button
 		
-		updateStatus1(); //Final update to progress and time
+		spurgear_updateProgress(); //Final update to progress and time
 		spurgear_update();
 		worker.terminate(); //Terminate web worker
 		worker = undefined;
