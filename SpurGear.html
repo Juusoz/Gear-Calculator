@@ -3,7 +3,7 @@
   <p>This calculator assumes every layer has two gers and the first gear of each layer is joined to the last gear of the previous layer and is spinning at the same speed. So gear 1 is rotating gear 2, gear 2 is physically joined to gear 3, and gear 3 is rotating gear 4.</p>
   <p>The higher the maximum tooth count and the layer count, the smaller the deviation.</p>
   <b><p>Work in progress!</p></b>
-  <p>The backend is done, I just haven't implemented the frontend yet.</p>
+  <p>Need to fix the sorting system and the progress bar.</p>
 
   <!-- Input group for specifying spur gear minimum and maximum teeth -->
   <div class="form-group row">
@@ -11,13 +11,13 @@
     <label for="spurgear_min_teeth" class="col-4 col-form-label">Spur gear minimum teeth</label>
     <!-- Input field for minimum teeth with constraints and dynamic update of maximum value -->
     <input type="number" class="form-control col-2" id="spurgear_min_teeth" value="8" min="1" max="12" 
-           onchange="spurgear_update(); this.max = $('#spurgear_max_teeth')[0].value; $('#spurgear_max_teeth')[0].min = this.value">
+           onchange="spurgear_updateCombinations(); this.max = $('#spurgear_max_teeth')[0].value; $('#spurgear_max_teeth')[0].min = this.value">
 
     <!-- Label for maximum teeth input -->
     <label for="spurgear_max_teeth" class="col-4 col-form-label">Spur gear maximum teeth</label>
     <!-- Input field for maximum teeth with constraints and dynamic update of minimum value -->
     <input type="number" class="form-control col-2" id="spurgear_max_teeth" value="20" min="8" 
-           onchange="spurgear_update(); this.min = $('#spurgear_min_teeth')[0].value; $('#spurgear_min_teeth')[0].max = this.value">
+           onchange="spurgear_updateCombinations(); this.min = $('#spurgear_min_teeth')[0].value; $('#spurgear_min_teeth')[0].max = this.value">
   </div>
 
   <!-- Input for specifying the number of gear layers -->
@@ -25,7 +25,7 @@
     <!-- Label for gear layers -->
     <label for="spurgear_layers" class="col-4 col-form-label">Gear layers</label>
     <!-- Input field for gear layers with a minimum value of 1 -->
-    <input type="number" class="form-control col-2" id="spurgear_layers" value="2" min="1" onchange="spurgear_update();">
+    <input type="number" class="form-control col-2" id="spurgear_layers" value="2" min="1" onchange="spurgear_updateCombinations();">
   </div>
 
   <!-- Input group for target gear ratio and maximum number of results -->
@@ -100,7 +100,7 @@
     var spurgear_combinations = 3080; //Total number of possible combinations
 
     //Function to update the total number of combinations and gear ratio based on user input
-    function spurgear_update() {
+    function spurgear_updateCombinations() {
 	
         spurgear_combinations = ($("#spurgear_max_teeth")[0].value - $("#spurgear_min_teeth")[0].value) + 1;
         spurgear_combinations = Math.pow(spurgear_combinations, 2);
@@ -193,7 +193,7 @@
 		var spurgear_gear_ratio = msg.data[2]; // Gear ratio of the system
 		var r = msg.data[3]; // Ring gear teeth
 		var spurgear_gear_layers = msg.data[4]; // Number of layers in the system
-		var spurgear_deviation = msg.data[5];
+		var spurgear_deviation = msg.data[5]; // Deviation out of the target
 		var ratio = eval(ratioFunction); // Calculate gear ratio
 
 		// Clone result template and populate with data
@@ -249,7 +249,7 @@
 		$("#spurgear_abort").hide();	//Hide the Abort! button
 		
 		spurgear_updateProgress(); //Final update to progress and time
-		spurgear_update();
+		spurgear_updateCombinations();
 		worker.terminate(); //Terminate web worker
 		worker = undefined;
 		console.log("Worker terminated");
