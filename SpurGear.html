@@ -80,11 +80,11 @@
 			<!-- Collapsible list item for a result, initially collapsed -->
 			<a class="list-group-item list-group-item-action list-group-item-secondary" id="spurgear_title" data-toggle="collapse" data-target="#spurgear_col" aria-expanded="false" aria-controls="spurgear_col" data-ratio="2"></a>
 			<div class="list-group-item collapse" id="spurgear_col">
-				<div id="s"></div>
+				<div id="spurgear_gear_system"></div>
 				<div id="spurgear_gear_ratio"><b>Gear ratio: </b></div>
 				<div id ="spurgear_deviation"><b>Deviation: </b></div>
 				
-				<div id="r">Ring teeth: </div>
+				<div id="spurgear_gear_count">Ring teeth: </div>
 				<div id="dist">Planet distance from center: </div>
 				<div id="rot">Rotate planets by multiple of: </div>
 			</div>
@@ -189,9 +189,9 @@
     }
 
 	function createNewSpurResponse(msg, spurgear_currentID){
-		var s = msg.data[1]; // Sun gear teeth
+		var spurgear_gear_system = msg.data[1]; // Tooth counts of the system
 		var spurgear_gear_ratio = msg.data[2]; // Gear ratio of the system
-		var r = msg.data[3]; // Ring gear teeth
+		var spurgear_gear_count = msg.data[3]; // Number of gears
 		var spurgear_gear_layers = msg.data[4]; // Number of layers in the system
 		var spurgear_deviation = msg.data[5]; // Deviation out of the target
 
@@ -205,9 +205,9 @@
 		entry.find("#spurgear_title")[0].attributes["data-target"].value = "#" + id;
 		entry.find("#spurgear_col")[0].id = id;
 		entry.find("#spurgear_title")[0].attributes["aria-controls"].value = id;
-		entry.find("#spurgear_title")[0].innerHTML = spurgear_gear_ratio + ":1 Ratio, " + s.length + " gears on " + spurgear_gear_layers + " layers";
+		entry.find("#spurgear_title")[0].innerHTML = spurgear_gear_ratio + ":1 Ratio, " + spurgear_gear_system.length + " gears on " + spurgear_gear_layers + " layers";
 		
-		entry.find("#s")[0].innerHTML += spurgear_toLayers(s, 2);	
+		entry.find("#spurgear_gear_system")[0].innerHTML += spurgear_toLayers(spurgear_gear_system, 2);	
 
 		//--------------Gear ratio------------//
 		entry.find("#spurgear_gear_ratio")[0].innerHTML += spurgear_gear_ratio + ":1";
@@ -224,9 +224,9 @@
 			}
 		}
 		
-		entry.find("#r")[0].innerHTML += r;
-		entry.find("#dist")[0].innerHTML += (s + spurgear_gear_ratio) / 2 + " * module";
-		entry.find("#rot")[0].innerHTML += ((360 / spurgear_gear_layers) / (360 / s)) * (360 / spurgear_gear_ratio) + "&#176;";
+		entry.find("#spurgear_gear_count")[0].innerHTML += spurgear_gear_count;
+		entry.find("#dist")[0].innerHTML += (spurgear_gear_system + spurgear_gear_ratio) / 2 + " * module";
+		entry.find("#rot")[0].innerHTML += ((360 / spurgear_gear_layers) / (360 / spurgear_gear_system)) * (360 / spurgear_gear_ratio) + "&#176;";
 		
 		$("#spurgear_results").append(entry);
 		spurgear_sort(); // Sort results
@@ -284,8 +284,8 @@
 		// Limit the number of results based on the max results value from the input field
 		if (results.length > $("#spurgear_max_results")[0].value) {
 			// Convert the jQuery collection to an array, remove the excess elements, and delete them from the DOM
-			$(".spurgear_result").toArray().splice($("#spurgear_max_results")[0].value).forEach(function(r) {
-				r.remove();
+			$(".spurgear_result").toArray().splice($("#spurgear_max_results")[0].value).forEach(function(spurgear_gear_count) {
+				spurgear_gear_count.remove();
 			});
 		}
 	}
