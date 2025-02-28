@@ -82,6 +82,8 @@
 			<div class="list-group-item collapse" id="spurgear_col">
 				<div id="s"></div>
 				<div id="spurgear_gear_ratio"><b>Gear ratio: </b></div>
+				<div id ="spurgear_deviation"><b>Deviation: </b></div>
+				
 				<div id="r">Ring teeth: </div>
 				<div id="dist">Planet distance from center: </div>
 				<div id="rot">Rotate planets by multiple of: </div>
@@ -191,6 +193,7 @@
 		var spurgear_gear_ratio = msg.data[2]; // Gear ratio of the system
 		var r = msg.data[3]; // Ring gear teeth
 		var spurgear_gear_layers = msg.data[4]; // Number of layers in the system
+		var spurgear_deviation = msg.data[5];
 		var ratio = eval(ratioFunction); // Calculate gear ratio
 
 		// Clone result template and populate with data
@@ -207,6 +210,7 @@
 		
 		entry.find("#s")[0].innerHTML += spurgear_toLayers(s, 2);		
 		entry.find("#spurgear_gear_ratio")[0].innerHTML += spurgear_gear_ratio + ":1";
+		entry.find("#spurgear_deviation")[0].innerHTML += spurgear_deviation;
 		
 		entry.find("#r")[0].innerHTML += r;
 		entry.find("#dist")[0].innerHTML += (s + spurgear_gear_ratio) / 2 + " * module";
