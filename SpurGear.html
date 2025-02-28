@@ -203,7 +203,7 @@
 		entry.find("#spurgear_title")[0].attributes["data-target"].value = "#" + id;
 		entry.find("#spurgear_col")[0].id = id;
 		entry.find("#spurgear_title")[0].attributes["aria-controls"].value = id;
-		entry.find("#spurgear_title")[0].innerHTML = spurgear_gear_ratio + ":1 Ratio, " + s.length + " Gears on" + spurgear_gear_layers + " layers";
+		entry.find("#spurgear_title")[0].innerHTML = spurgear_gear_ratio + ":1 Ratio, " + s.length + " gears on " + spurgear_gear_layers + " layers";
 		
 		entry.find("#s")[0].innerHTML += spurgear_toLayers(s, 2);		
 		entry.find("#spurgear_gear_ratio")[0].innerHTML += spurgear_gear_ratio + ":1";
