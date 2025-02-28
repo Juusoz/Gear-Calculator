@@ -214,7 +214,12 @@
 		if(spurgear_deviation == 0){
 			entry.find("#spurgear_deviation")[0].innerHTML += "None";
 		}else{
-			entry.find("#spurgear_deviation")[0].innerHTML += Math.abs(spurgear_deviation);		
+			if(spurgear_deviation > 0){
+				entry.find("#spurgear_deviation")[0].innerHTML += $("#spurgear_target_ratio")[0].value + " + " spurgear_deviation;		
+			}
+			else{
+				entry.find("#spurgear_deviation")[0].innerHTML += $("#spurgear_target_ratio")[0].value + " - " -spurgear_deviation;
+			}
 		}
 		
 		entry.find("#r")[0].innerHTML += r;
