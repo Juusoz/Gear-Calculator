@@ -1,6 +1,6 @@
 <div class="card-body mr-3">
   <p><b>Spur gear calculator</b></p>
-  <p>This calculator assumes every layer has two gers and the first gear of each layer is joined to the last gear of the previous layer and is spinning at the same speed. So gear 1 is rotating gear 2, gear 2 is physically joined to gear 3, and gear 3 is rotating gear 4.</p>
+  <p>This calculator assumes every layer has two gears and the first gear of each layer is joined to the last gear of the previous layer and is spinning at the same speed. So gear 1 is rotating gear 2, gear 2 is physically joined to gear 3, and gear 3 is rotating gear 4.</p>
   <p>The higher the maximum tooth count and the layer count, the smaller the deviation.</p>
   <b><p>Work in progress!</p></b>
   <p>Need to fix the sorting system and the progress bar.</p>
@@ -194,13 +194,12 @@
 		var r = msg.data[3]; // Ring gear teeth
 		var spurgear_gear_layers = msg.data[4]; // Number of layers in the system
 		var spurgear_deviation = msg.data[5]; // Deviation out of the target
-		var ratio = eval(ratioFunction); // Calculate gear ratio
 
 		// Clone result template and populate with data
 		var entry = $($("#spurgear_result_template").clone().prop("content"));
 		var id = "spurgear_system_" + spurgear_currentID;
 		var attr = document.createAttribute("data-ratio");
-		attr.value = ratio;
+		attr.value = spurgear_gear_ratio;
 		
 		entry.find(".spurgear_result")[0].setAttributeNode(attr);
 		entry.find("#spurgear_title")[0].attributes["data-target"].value = "#" + id;
@@ -270,28 +269,36 @@
 
 
     //Sort results by closeness to the target ratio
-    function spurgear_sort() {
-	
-        var results = $(".spurgear_result").sort(spurgear_sortFunction);
-		
-        $(".spurgear_result").remove(); //Clear previous results
-		
-        results.each(function(_, entry) {
-            $("#spurgear_results").append(entry); //Append sorted results
-        });
-		
-        //Limit number of displayed results
-        if (results.length > $("#spurgear_max_results")[0].value) {
-            $(".spurgear_result").toArray().splice($("#spurgear_max_results")[0].value).forEach(function(r) {
-                r.remove();
-            });
-        }
-    }
+	function spurgear_sort() {
+		// Get all elements with the class ".spurgear_result" and sort them using the custom sorting function
+		var results = $(".spurgear_result").sort(spurgear_sortFunction);
 
-    //Comparison function for sorting results by ratio difference
-    function spurgear_sortFunction(a, b) {
-        return Math.abs($("#spurgear_target_ratio")[0].value - Math.abs($(a).data("ratio"))) - Math.abs($("#spurgear_target_ratio")[0].value - Math.abs($(b).data("ratio")));
-    }
+		// Remove all ".spurgear_result" elements from the DOM to prepare for reordering
+		$(".spurgear_result").remove(); 
+
+		// Add each sorted result back into the "#spurgear_results" div
+		results.each(function(_, entry) {
+			$("#spurgear_results").append(entry); 
+		});
+
+		// Limit the number of results based on the max results value from the input field
+		if (results.length > $("#spurgear_max_results")[0].value) {
+			// Convert the jQuery collection to an array, remove the excess elements, and delete them from the DOM
+			$(".spurgear_result").toArray().splice($("#spurgear_max_results")[0].value).forEach(function(r) {
+				r.remove();
+			});
+		}
+	}
+
+	function spurgear_sortFunction(a, b) {
+		// Calculate the absolute difference between each element's data-ratio and the target ratio
+		// Sort elements by how close their ratio is to the target ratio, in ascending order
+		
+		//Target ratio - 
+		var value1 = Math.abs($("#spurgear_target_ratio")[0].value - Math.abs($(a).data("ratio")));
+		var value2 = Math.abs($("#spurgear_target_ratio")[0].value - Math.abs($(b).data("ratio")));
+		return value1 - value2;
+	}
 
 	
 </script>
