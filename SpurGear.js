@@ -64,9 +64,9 @@ self.onmessage = function (msg) {
 			
 		}
 		//Deviation bigger than the previous best deviation, no progress in this direction. || Optimization 3.
-		if(Math.abs(gear_ratio_deviation) > gear_ratio_best_deviation){			
+		/*if(Math.abs(gear_ratio_deviation) > gear_ratio_best_deviation){			
 			noProgressHere = true;
-		}
+		}*/
 		
 		//Check if the gear ratio is the same as the target gear ratio
 		if(gear_ratio == target_gear_ratio){
@@ -134,7 +134,7 @@ self.onmessage = function (msg) {
 	//---------------------------------------------------------------------------//
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
-	console.log("version 11");
+	console.log("version 12");
 	try {
 
 		//Look through each layer for the optimal gear ratio
