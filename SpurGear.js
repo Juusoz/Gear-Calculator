@@ -62,6 +62,7 @@ self.onmessage = function (msg) {
 			//Replace the previous best deviation.
 			gear_ratio_best_deviation = Math.abs(gear_ratio_deviation);
 			
+		}
 		//Deviation bigger than the previous best deviation, no progress in this direction. || Optimization 3.
 		if(Math.abs(gear_ratio_deviation) > gear_ratio_best_deviation){			
 			noProgressHere = true;
