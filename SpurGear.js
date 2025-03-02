@@ -1,5 +1,5 @@
 //Optimization 2: 8-25 teeth, 4 layers, 7.52:1: 5 min 8s
-//Optimization 3: 8-25 teeth, 4 layers, 7.52:1: 
+//Optimization 3: 8-25 teeth, 4 layers, 7.52:1: 19s
 
 self.onmessage = function (msg) {
 	console.log("Worker received message");
@@ -84,7 +84,7 @@ self.onmessage = function (msg) {
 		gearSystem = new Array(currentLayer*2).fill(min_teeth);
 		
 		//Calculate the first gear ratio of the layer
-		calculateGearRatio(gearSystem, currentLayer)
+		calculateGearRatio(gearSystem, currentLayer);
 		
 		//Cycle the rest of the combinations of the layer
 		while(true){
@@ -112,6 +112,7 @@ self.onmessage = function (msg) {
 					
 				}else{
 					//Optimization 3 triggered.
+					console.log("Optimization 3 triggered.");
 					
 					//Reset noProgressHere
 					noProgressHere = false;
@@ -122,7 +123,7 @@ self.onmessage = function (msg) {
 			}
 			
 			//Calculate the gear ratio of the newly made combination
-			calculateGearRatio(gearSystem, currentLayer)
+			calculateGearRatio(gearSystem, currentLayer);
 			
 			//If done looking through layer, stop.
 			if(complete == true) break;
