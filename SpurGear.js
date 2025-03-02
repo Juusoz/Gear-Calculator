@@ -9,7 +9,7 @@ self.onmessage = function (msg) {
     let max_layers = parseInt(msg.data[2]); //Maximum number of layers
     let target_gear_ratio = parseFloat(msg.data[3]); // Target gear ratio
 	let idealFound = false;
-	let noProgressHere = false;
+	let deviation_higher = false;
 
     let calculation_count = 0; //Keep track of how many calculations we've done
 	let update_limit = 10000; //Update every x calculations
@@ -64,8 +64,8 @@ self.onmessage = function (msg) {
 			
 		}
 		//Deviation bigger than the previous best deviation, no progress in this direction. || Optimization 3.
-		if(Math.abs(gear_ratio_deviation) > gear_ratio_best_deviation && gearSystem[1] != min_teeth){			
-			noProgressHere = true;
+		if(Math.abs(gear_ratio_deviation) > gear_ratio_best_deviation){			
+			deviation_higher = true;
 		}
 		
 		//Check if the gear ratio is the same as the target gear ratio
@@ -90,11 +90,20 @@ self.onmessage = function (msg) {
 		//Cycle the rest of the combinations of the layer
 		while(true){
 			
-			//Check the gears in the combination
+			//Function to increment through the gears
 			for (let gear = 0; gear < gearSystem.length; gear++) {
-				//Check if we went closer to the goal, checked by the gear ratio calculator || Optimization 3.
-				if(noProgressHere == false){
+				
+				//Check if we got closer to the goal, checked by the gear ratio calculator || Optimization 3.
+				if(deviation_higher == true){	
+					//Optimization 3 triggered.
+					console.log("Optimization 3 triggered.");
+					console.log(gearSystem);
 					
+					//Reset deviation_higher
+					deviation_higher = false;	
+					
+				}else{
+				
 					//Increase the tooth count of the current gear by 1
 					gearSystem[gear]++;
 					
@@ -107,21 +116,13 @@ self.onmessage = function (msg) {
 						complete = true;
 						return;
 					}
-					
-					//Neither check was triggered, reset the tooth count of the gear back to minimum and move on to the next gear
-					gearSystem[gear] = min_teeth;
-					
-				}else{
-					//Optimization 3 triggered.
-					console.log("Optimization 3 triggered.");
-					
-					//Reset noProgressHere
-					noProgressHere = false;
-					console.log(gearSystem);
-					//Reset the tooth count of the current gear and move on to the next gear
-					gearSystem[gear] = min_teeth;					
-				}				
+				}
+				
+				//No check was triggered, reset the tooth count of the gear back to minimum and move on to the next gear
+				gearSystem[gear] = min_teeth;
+						
 			}
+			
 			
 			//Calculate the gear ratio of the newly made combination
 			calculateGearRatio(gearSystem, currentLayer);
