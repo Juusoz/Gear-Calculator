@@ -89,23 +89,36 @@ self.onmessage = function (msg) {
 		//Cycle the rest of the combinations of the layer
 		while(true){
 			
-			//Cycle through the gears in the combination
-			for (let i = 0; i < gearSystem.length; i++) {
-				//Increase the tooth count of the gear by 1
-				gearSystem[i]++;
-				
-				//Check if the current gear is below max teeth. If yes, calculate the gear ratio.
-				if (gearSystem[i] < max_teeth+1) break;
-				
-				
-				//Check if this is the last gear and if it has max teeth. If yes, stop the function.
-				if (i == gearSystem.length - 1 && gearSystem[i] == max_teeth+1) {
-					console.log("gearSystem has reached the end!");
-					complete = true;
-					return;
-				}
-				//Neither check was triggered, reset the tooth count of the gear back to minimum
-				gearSystem[i] = min_teeth;
+			//Check the gears in the combination
+			for (let gear = 0; gear < gearSystem.length; gear++) {
+				//Check if we went closer to the goal, checked by the gear ratio calculator || Optimization 3.
+				if(noProgressHere == false){
+					
+					//Increase the tooth count of the current gear by 1
+					gearSystem[gear]++;
+					
+					//Check if the current gear is below max teeth. If yes, calculate the gear ratio.
+					if (gearSystem[gear] < max_teeth+1) break;
+					
+					//Check if this is the last gear and if it has max teeth. If yes, stop the function.
+					if (gear == gearSystem.length - 1 && gearSystem[gear] == max_teeth+1) {
+						console.log("gearSystem has reached the end!");
+						complete = true;
+						return;
+					}
+					
+					//Neither check was triggered, reset the tooth count of the gear back to minimum and move on to the next gear
+					gearSystem[gear] = min_teeth;
+					
+				}else{
+					//Optimization 3 triggered.
+					
+					//Reset noProgressHere
+					noProgressHere = false;
+					
+					//Reset the tooth count of the current gear and move on to the next gear
+					gearSystem[gear] = min_teeth;					
+				}				
 			}
 			
 			//Calculate the gear ratio of the newly made combination
