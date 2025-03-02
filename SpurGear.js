@@ -101,6 +101,7 @@ self.onmessage = function (msg) {
 					
 					//Reset deviation_higher
 					deviation_higher = false;	
+					gear_ratio_best_deviation = Infinity;
 					
 				}else{
 				
