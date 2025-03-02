@@ -117,7 +117,7 @@ self.onmessage = function (msg) {
 					
 					//Reset noProgressHere
 					noProgressHere = false;
-					
+					console.log(gearSystem);
 					//Reset the tooth count of the current gear and move on to the next gear
 					gearSystem[gear] = min_teeth;					
 				}				
