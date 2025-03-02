@@ -1,3 +1,6 @@
+//Optimization 2: 8-25 teeth, 4 layers, 7.52:1: 5 min 8s
+//Optimization 3: 8-25 teeth, 4 layers, 7.52:1: 
+
 self.onmessage = function (msg) {
 	console.log("Worker received message");
     //Parse inputs from the message
@@ -6,14 +9,15 @@ self.onmessage = function (msg) {
     let max_layers = parseInt(msg.data[2]); //Maximum number of layers
     let target_gear_ratio = parseFloat(msg.data[3]); // Target gear ratio
 	let idealFound = false;
+	let noProgressHere = false;
 
     let calculation_count = 0; //Keep track of how many calculations we've done
 	let update_limit = 10000; //Update every x calculations
 	
 	//Function for posting the new best gear system
-	function postNewBestSystem(gear_system, gear_ratio, currentLayer, gearRatio_distance){
-		self.postMessage([0, gear_system, gear_ratio, gear_system.length * 2, currentLayer, gearRatio_distance]); //Reminder to add distance
-		console.log("Worker posted message: " + 0 + "\n Gear system: " + gear_system + "\n Gear ratio: " + gear_ratio + "\n Array length: " + gear_system.length * 2 + "\n Current layer: " + currentLayer + "\n Deviation: " + gearRatio_distance);
+	function postNewBestSystem(gear_system, gear_ratio, currentLayer, gear_ratio_deviation){
+		self.postMessage([0, gear_system, gear_ratio, gear_system.length * 2, currentLayer, gear_ratio_deviation]); //Reminder to add distance
+		console.log("Worker posted message: " + 0 + "\n Gear system: " + gear_system + "\n Gear ratio: " + gear_ratio + "\n Array length: " + gear_system.length * 2 + "\n Current layer: " + currentLayer + "\n Deviation: " + gear_ratio_deviation);
 	}
 	
 	//Function for posting an update on the progress
@@ -31,25 +35,41 @@ self.onmessage = function (msg) {
 		return Math.pow((max_teeth / min_teeth), currentLayer);
 	}
 	
-	var gearRatio;
-	var oldBest_gearRatio = Infinity;
+	var gear_ratio;
+	var gear_ratio_best_deviation = Infinity;
+	var previous_gear_ratio = Infinity;
 	
 	function calculateGearRatio(gearSystem, currentLayer){
+		
+		//Default gear ratio multiplier = 1
+		gear_ratio = 1;
+		
+		//Calculate the gear ratio
+		for(let j=0; j < gearSystem.length; j += 2){
+			//New layer gear ratio = Previous layer gear ratio * (new second gear / new first gear)
+			gear_ratio = gear_ratio * (gearSystem[j+1]/gearSystem[j]);
+		}
+		
+		//The deviation from the target gear ratio
+		gear_ratio_deviation = target_gear_ratio - gear_ratio;
+		
+		//Is the deviation better or equal to the previous best deviation?
+		if(Math.abs(gear_ratio_deviation) <= gear_ratio_best_deviation){
 			
-		//console.log("Currently looking at gears " + gearSystem);
-		
-		gearRatio = 1;	//Reset gear ratio
-		for(let j=0; j < gearSystem.length; j += 2){	//Calculate the new gear ratio
-			gearRatio = gearRatio * (gearSystem[j+1]/gearSystem[j]);;
+			//Post result if the new ratio is better.
+			postNewBestSystem(gearSystem, gear_ratio, currentLayer, -gear_ratio_deviation);
+			
+			//Replace the previous best deviation.
+			gear_ratio_best_deviation = Math.abs(gear_ratio_deviation);
+			
+		}else{
+			//Deviation bigger than the previous best deviation, no progress in this direction. || Optimization 3.
+			noProgressHere = true;
 		}
 		
-		gearRatio_distance = target_gear_ratio - gearRatio; //The deviation from goal gear ratio
-		if(Math.abs(gearRatio_distance) <= oldBest_gearRatio){
-			postNewBestSystem(gearSystem, gearRatio, currentLayer, -gearRatio_distance);	//Only post if the new ratio is better.
-			oldBest_gearRatio = Math.abs(gearRatio_distance);
-		}
-		
-		if(gearRatio == target_gear_ratio){
+		//Check if the gear ratio is the same as the target gear ratio
+		if(gear_ratio == target_gear_ratio){
+			//An ideal has been found, no point in adding in a new layer of gears || Optimization 1.
 			idealFound = true;
 			console.log("Ideal found");
 		}
@@ -59,23 +79,40 @@ self.onmessage = function (msg) {
 
 	function cycleGears(currentLayer) {
 		let complete = false;
+		
+		//Create a new gear system with minimum values based off of the current layer.
 		gearSystem = new Array(currentLayer*2).fill(min_teeth);
+		
+		//Calculate the first gear ratio of the layer
 		calculateGearRatio(gearSystem, currentLayer)
+		
+		//Cycle the rest of the combinations of the layer
 		while(true){
+			
+			//Cycle through the gears in the combination
 			for (let i = 0; i < gearSystem.length; i++) {
+				//Increase the tooth count of the gear by 1
 				gearSystem[i]++;
+				
+				//Check if the current gear is below max teeth. If yes, calculate the gear ratio.
 				if (gearSystem[i] < max_teeth+1) break;
+				
+				
+				//Check if this is the last gear and if it has max teeth. If yes, stop the function.
 				if (i == gearSystem.length - 1 && gearSystem[i] == max_teeth+1) {
 					console.log("gearSystem has reached the end!");
 					complete = true;
 					return;
 				}
+				//Neither check was triggered, reset the tooth count of the gear back to minimum
 				gearSystem[i] = min_teeth;
 			}
+			
+			//Calculate the gear ratio of the newly made combination
 			calculateGearRatio(gearSystem, currentLayer)
-			if(complete == true){
-				break;
-			}
+			
+			//If done looking through layer, stop.
+			if(complete == true) break;
 		};
 	}
 	
@@ -83,11 +120,16 @@ self.onmessage = function (msg) {
 	//-----------------------Start the calculation process-----------------------//
 	//---------------------------------------------------------------------------//
 	console.log("version 11");
-	try {		
+	try {
+
+		//Look through each layer for the optimal gear ratio
 		for(let currentLayer = 1; currentLayer <= max_layers; currentLayer++){
 			
-			if(idealFound != true){										//If the ideal has not been found, proceed, else skip layer
-				if(MaxGearRatio(currentLayer) >= target_gear_ratio){	//If max gear ratio is above or equal to target ratio, proceed, else skip layer
+			//If the ideal has not been found, proceed, else skip layer || Optimization 1
+			if(idealFound != true){
+			
+				//If maximum possible gear ratio in the layer is above or equal to target ratio, proceed, else skip layer || Optimization 2
+				if(MaxGearRatio(currentLayer) >= target_gear_ratio){
 					console.log("Starting from layer " + currentLayer + " with " + currentLayer*2 + " gears.");
 					
 					//Cycle through the possibilities
@@ -101,6 +143,7 @@ self.onmessage = function (msg) {
 			}
 		}
 		
+		//Done looking through the layers
 		postDone();
 		
 		} catch (error) {
@@ -108,35 +151,3 @@ self.onmessage = function (msg) {
 		}
 		
 };
-		
-	
-	
-	
-	/*
-	
-
-
-        // Loop over all possible gear combinations in this layer
-        for (let gear1 = min_teeth; gear1 <= max_teeth; gear1++) {
-            for (let gear2 = min_teeth; gear2 <= max_teeth; gear2++) {
-                let newGearRatio = calculateGearRatio(previousLayerTeeth, gear1) * calculateGearRatio(gear1, gear2);
-
-                // Update the calculation count
-                calculation_count++;
-                total_calculations++;
-
-                // Output progress every 10,000 calculations
-                if (calculation_count >= 10000) {
-                    console.log(`Processed ${total_calculations} combinations so far.`);
-                    calculation_count = 0; // Reset calculation count
-                }
-            }
-        }
-
-        // After processing, recursively calculate the next layer
-        calculateLayer(currentLayer + 1, gear2, newGearRatio);
-    }
-
-    // Start the process with layer 1
-    calculateLayer(1, min_teeth, 1);
-};*/

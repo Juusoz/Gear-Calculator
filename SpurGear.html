@@ -205,7 +205,7 @@
 		entry.find("#spurgear_title")[0].attributes["data-target"].value = "#" + id;
 		entry.find("#spurgear_col")[0].id = id;
 		entry.find("#spurgear_title")[0].attributes["aria-controls"].value = id;
-		entry.find("#spurgear_title")[0].innerHTML = spurgear_gear_ratio + ":1 Ratio, " + spurgear_gear_system.length + " gears on " + spurgear_gear_layers + " layers";
+		entry.find("#spurgear_title")[0].innerHTML = spurgear_gear_ratio + " : 1 Ratio, " + spurgear_gear_system.length + " gears on " + spurgear_gear_layers + " layers";
 		
 		entry.find("#spurgear_gear_system")[0].innerHTML += spurgear_toLayers(spurgear_gear_system, 2);	
 
