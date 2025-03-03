@@ -37,7 +37,7 @@ self.onmessage = function (msg) {
 	
 	var gear_ratio;
 	var gear_ratio_best_deviation = Infinity;
-	var previous_gear_ratio = Infinity;
+	var previous_gear_ratio_deviation = Infinity;
 	
 	function calculateGearRatio(gearSystem, currentLayer){
 		
@@ -52,19 +52,19 @@ self.onmessage = function (msg) {
 		
 		//The deviation from the target gear ratio
 		gear_ratio_deviation = target_gear_ratio - gear_ratio;
+		previous_gear_ratio_deviation = Math.abs(gear_ratio_deviation);
 		
 		//Is the deviation better or equal to the previous best deviation?
 		if(Math.abs(gear_ratio_deviation) <= gear_ratio_best_deviation){
-			
 			//Post result if the new ratio is better.
 			postNewBestSystem(gearSystem, gear_ratio, currentLayer, -gear_ratio_deviation);
 			
 			//Replace the previous best deviation.
 			gear_ratio_best_deviation = Math.abs(gear_ratio_deviation);
-			
 		}
-		//Deviation bigger than the previous best deviation, no progress in this direction. || Optimization 3.
-		if(Math.abs(gear_ratio_deviation) > gear_ratio_best_deviation){			
+		
+		//Deviation bigger than the previous deviation, no progress in this direction. || Optimization 3.
+		if(Math.abs(gear_ratio_deviation) > previous_gear_ratio_deviation){			
 			deviation_higher = true;
 		}
 		
@@ -101,7 +101,7 @@ self.onmessage = function (msg) {
 					
 					//Reset deviation_higher
 					deviation_higher = false;	
-					gear_ratio_best_deviation = Infinity;
+					previous_gear_ratio_deviation = Infinity;
 					
 				}else{
 				
@@ -121,6 +121,8 @@ self.onmessage = function (msg) {
 				
 				//No check was triggered, reset the tooth count of the gear back to minimum and move on to the next gear
 				gearSystem[gear] = min_teeth;
+				//Reset previous deviation
+				previous_gear_ratio_deviation = Infinity;
 						
 			}
 			
